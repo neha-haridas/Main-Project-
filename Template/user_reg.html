@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<title>Sign UP</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+<link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor\bootstrap\css\bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static '\fonts\font-awesome-4.7.0\css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor\animate\animate.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor\css-hamburgers\hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor\select2\select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css\util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css\main.css' %}">
+<!--===============================================================================================-->
+
+
+<script>
+                
+	function validation(){
+	  var fname=document.getElementById('f-name').value;
+	  var regx = /^[A-Za-z]+$/;
+
+		if(fname==""){
+		   document.getElementById('name').innerHTML="**Please enter your firstname";
+		   return false;
+		}
+		else{
+		   document.getElementById('name').innerHTML="";
+		}
+
+		if((fname.length<=3)||(fname.length>20)){
+		   document.getElementById('name').innerHTML="**your firstname must include more characters";
+		   return false;
+		}
+		else{
+		   document.getElementById('name').innerHTML="";
+		}
+
+		 
+		if(!fname.match(/^[A-Za-z]+$/)){
+
+		   document.getElementById('name').innerHTML="**Only characters are allowed";
+		   return false;
+
+		}
+		else{
+		   document.getElementById('name').innerHTML="";
+		}
+
+
+		var lname=document.getElementById('l-name').value;
+		if(lname==""){
+		   document.getElementById('names').innerHTML="**Please enter your lastname";
+		   return false;
+		}
+		else{
+		   document.getElementById('names').innerHTML="";
+		}
+
+		if((lname.length<=1)||(lname.length>20)){
+		   document.getElementById('names').innerHTML="**your firstname must include more characters";
+		   return false;
+		}
+		else{
+		   document.getElementById('names').innerHTML="";
+		}
+
+
+		if(!lname.match(/^[A-Za-z\s, ]+$/)){
+
+		  document.getElementById('names').innerHTML="**Only characters are allowed";
+		  return false;
+
+		  }
+		  else{
+		  document.getElementById('names').innerHTML="";
+		  }
+	  
+	  var detail=document.getElementById('details').value;
+
+	  if(detail==""){
+	  document.getElementById('addr').innerHTML="**Please enter your address";
+	  return false;
+	  }
+	  else{
+	  document.getElementById('addr').innerHTML="";
+	  }
+	  if((detail.length<=4)||(detail.length>60)){
+
+	  document.getElementById('addr').innerHTML="**User length must include more characters";
+	  return false;
+
+	  }
+	  else{
+	  document.getElementById('addr').innerHTML="";
+	  }
+
+	  if (!detail.match(/^[a-zA-Z\s,()'-]*$/)) 
+	  {
+		  document.getElementById('mail').innerHTML="**enter a Valid Email";
+		  return false;
+	  }
+	  else{
+		  document.getElementById('mail').value = "";
+	  }
+  
+	  var val = document.getElementById('email').value;
+	  if(val==""){
+	  document.getElementById('mail').innerHTML="**Please enter your address";
+	  return false;
+	  }
+	  else{
+	  document.getElementById('mail').innerHTML="";
+	  }
+
+	  if (!val.match(/([A-z0-9_\-\.]){1,}\@([A-z0-9_\-\.]){1,}\.([A-Za-z]){2,4}$/)) 
+	  {
+		  document.getElementById('mail').innerHTML="**enter a Valid Email";
+		  return false;
+	  }
+	  else{
+		  document.getElementById('mail').value = "";
+	  }
+
+
+	  var phon=document.getElementById('phoneno').value;
+	  if(phon==""){
+
+		  document.getElementById('pho').innerHTML="**Please enter your phone number";
+		  return false;
+	  }
+	  else{
+		  document.getElementById('pho').innerHTML="";
+	  }
+	  if(!phon.match(/^[6-9][0-9]{9}$/)){
+
+		  document.getElementById('pho').innerHTML="**Please enter a valid phone number";
+		  return false;
+	  }
+	  else{
+		  document.getElementById('pho').innerHTML="";
+	  }
+	  if(phon.length!=10){
+
+		  document.getElementById('pho').innerHTML="**Phone number must be 10 digits only";
+		  return false;
+	  }
+	  else{
+		  document.getElementById('pho').innerHTML="";
+	  }
+
+
+	  var cities=document.getElementById('city').value;
+	  if(cities==""){
+	  document.getElementById('cit').innerHTML="**Please enter your city";
+	  return false;
+	  }
+	  else{
+		  document.getElementById('cit').innerHTML="";
+	  }
+	  if(!cities.match(/^[a-zA-Z\s, ]+$/)){
+	  document.getElementById('cit').innerHTML="**enter a valid city";
+	  return false;
+	  }
+	  else{
+	  document.getElementById('cit').innerHTML="";
+	  }
+	  if((cities.length<=4)||(detail.length>60)){
+
+	  document.getElementById('cit').innerHTML="**User length must include more characters";
+	  return false;
+
+	  }
+	  else{
+	  document.getElementById('cit').innerHTML="";
+	  }
+
+	  var cities=document.getElementById('district').value;
+	  if(cities==""){
+	  document.getElementById('states').innerHTML="**Please enter your district";
+	  return false;
+	  }
+	  else{
+		  document.getElementById('states').innerHTML="";
+	  }
+	  if(!cities.match(/^[a-zA-Z\s, ]+$/)){
+	  document.getElementById('states').innerHTML="**enter a valid district";
+	  return false;
+	  }
+	  else{
+	  document.getElementById('states').innerHTML="";
+	  }
+	  if((cities.length<=3)||(detail.length>60)){
+
+	  document.getElementById('states').innerHTML="**User length must include more characters";
+	  return false;
+
+	  }
+	  else{
+	  document.getElementById('states').innerHTML="";
+	  }
+
+	  var code=document.getElementById('pincode').value;  
+	  if (code=="")   
+	  {  
+		  document.getElementById('pin').innerHTML="**Please enter the pincode";
+		  return false;
+	  }   
+	  else   
+	  {  
+		  document.getElementById('pin').innerHTML=""; 
+	  } 
+	 
+	  if(!code.match(/^[6][0-9]{5}$/)){
+
+	  document.getElementById('pin').innerHTML="**enter a valid pincode";
+	  return false;
+
+	  }
+	  else{
+	  document.getElementById('pin').innerHTML="";
+	  }
+	  if(code.length!=6){
+
+	  document.getElementById('pin').innerHTML="**enter a valid pincode";
+	  return false;
+	  }
+	  else{
+	  document.getElementById('pin').innerHTML="";
+	  }
+
+	  
+
+	  var val = document.getElementById('pwd').value;
+	  if(val=="")
+	  {
+		  document.getElementById('pass1').innerHTML="**Password can't be null!!";
+		  return false;
+	  }
+	  else{
+		  document.getElementById('pass1').value = "";
+	  }
+	  if (!val.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}/)) 
+	  {
+		  document.getElementById('pass1').innerHTML="**Must contain at least one number and one uppercase and lowercase letter and aleast 5 characters'";
+		  return false;
+	  }
+	  else{
+		  document.getElementById('pass1').value = "";
+	  }
+	   
+	  // var val = document.getElementById('pwd').value;
+	  // var pattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}/;
+	  // if (val != pattern) 
+	  // {
+	  //     document.getElementById('pass1').innerHTML="**Must contain at least one number and one uppercase and lowercase letter and aleast 5 characters";
+	  //     return false;
+	  // }
+	  // else{
+	  //     document.getElementById('pass1').value = "";
+	  // }
+
+	  var ps2=document.getElementById('cpwd').value;
+	  if(ps2==""){
+	  document.getElementById('pass2').innerHTML="**confrim password can't be null!!";
+	  return false;
+	  }
+	  else{
+	  document.getElementById('pass2').innerHTML="";
+	  }
+	  if(ps2!= document.getElementById('pwd').value){
+	  document.getElementById('pass2').innerHTML="**passwords should be matching";
+	  return false;
+	  }
+	  else{
+	  document.getElementById('pass2').innerHTML="";
+	  }
+
+	  // if(val!=ps2){
+	  // document.getElementById('pass2').innerHTML="**passwords should be matching";
+	  // return false;
+	  // }
+	  // else{
+	  // document.getElementById('pass2').innerHTML="";
+	  // }
+}
+
+  </script>
+</head>
+<body>
+	
+	<div class="limiter">
+		<center>
+			<div class="wrap-login100">
+				<div class="login100-pic js-tilt" data-tilt>
+					<img src="{% static 'img\img-01.png' %}"alt="IMG">
+				</div>
+
+				<form class="form-horizontal" onclick="return validation()"  action="{% url 'user_reg' %}" id="input-form"  method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+					<span class="login100-form-title">
+						CREATE ACCOUNT
+					</span>
+					<div class="wrap-input100 validate-input" data-validate = "First name is required">
+						<input class="input100" type="text" name="first_name" id="f-name" placeholder="Firstname" onkeyup='fnameValidation(this)' required>
+						<span id="name" class="new" style="color: red;"></span> 
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							{% comment %} <i class="fa fa-envelope" aria-hidden="true"></i> {% endcomment %}
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "Last name is required">
+						<input class="input100" type="text" id="l-name" name="last_name" placeholder="Lastname" onkeyup='lnameValidation(this)' required>
+						<span id="names" class="new" style="color: red;"></span>
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							{% comment %} <i class="fa fa-envelope" aria-hidden="true"></i> {% endcomment %}
+						</span>
+					</div>
+                    <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+						<input class="input100" type="email" id="email" name="email" placeholder="Email" onkeyup=' emailValidation(this)' required>
+						<span id="mail" class="new" style="color: red;"></span>
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							{% comment %} <i class="fa fa-envelope" aria-hidden="true"></i> {% endcomment %}
+						</span>
+					</div>
+                    <div class="wrap-input100 validate-input" data-validate = "Valid Phone number is required: +91 26547891">
+						<input class="input100" type="Phone number" id="phoneno"  name="contact" placeholder="Phone Number"onkeyup='phoneValidation(this)' required>
+						<span id="pho" class="new" style="color: red;"></span>
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							{% comment %} <i class="fa fa-phone" aria-hidden="true"></i> {% endcomment %}
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Valid Register Number is required">
+						<input class="input100" type="text" name="regno" placeholder="Register Number">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							{% comment %} <i class="fa fa-envelope" aria-hidden="true"></i> {% endcomment %}
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Department is required">
+						<input class="input100" type="text" name="dpmnt" placeholder="Department">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							{% comment %} <i class="fa fa-envelope" aria-hidden="true"></i> {% endcomment %}
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Semester is required">
+						<input class="input100" type="text" name="sem" placeholder="Semester">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							{% comment %} <i class="fa fa-envelope" aria-hidden="true"></i> {% endcomment %}
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Password is required" >
+						<input class="input100" type="password" id="pwd" name="password" placeholder="Password" onkeyup='passwordValidation(this)' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}" required>
+						<span id="pass1" class="new" style="color: red;"></span>
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							{% comment %} <i class="fa fa-lock" aria-hidden="true"></i> {% endcomment %}
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "Password is required">
+						<input class="input100" type="password"  id="cpwd" name="cpass" placeholder="Confirm Password" onkeyup='cpasswordValidation(this)' required>
+						<span id="pass2" class="new" style="color: red;"></span>
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							{% comment %} <i class="fa fa-lock" aria-hidden="true"></i> {% endcomment %}
+						</span>
+					</div>
+					
+
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn" type="submit">
+							Signup
+						</button>
+					</div>
+					<div class="text-center p-t-136">
+						<a href="{% url 'login' %}">Login</a>
+						<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</center>
+</div>
+	
+	
+
+	
+<!--===============================================================================================-->	
+	<script src="{% static 'vendor\jquery\jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor\bootstrap\js\popper.js' %}"></script>
+	<script src="{% static 'vendor\bootstrap\js\bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor\select2\select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor\tilt\tilt.jquery.min.js' %}"></script>
+	<script >
+		$('.js-tilt').tilt({
+			scale: 1.1
+		})
+	</script>
+<!--===============================================================================================-->
+	<!-- <script src="{% static 'js\logmain.js' %}"></script> -->
+	<script src="{% static 'js\reg.js' %}"></script>
+  
+</body>
+</html>

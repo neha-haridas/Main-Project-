@@ -1,0 +1,575 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="mdc-typography">
+
+  <head>
+    <title>Hello User</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">ScreenShot</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <p class="lead p1">
+              <b>Upload Your Whatsapp ScreenShot Here</b>
+            </p>
+            <!-- Upload  -->
+            <form id="file-upload-form" class="uploader">
+              <input id="file-upload" type="file" name="fileUpload" accept="image/*" />
+
+              <label for="file-upload" id="file-drag">
+                <img id="file-image" src="#" alt="Preview" class="hidden">
+                <div id="start">
+                  <i class="fa fa-download" aria-hidden="true"></i>
+                  <div>Select a file or drag here</div>
+                  <div id="notimage" class="hidden">Please select an image</div>
+                  <span id="file-upload-btn" class="btn btn-primary">Select a file</span>
+                </div>
+                <div id="response" class="hidden">
+                  <div id="messages"></div>
+                  <progress class="progress" id="file-progress" value="0">
+                    <span>0</span>%
+                  </progress>
+                </div>
+              </label>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Outpass View Modal -->
+
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModal2Label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModal2Label">Outpass Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Purpose Of Leave</label>
+              <textarea class="form-control" id="purposeOfLeave" readonly></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Number Of Days</label>
+              <input type="number" class="form-control" id="num_of_days1111">
+            </div>
+
+
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">From</label>
+              <input type="date" class="form-control" id="fromDate" readonly>
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">To</label>
+              <input type="date" class="form-control" id="toDate" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Address While Leave</label>
+              <textarea class="form-control" id="addressWhileLeave" readonly></textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="isEmergency">
+                <label class="form-check-label" for="isEmergency">
+                  Is An Emergency !!
+                </label>
+              </div>
+            </div>
+            <div class="box">
+              <div class="js--image-preview" id="preview111"></div>
+              <div class="upload-options">
+                <label>
+                  <input type="file" class="image-upload" accept="image/*" hidden/>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Outpass Edit Modal -->
+
+
+    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModal3Label">Outpass Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Purpose Of Leave</label>
+              <textarea class="form-control" id="purposeOfLeave1"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Number Of Days</label>
+              <input type="number" class="form-control" id="num_of_days1">
+            </div>
+
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">From</label>
+              <input type="date" class="form-control" id="fromDate1">
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">To</label>
+              <input type="date" class="form-control" id="toDate1">
+            </div>
+
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Address While Leave</label>
+              <textarea class="form-control" id="addressWhileLeave1"></textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="isEmergency1">
+                <label class="form-check-label" for="isEmergency">
+                  Is An Emergency !!
+                </label>
+              </div>
+            </div>
+
+            <div class="box">
+              <div class="js--image-preview" id="preview11"></div>
+              <div class="upload-options">
+                <label>
+                  <input type="file" class="image-upload" accept="image/*" id="upload-screenshot" />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="edit-save" class="btn btn-secondary" data-dismiss="modal">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close-file1">Close</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Pdf View Modal -->
+    <div class="modal fade bd-example-modal-lg myPdfModal" id="myPdfModal" tabindex="-1" role="dialog" aria-labelledby="myPdfModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="myPdfModalLabel">Outpass</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body page11" id="full">
+
+          </div>
+          <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div> -->
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Qr Code -->
+    <!-- Pdf View Modal -->
+    <div class="modal fade bd-example-modal-sm" id="qr-coModal" tabindex="-1" role="dialog" aria-labelledby="qr-coModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="qr-coModalLabel">Your Unique QR Code</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="qrcode">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input id="hid_inp" hidden type="text" />
+
+  </body>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <!-- Access Token -->
+  <script>
+    var access_token = "{{access_token}}"
+    var refresh_token = "{{refresh_token}}"
+    var file, file1;
+    $(function() {
+
+      setInterval(function(){$.ajax({
+        url: "http://127.0.0.1:8000/student/acceptedOutpassNotifications1",
+        type: "GET",
+        headers: {
+          Authorization: "Bearer " + access_token
+        },
+        success: function(data) {
+          var approved_outpasses = JSON.parse(data.accepted_outpasses);
+          console.log($("#num_of_noti"))
+          $("#num_of_noti").html(approved_outpasses.length)
+        }
+      })},2000);
+
+      $("#file-upload").change(function(e) {
+
+        file = e.target.files[0];
+        var reader = new FileReader();
+        reader.onload = function(event) {
+          file = event.target.result;
+        }
+      });
+
+      $("#close-file1").click(function(){
+        file1=undefined;
+      })
+
+
+
+      $("#upload-screenshot").change(function(e) {
+
+        file1 = e.target.files[0];
+        var reader = new FileReader();
+        reader.onload = function(event) {
+          file1 = event.target.result;
+        }
+      })
+
+    })
+
+    //console.log(access_token+" "+refresh_token)
+  </script>
+  <!-- Signature -->
+  <script src="{% static 'js/signature.js' %}"></script>
+
+  <!-- Main Controller -->
+  <script src="{% static 'js/mainController.js' %}"></script>
+
+  <!-- File Uploader -->
+  <script src="{% static 'js/fileUploader.js' %}"></script>
+
+  <!-- Outpass -->
+  <script src="{% static 'js/outpass.js' %}"></script>
+
+  <!-- Pdf Generator -->
+  <script src="{% static 'js/generatePdf.js' %}"></script>
+
+  <!-- Update -->
+  <script src="{% static 'js/update.js' %}"></script>
+
+  <!-- Profile -->
+  <script src="{% static 'js/profile.js' %}"></script>
+
+  <!-- Drafts -->
+  <script src="{% static 'js/drafts.js' %}"></script>
+
+  <!-- History -->
+  <script src="{% static 'js/history.js' %}"></script>
+
+  <!-- QR Code Generator -->
+  <script src="{% static 'js/QRCodeGenerator.js' %}"></script>
+
+  <!-- Notifications -->
+  <script src="{% static 'js/notifications.js' %}"></script>
+
+
+
+  <script>
+    $(function() {
+
+      profile();
+      update();
+
+
+      function initImageUpload(box) {
+        let uploadField = box.querySelector('.image-upload');
+
+        uploadField.addEventListener('change', getFile);
+
+        function getFile(e) {
+          let file = e.currentTarget.files[0];
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            file1 = event.target.result;
+          }
+          checkType(file);
+        }
+
+        function previewImage(file) {
+          let thumb = box.querySelector('.js--image-preview'),
+            reader = new FileReader();
+
+          reader.onload = function() {
+            thumb.style.backgroundImage = 'url(' + reader.result + ')';
+          }
+          reader.readAsDataURL(file);
+
+          thumb.className += ' js--no-default';
+        }
+
+        function checkType(file) {
+          let imageType = /image.*/;
+          if (!file.type.match(imageType)) {
+            throw 'Datei ist kein Bild';
+          } else if (!file) {
+            throw 'Kein Bild gewählt';
+          } else {
+            previewImage(file);
+          }
+        }
+
+      }
+
+      // initialize box-scope
+      var boxes = document.querySelectorAll('.box');
+
+      for (let i = 0; i < boxes.length; i++) {
+        let box = boxes[i];
+        initDropEffect(box);
+        initImageUpload(box);
+      }
+
+
+
+      /// drop-effect
+      function initDropEffect(box) {
+        let area, drop, areaWidth, areaHeight, maxDistance, dropWidth, dropHeight, x, y;
+
+        // get clickable area for drop effect
+        area = box.querySelector('.js--image-preview');
+        area.addEventListener('click', fireRipple);
+
+        function fireRipple(e) {
+          area = e.currentTarget
+          // create drop
+          if (!drop) {
+            drop = document.createElement('span');
+            drop.className = 'drop';
+            this.appendChild(drop);
+          }
+          // reset animate class
+          drop.className = 'drop';
+
+          // calculate dimensions of area (longest side)
+          areaWidth = getComputedStyle(this, null).getPropertyValue("width");
+          areaHeight = getComputedStyle(this, null).getPropertyValue("height");
+          maxDistance = Math.max(parseInt(areaWidth, 10), parseInt(areaHeight, 10));
+
+          // set drop dimensions to fill area
+          drop.style.width = maxDistance + 'px';
+          drop.style.height = maxDistance + 'px';
+
+          // calculate dimensions of drop
+          dropWidth = getComputedStyle(this, null).getPropertyValue("width");
+          dropHeight = getComputedStyle(this, null).getPropertyValue("height");
+
+          // calculate relative coordinates of click
+          // logic: click coordinates relative to page - parent's position relative to page - half of self height/width to make it controllable from the center
+          x = e.pageX - this.offsetLeft - (parseInt(dropWidth, 10) / 2);
+          y = e.pageY - this.offsetTop - (parseInt(dropHeight, 10) / 2) - 30;
+
+          // position drop and animate
+          drop.style.top = y + 'px';
+          drop.style.left = x + 'px';
+          drop.className += ' animate';
+          e.stopPropagation();
+
+        }
+      }
+
+
+
+
+      $.fn.html2canvas = function(options) {
+        var date = new Date(),
+          $message = null,
+          timeoutTimer = false,
+          timer = date.getTime();
+        html2canvas.logging = options && options.logging;
+        html2canvas.Preload(this[0], $.extend({
+          complete: function(images) {
+            var queue = html2canvas.Parse(this[0], images, options),
+              $canvas = $(html2canvas.Renderer(queue, options)),
+              finishTime = new Date();
+
+            $canvas.css({
+              position: 'absolute',
+              left: 0,
+              top: 0
+            }).appendTo(document.body);
+            $canvas.siblings().toggle();
+
+            $(window).click(function() {
+              if (!$canvas.is(':visible')) {
+                $canvas.toggle().siblings().toggle();
+                throwMessage("Canvas Render visible");
+              } else {
+                $canvas.siblings().toggle();
+                $canvas.toggle();
+                throwMessage("Canvas Render hidden");
+              }
+            });
+            throwMessage('Screenshot created in ' + ((finishTime.getTime() - timer) / 1000) + " seconds<br />", 4000);
+          }
+        }, options));
+
+        function throwMessage(msg, duration) {
+          window.clearTimeout(timeoutTimer);
+          timeoutTimer = window.setTimeout(function() {
+            $message.fadeOut(function() {
+              $message.remove();
+            });
+          }, duration || 2000);
+          if ($message)
+            $message.remove();
+          $message = $('<div ></div>').html(msg).css({
+            margin: 0,
+            padding: 10,
+            background: "#000",
+            opacity: 0.7,
+            position: "fixed",
+            top: 10,
+            right: 10,
+            fontFamily: 'Tahoma',
+            color: '#fff',
+            fontSize: 12,
+            borderRadius: 12,
+            width: 'auto',
+            height: 'auto',
+            textAlign: 'center',
+            textDecoration: 'none'
+          }).hide().fadeIn().appendTo('body');
+        }
+      };
+
+
+
+    })
+
+    function createPdf() {
+      var pdf = new jsPDF('portrait', 'pt', 'a4');
+      source = $('#myoutpass1');
+      console.log(source);
+
+      margins = {
+        top: 5,
+        bottom: 5,
+        left: 10,
+        width: 842
+      };
+
+      pdf.fromHTML(
+        source.html(), // HTML string or DOM elem ref.
+        margins.left, // x coord
+        margins.top, { // y coord
+          'width': margins.width // max width of content on PDF
+          // 'elementHandlers': specialElementHandlers
+        },
+
+        function(dispose) {
+          // dispose: object with X, Y of the last line add to the PDF
+          //          this allow the insertion of new lines after html
+          pdf.save('Test.pdf');
+        }, margins
+      );
+    }
+
+
+    // Set Student Details
+    function send(dataURL) {
+      console.log($("#er_no").val())
+      console.log($("#bed_no").val())
+      console.log($("#room_no").val())
+      console.log($("#year").val())
+      console.log($("#branch").val())
+      console.log($("#parent").val())
+      console.log($("#warden").val())
+      console.log($("#college").val())
+      console.log(dataURL)
+
+      $.ajax({
+        "type": 'POST',
+        "url": "http://127.0.0.1:8000/student/saveStudentDetails/",
+        "headers": {
+          "Authorization": "Bearer " + access_token
+        },
+        "data": {
+          'er_no': $("#er_no").val(),
+          'signature': dataURL,
+          'bed_no': $("#bed_no").val(),
+          'hostel': $("#hostel").val(),
+          'room_no': $("#room_no").val(),
+          'year': $("#year").val(),
+          'sem': $("#sem1").val(),
+          'branch': $("#branch").val(),
+          'parent': $("#parent").val(),
+          'parent_contact': $("#parent_contact").val(),
+          'warden': $("#warden").val(),
+          'college': $("#college").val()
+        },
+        "dataType": 'json',
+        success: function(data) {
+          console.log(data);
+          if(data.status==="404"){
+            alert("Warden Is Registered For Different Year!!")
+          }
+          else if(data.status==="200"){
+          alert("Your Details Have Been Saved Successfully!!");
+          $("#createOutpass1").html("");
+        }
+        else{
+            alert("Error!! Please Try Again With Proper And Valid Details!!")
+        }
+        }
+      });
+    }
+  </script>
+
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+{% load static %}
+
+<html>
+	<head>
+		<title>Book View</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" >
+		<link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css'%}" >
+		<!-- <link rel="stylesheet" href="{% static 'css/viewbookmain.css'%}" > -->
+
+				
+		<!-- Favicons -->
+		<link href="{% static 'img/favicon.png'%}" rel="icon">
+		<link href="{% static 'img/apple-touch-icon.png'%}" rel="apple-touch-icon">
+
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+		<!-- Vendor CSS Files -->
+		<link href="{% static 'vendor/aos/aos.css'%}" rel="stylesheet">
+		<link href="{% static 'vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+		<link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css'%}" rel="stylesheet">
+		<link href="{% static 'vendor/boxicons/css/boxicons.min.css'%}" rel="stylesheet">
+		<link href="{% static 'vendor/glightbox/css/glightbox.min.css'%}" rel="stylesheet">
+		<link href="{% static 'vendor/swiper/swiper-bundle.min.css'%}" rel="stylesheet">
+  
+
+		<!-- Template Main CSS File -->
+		<link href="{% static 'css/style.css'%}" rel="stylesheet">
+
+    
+
+	</head>
+	<body class="is-preload"uytu>
+		<!-- Wrapper -->
+	  <div id="wrapper">
+
+                
+          <!-- ======= Top Bar ======= -->
+          <section id="topbar" class="d-flex align-items-center">
+            <div class="container d-flex justify-content-center justify-content-md-between">
+              <div class="contact-info d-flex align-items-center">
+                <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">mycardshelp@gmail.com</a></i>
+                <i class="bi bi-phone d-flex align-items-center ms-4"><span>+91 9633652368</span></i>
+              </div>
+              <div class="social-links d-none d-md-flex align-items-center">
+                <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></i></a>
+              </div>
+            </div>
+          </section>
+
+          <!-- ======= Header ======= -->
+          <header id="header" class="d-flex align-items-center">
+            <div class="container d-flex align-items-center justify-content-between">
+
+              <h1 class="logo"><a href="{% url 'Student_Home' %}">My Cards<span>.</span></a></h1>
+              <!-- Uncomment below if you prefer to use an image logo -->
+              <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt=""></a>-->
+
+              <div class="search">
+                <form action="{% url 'searchbar' %}" method="GET">
+                    <input type="text"
+                        placeholder=" Search Books"
+                        name="query">
+                    <button>
+                        <i class="bx bx-search"
+                            style="font-size: 18px;">
+                        </i>
+                    </button>
+                </form>
+            </div>
+
+              <nav id="navbar" class="navbar">
+                <ul>        
+                  <li><a class="nav-link scrollto active" href="{% url 'Student_Home' %}">Home</a></li>
+                  <li><a class="nav-link scrollto" href="{% url 'about' %}">About</a></li>
+                  <li class="dropdown"><a href="#"><span>Catagory</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                      {% for x in category %}
+                      <li><a href="{% url 'Catagory_Books' x.category_id %}">{{x.category_name}}</a></li>
+                      {% endfor %}                   
+                    </ul>
+                      
+                    
+                  </li>
+                  <li><a class="nav-link scrollto" href="{% url 'Service' %}">Services</a></li>
+                  <!-- <li><a class="nav-link scrollto" href="#team">Team</a></li> -->
+                    {% if request.user.is_authenticated %}
+                  <li class="dropdown"><a href="#"><span>{{request.user.first_name}}</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                      <li><a href="{% url 'profile' %}">Account</a></li>
+                      <li><a href="{% url 'changepassword' %}">Change Password</a></li>
+                      <li><a href="{% url 'logout' %}">Logout</a></li>
+                      {% else %}
+
+                    </ul>
+                  </li>
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+              </nav>
+              <!-- .navbar -->
+              <a href="{% url 'login' %}">Login</a>
+              {% endif %}
+                    
+              <!-- .navbar -->
+
+            </div>
+          </header><!-- End Header -->
+
+
+
+                <!-- Main -->
+                  <div id="main">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                      <!-- <ol class="carousel-indicators">
+                        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                      </ol> -->
+                      <div class="carousel-inner">
+                        <div class="carousel-item active">
+                          <!-- <img class="d-block w-100" src="{% static 'img/slider-image-1-1920x700.jpg'%}" alt="First slide"> -->
+                        </div>
+                        <div class="carousel-item">
+                          <!-- <img class="d-block w-100" src="{% static 'img/slider-image-2-1920x700.jpg'%}" alt="Second slide"> -->
+                        </div>
+                        <div class="carousel-item">
+                          <!-- <img class="d-block w-100" src="{% static 'img/slider-image-3-1920x700.jpg'%}" alt="Third slide"> -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <br>
+                    <br>
+
+                    <div class="inner">
+                      <!-- About Us -->
+                      <header id="inner">
+                        <h1>Issuing Book.
+                        </h1><br>
+
+                      <br>
+                      <br>
+
+                      <h2 class="h2">Latest Book</h2>
+                      <br>
+                      
+
+    <form method='POST' action="" enctype="multipart/form-data">
+   
+                       
+	    {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group">
+              <label class="control-label col-xs-4">{{ field.label_tag }}</label>
+              <div class="col-xs-8">
+              {{ field }}
+               </div>
+            </div>
+            {% endfor %}
+
+
+              <div class="form-group">
+                  <div class="col-xs-8 col-xs-offset-4">
+              <button type="submit" class="btn btn-success btn-lg" style="border-radius: 0%;">ISSUE</button>
+                  </div>
+              </div>
+      </form>
+    <div class="text-center">View Issued Book to Student  <a href="viewissuedbook">Click here</a></div>
+  </div>
+
+<!-- ======= Footer ======= -->
+<footer id="footer">
+    <div class="footer-newsletter">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <h4>Join Our Newsletter</h4>
+            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Subscribe">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 footer-contact">
+            <h3>My Cards<span>.</span></h3>
+            <p>
+              Amal Jyothi College of Engineering <br>
+              P.O Kanjirapally - Erumely Road, <br>
+               Kerala <br>686518<br>
+              <strong>Phone:</strong>+91 9633652368<br>
+              <strong>Email:</strong> mycardshelp@gmail.com<br>
+            </p>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="{% url 'Student_Home' %}">Home</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="{% url 'about' %}">About us</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="{% url 'Service' %}">Services</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Our Social Networks</h4>
+            <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p>
+            <div class="social-links mt-3">
+              <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+              <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+              <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'endor/purecounter/purecounter_vanilla.js'%}"></script>
+  <script src="{% static 'vendor/aos/aos.js'%}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js'%}"></script>
+  <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js'%}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js'%}"></script>
+  <script src="{% static 'vendor/waypoints/noframework.waypoints.js'%}"></script>
+  <script src="{% static 'vendor/php-email-form/validate.js'%}"></script>
+  <script src="{% static 'vendor/jquery.js'%}"></script><!-- jQuery is required -->
+  
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js'%}"></script>
+
+		
+	</body>
+</html>
