@@ -7,7 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.http import HttpResponse,HttpResponseRedirect, JsonResponse
-from .models import Account, Category,tbl_Outpass,addmessfee,Book,Category_Book,Files
+from .models import Account, Category, ComplaintStudent,tbl_Outpass,addmessfee,Book,Category_Book,Files
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 
@@ -547,14 +547,16 @@ def outpassapproved(request,leave_id):
     appout=tbl_Outpass.objects.get(id=leave_id)
     appout.status=1
     appout.save()
-    return HttpResponseRedirect(reverse("WardenOutpassView"))
+    return redirect('WardenOutpassView')
+    
 
 def outpassdisapprove(request,leave_id):
     appout=tbl_Outpass.objects.get(id=leave_id)
     appout.status=2
     appout.save()
-    return HttpResponseRedirect(reverse("WardenOutpassView"))
-
+    return redirect('WardenOutpassView')
+    
+   
 
 def WardenDue(request):
     return render(request,'Warden_Due.html')
@@ -568,5 +570,24 @@ def WardenMess(request):
     pay.save() 
     return render(request,'WardenMess.html',{'messfee':messfee})
 
+
+
 def Student_complaint(request):
-    return render(request,'Student_complaint.html')
+    user = request.user
+    feedback_data=ComplaintStudent.objects.filter(student_id=user)
+    return render(request,'Student_complaint.html',{"feedback_data":feedback_data})
+
+def Student_complaint_save(request):
+    if request.method!="POST":
+        return redirect('Student_complaint')
+    else:
+        feedback_msg=request.POST.get("feedback_msg")
+        try:
+            feedback=ComplaintStudent(feedback=feedback_msg,feedback_reply="")
+            feedback.save()
+            messages.success(request, "Successfully Sent Feedback")
+            return redirect('Student_complaint')
+        except:
+            messages.error(request, "Failed To Send Feedback")
+            return redirect('Student_complaint')
+

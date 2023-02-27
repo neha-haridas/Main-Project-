@@ -42,6 +42,7 @@ urlpatterns = [
     path('WardenDue/', views.WardenDue, name='WardenDue'),
     path('WardenMess/', views.WardenMess, name='WardenMess'),
     path('Student_complaint/', views.Student_complaint, name='Student_complaint'),
+    path('Student_complaint_save', views.Student_complaint_save, name="Student_complaint_save"),
 
 
 

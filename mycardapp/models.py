@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
 # from django.contrib.auth.models import User
 from PIL import Image
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta, timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 # from twilio.rest import Client
 # import os
@@ -266,3 +266,18 @@ class addmessfee(models.Model):
 #         return super().save(*args, **kwargs)
 
 
+# class hostelcomplaints(models.Model):
+#     id  =  models.AutoField(primary_key=True)
+#     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
+#     date_time  = models.DateField(auto_now=True) 
+#     complaint = models.CharField(max_length=100)
+#     complaint_status=models.BooleanField(default=False)
+
+class ComplaintStudent(models.Model):
+    id = models.AutoField(primary_key=True)
+    student_id = models.ForeignKey(Account, on_delete=models.CASCADE)
+    complaint = models.TextField()
+    complaint_reply = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    
