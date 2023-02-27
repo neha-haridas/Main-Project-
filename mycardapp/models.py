@@ -275,7 +275,7 @@ class addmessfee(models.Model):
 
 class ComplaintStudent(models.Model):
     id = models.AutoField(primary_key=True)
-    student_id = models.ForeignKey(Account, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
     complaint = models.TextField()
     complaint_reply = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

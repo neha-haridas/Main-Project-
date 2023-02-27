@@ -95,6 +95,7 @@
   </header><!-- End Header -->
    
             <!-- end of navbar navigation -->
+          <div>
             <div class="content">
                 <div class="container">
                     <div class="page-title">
@@ -108,29 +109,32 @@
                                 <!-- <div class="card-header">complaint Form</div> -->
                                 <div class="card-body">
                                     <!-- <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5> -->
-                                    <form action="{% url 'Student_complaint_save' %}" method="post" accept-charset="utf-8">
-                                        
-                                       
-                                        <div class="mb-3">
-                                            <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                                            <textarea class="form-control" id="complaint" name="complaint" rows="3"></textarea>
-                                          </div>
-                                          <div class="form-group">
+                                    <form action="{% url 'Student_complaint_save' %}" method="post">
+                                      <div class="card-body">
+                      
+                                          {% csrf_token %}
+                                        <div class="form-group">
+                                          <label>Complaint</label>
+                                          <textarea class="form-control" rows="6" name="complaint"></textarea>
+                                        </div>
+                                         <!-- <div class="form-group">
                                             {% if messages %}
-                                              {% for feedback in messages %}
-                                              {% if messages.tags == 'error' %}
-                                              <div class="alert alert-danger" style="margin-top:10px">{{ messages }}</div>
+                                              {% for message in messages %}
+                                              {% if message.tags == 'error' %}
+                                              <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
                                               {% endif %}
-                                              {% if messages.tags == 'success' %}
-                                              <div class="alert alert-success" style="margin-top:10px">{{ messages }}</div>
+                                              {% if message.tags == 'success' %}
+                                              <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
                                               {% endif %}
                                               {% endfor %}
                                             {% endif %}
-                                          </div>
+                                          </div> -->
+                      
+                                      </div>
                                         <br>
-                                        <!-- <div class="mb-3">
+                                        <div class="mb-3">
                                             <input type="submit" class="btn btn-primary">
-                                        </div> -->
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -149,10 +153,10 @@
                                  <th>Complaint Message</th>
                                  <th>Complaint Reply</th>
                              </tr>
-                             {% for row in feedback_data %}
+                             {% for stucom in Student_complaint_save %}
                                   <tr>
-                                      <td>{{ row.feedback }}</td>
-                                      <td>{{ row.feedback_reply }}</td>
+                                      <td>{{ stucom.complaint }}</td>
+                                      <td>{{ stucom.feedback_reply }}</td>
                                   </tr>
                              {% endfor %}
                          </table>

@@ -563,31 +563,47 @@ def WardenDue(request):
 
 
 def WardenMess(request):
-    user = request.user
+    is_user = request.user
     messfee=Account.objects.filter(is_user = True)
     amount = request.POST.get("amount",True)
-    pay = addmessfee(user_id=user.id,amount=amount)
+    pay = addmessfee(user_id=is_user.id,amount=amount)
     pay.save() 
     return render(request,'WardenMess.html',{'messfee':messfee})
 
 
 
-def Student_complaint(request):
-    user = request.user
-    feedback_data=ComplaintStudent.objects.filter(student_id=user)
-    return render(request,'Student_complaint.html',{"feedback_data":feedback_data})
+# def Student_complaint(request):
+#     feedback_data =ComplaintStudent.objects.all()
+#     return render(request,'Student_complaint.html',{'feedback_data':feedback_data})
+   
+
+# def Student_complaint_save(request):
+#     if request.method!="POST":
+#         return redirect('Student_complaint')
+#     else:
+#         complaint=request.POST.get("feedback_msg")
+#         try:
+#             feedback=ComplaintStudent(complaint=complaint,complaint_reply="")
+#             feedback.save()
+#             messages.success(request, "Successfully Sent Feedback")
+#             return redirect('Student_complaint')
+#         except:
+#             messages.error(request, "Failed To Send Feedback")
+#             return redirect('Student_complaint')
+
+   
 
 def Student_complaint_save(request):
-    if request.method!="POST":
-        return redirect('Student_complaint')
-    else:
-        feedback_msg=request.POST.get("feedback_msg")
-        try:
-            feedback=ComplaintStudent(feedback=feedback_msg,feedback_reply="")
-            feedback.save()
-            messages.success(request, "Successfully Sent Feedback")
-            return redirect('Student_complaint')
-        except:
-            messages.error(request, "Failed To Send Feedback")
-            return redirect('Student_complaint')
+    user = request.user
+    if request.method == 'POST':
+        complaint = request.POST.get('complaint')
+        created_at = request.POST.get('created_at')
+        updated_at = request.POST.get('updated_at')
+        user = ComplaintStudent(user_id=user.id,complaint=complaint, created_at=created_at,updated_at=updated_at)
+        user.save()
+    return render(request, "Student_complaint.html")
 
+def student_complaintview(request):
+    user = request.user
+    stucom =ComplaintStudent.objects.filter(user_id=user)
+    return render(request,'Student_complaint.html',{'stucom':stucom })  
