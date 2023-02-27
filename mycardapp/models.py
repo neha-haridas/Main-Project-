@@ -232,7 +232,18 @@ class addmessfee(models.Model):
     date_paid = models.DateField(auto_now=True)
     
 
+class ComplaintStudent(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    complaint = models.TextField()
+    complaint_reply = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
+
+#############################################################
+
+    
 # class Message(models.Model):
 #     name = models.CharField(max_length=100)
 #     score = models.IntegerField(default=0)
@@ -247,7 +258,7 @@ class addmessfee(models.Model):
 #             client = Client(account_sid, auth_token)
 
 #             message = client.messages.create(
-#                      body="Join Earth's mightiest heroes. Like Kevin Bacon.",
+#                      body="Heloo ",
 #                      from_='+15017122661',
 #                      to='+15558675310'
 #             )
@@ -266,18 +277,3 @@ class addmessfee(models.Model):
 #         return super().save(*args, **kwargs)
 
 
-# class hostelcomplaints(models.Model):
-#     id  =  models.AutoField(primary_key=True)
-#     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
-#     date_time  = models.DateField(auto_now=True) 
-#     complaint = models.CharField(max_length=100)
-#     complaint_status=models.BooleanField(default=False)
-
-class ComplaintStudent(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    complaint = models.TextField()
-    complaint_reply = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-    

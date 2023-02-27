@@ -26,7 +26,7 @@ urlpatterns = [
     path('login/admin/', admin.site.urls),
     path('',include('mycardapp.urls')),
     # path('warden/', warden_site.urls),
-    # path('library/', library_site.urls),
+    path('library/', library_site.urls),
     # path('jet/', include('jet.urls', 'jet')),
 
 

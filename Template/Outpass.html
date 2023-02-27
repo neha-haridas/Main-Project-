@@ -126,7 +126,7 @@
 <form class="cf" action="{% url 'Outpass' %}" autocomplete="off" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="half left cf"> 
-    <input type="text" id="name" name="name" value="{{request.user.first_name}} {{request.user.last_name}}" disabled>
+    <input type="text" id="name" name="name" placeholder="Name">
     <input type="text" id="sem" name="sem" placeholder="Semester">
     <input class="input100" type="Phone number" id="mobno" name="mobno" placeholder="Mobile number"onkeyup='phoneValidation(this)' required>
     <span id="pho" class="new" style="color: red;"></span>

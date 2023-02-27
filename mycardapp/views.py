@@ -2,6 +2,7 @@ from audioop import reverse
 from contextvars import Token
 from importlib.metadata import files
 from django import forms
+# from django.conf import settings
 from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
@@ -23,6 +24,7 @@ from django.views import generic
 from . import  models
 
 from datetime import date
+# from twilio.rest import Client
 
 
 
@@ -507,6 +509,7 @@ def uploadFile(request):
 def Outpass(request):
     user = request.user
     if request.method=="POST":
+     name= request.POST.get("name",True)
      dept = request.POST.get("dept",True)
      sem = request.POST.get("sem",True)
      mobno=request.POST.get("mobno",True)
@@ -517,7 +520,7 @@ def Outpass(request):
      parents_email= request.POST.get("parents_email",False)
      parents_contact=request.POST.get("parents_contact",False)
     #  sign = request.POST.get("sign",True)
-     o = tbl_Outpass(user_id=user.id,dept=dept,sem=sem,mobno=mobno,idate=idate,ldate=ldate,purpose=purpose,dest=dest,parents_email=parents_email,parents_contact=parents_contact)
+     o = tbl_Outpass(user_id=user.id,name=name,dept=dept,sem=sem,mobno=mobno,idate=idate,ldate=ldate,purpose=purpose,dest=dest,parents_email=parents_email,parents_contact=parents_contact)
      o.save()
     return render(request,'Outpass.html')
 
@@ -607,3 +610,19 @@ def student_complaintview(request):
     user = request.user
     stucom =ComplaintStudent.objects.filter(user_id=user)
     return render(request,'Student_complaint.html',{'stucom':stucom })  
+
+############################################################################
+
+# def broadcast_sms(request):
+#     message_to_broadcast = ("Have you played the incredible TwilioQuest "
+#                                                 "yet? Grab it here: https://www.twilio.com/quest")
+#     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+#     for recipient in settings.SMS_BROADCAST_TO_NUMBERS:
+#         if recipient:
+#             client.messages.create(to=recipient,
+#                                    from_=settings.TWILIO_NUMBER,
+#                                    body=message_to_broadcast)
+#     return HttpResponse("messages sent!", 200)
+
+
+###########################################################################
