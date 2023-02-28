@@ -574,55 +574,55 @@ def WardenMess(request):
     return render(request,'WardenMess.html',{'messfee':messfee})
 
 
-
-# def Student_complaint(request):
-#     feedback_data =ComplaintStudent.objects.all()
-#     return render(request,'Student_complaint.html',{'feedback_data':feedback_data})
    
 
 # def Student_complaint_save(request):
-#     if request.method!="POST":
-#         return redirect('Student_complaint')
-#     else:
-#         complaint=request.POST.get("feedback_msg")
-#         try:
-#             feedback=ComplaintStudent(complaint=complaint,complaint_reply="")
-#             feedback.save()
-#             messages.success(request, "Successfully Sent Feedback")
-#             return redirect('Student_complaint')
-#         except:
-#             messages.error(request, "Failed To Send Feedback")
-#             return redirect('Student_complaint')
+#     user = request.user
+#     if request.method == 'POST':
+#         complaint = request.POST.get('complaint')
+#         created_at = request.POST.get('created_at')
+#         updated_at = request.POST.get('updated_at')
+#         user = ComplaintStudent(user_id=user.id,complaint=complaint, created_at=created_at,updated_at=updated_at)
+#         user.save()
+#     return render(request, "Student_complaint.html")
 
-   
-
-def Student_complaint_save(request):
-    user = request.user
-    if request.method == 'POST':
-        complaint = request.POST.get('complaint')
-        created_at = request.POST.get('created_at')
-        updated_at = request.POST.get('updated_at')
-        user = ComplaintStudent(user_id=user.id,complaint=complaint, created_at=created_at,updated_at=updated_at)
-        user.save()
-    return render(request, "Student_complaint.html")
-
-def student_complaintview(request):
-    user = request.user
-    stucom =ComplaintStudent.objects.filter(user_id=user)
-    return render(request,'Student_complaint.html',{'stucom':stucom })  
+# def student_complaintview(request):
+#     user = request.user
+#     stucom =ComplaintStudent.objects.filter(user_id=user)
+#     return render(request,'Student_complaint.html',{'stucom':stucom })  
 
 ############################################################################
 
-# def broadcast_sms(request):
-#     message_to_broadcast = ("Have you played the incredible TwilioQuest "
-#                                                 "yet? Grab it here: https://www.twilio.com/quest")
-#     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-#     for recipient in settings.SMS_BROADCAST_TO_NUMBERS:
-#         if recipient:
-#             client.messages.create(to=recipient,
-#                                    from_=settings.TWILIO_NUMBER,
-#                                    body=message_to_broadcast)
-#     return HttpResponse("messages sent!", 200)
+def broadcast_sms(request):
+    message_to_broadcast = ("Have you played the incredible TwilioQuest "
+                                                "yet? Grab it here: https://www.twilio.com/quest")
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    for recipient in settings.SMS_BROADCAST_TO_NUMBERS:
+        if recipient:
+            client.messages.create(to=recipient,
+                                   from_=settings.TWILIO_NUMBER,
+                                   body=message_to_broadcast)
+    return HttpResponse("messages sent!", 200)
 
 
 ###########################################################################
+
+
+def Student_complaint(request):
+    feedback_data =ComplaintStudent.objects.all()
+    return render(request,'Student_complaint.html',{'feedback_data':feedback_data})
+   
+
+def Student_complaint_save(request):
+    if request.method!="POST":
+        return redirect('Student_complaint')
+    else:
+        feedback_msg=request.POST.get("feedback_msg")
+        try:
+            feedback=ComplaintStudent(complaint=feedback_msg,complaint_reply="")
+            feedback.save()
+            messages.success(request, "Successfully Sent Feedback")
+            return redirect('Student_complaint')
+        except:
+            messages.error(request, "Failed To Send Feedback")
+            return redirect('Student_complaint')

@@ -167,11 +167,11 @@
                         </div>
                         {% endfor %}
                       </div> -->
-                      <div class="card-deck">
+                      <div class="row" data-aos="zoom-in" data-aos-delay="100"></div>
+                      <div class="col-md-3 col-md-pull-5">
                         {% for i in datas %}
                         <div class="card">
-                          
-                          <img class="card-img-top" src="{{i.img.url}}" style="height: 300px;" alt="Card image cap">
+                          <img class="card-img-top" src="{{i.img.url}}" style="height:20; width:20;" alt="Card image cap">
                           <div class="card-body">
                             <h5 class="card-title"><a href="{% url 'onebook' i.book_id %}">{{i.book_name}}</a></h5>
                             <p class="card-text">{{i.book_author}} &nbsp;|&nbsp; {{i.book_language}}</p>
