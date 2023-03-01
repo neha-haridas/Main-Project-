@@ -92,30 +92,21 @@
   
       <table>
     <tr>
-      <th>Semester</th>
-      <th>Department</th>
       <th>Destination</th>
       <th>Date Of Leaving</th>
       <th>Incoming Date</th>
-      <th>Mobile Number</th>
       <th>Purpose of Leaving</th>
-      <th>Parents Email</th>
-      <th>Parents PhoneNumber</th>
       <th>Status</th>
       
     </tr>
     {% for opass in opass %}
     <tr>
       
-          <td>{{opass.sem}}</td>
-          <td>{{opass.dept}}</td>
+          
           <td>{{opass.dest}}</td>
           <td>{{opass.ldate}}</td>
           <td>{{opass.idate}}</td>
-          <td>{{opass.mobno}}</td>
           <td>{{opass.purpose}}</td>
-          <td>{{opass.parents_email}}</td>
-          <td>{{opass.parents_contact}}</td>
           <td>
             {% if opass.status == 1 %}
                 <span class="alert alert-success">Approved</span>

@@ -240,7 +240,6 @@ class ComplaintStudent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
-
 #############################################################
 
     
@@ -275,5 +274,7 @@ class ComplaintStudent(models.Model):
 
 #         print(message.sid)
 #         return super().save(*args, **kwargs)
+
+
 
 

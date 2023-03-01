@@ -19,7 +19,7 @@
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
     <link href="{% static 'css/master.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/flagiconcss/css/flag-icon.min.css'%}" rel="stylesheet">
-   
+
 </head>
         
 <body>
@@ -42,7 +42,7 @@
                     <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-copy"></i> Payment Details</a>
                     <ul class="collapse list-unstyled" id="pagesmenu">
                         <li>
-                            <a href="{% url 'WardenMess' %}"><i class="fas fa-info-circle"></i> Mess Fee</a>
+                            <a href="{% url 'WardenMess'%}"><i class="fas fa-info-circle"></i> Mess Fee</a>
                         </li>
                         <li>
                             <a href="500.html"><i class="fas fa-info-circle"></i> Hostel Rent</a>
@@ -114,109 +114,132 @@
                 </div>
             </nav>
             <!-- end of navbar navigation -->
-            <div class="content">
-            <div class="container">
-            <div class="col-md-12 col-lg-12">
-                <div class="card">
-                    <div class="card-header">Basic DataTables Table</div>
-                    <div class="card-body">
-                        <p class="card-title"></p>
-                        <table class="table table-hover" id="dataTables-example" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Salary</th>
-                                    <th>Country</th>
-                                    <th>City</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Dakota Rice</td>
-                                    <td>$36,738</td>
-                                    <td>United States</td>
-                                    <td>Oud-Turnhout</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Minerva Hooper</td>
-                                    <td>$23,789</td>
-                                    <td>Curaçao</td>
-                                    <td>Sinaai-Waas</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Sage Rodriguez</td>
-                                    <td>$56,142</td>
-                                    <td>Netherlands</td>
-                                    <td>Baileux</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Philip Chaney</td>
-                                    <td>$38,735</td>
-                                    <td>Korea, South</td>
-                                    <td>Overland Park</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>Doris Greene</td>
-                                    <td>$63,542</td>
-                                    <td>Malawi</td>
-                                    <td>Feldkirchen in Kärnten</td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>Mason Porter</td>
-                                    <td>$78,615</td>
-                                    <td>Chile</td>
-                                    <td>Gloucester</td>
-                                </tr>
-                                <tr>
-                                    <td>7</td>
-                                    <td>Allisa Sanches</td>
-                                    <td>$28,615</td>
-                                    <td>Columbia</td>
-                                    <td>Nigger</td>
-                                </tr>
-                                <tr>
-                                    <td>8</td>
-                                    <td>Peter Benhams</td>
-                                    <td>$33,215</td>
-                                    <td>Ecuador</td>
-                                    <td>Holster</td>
-                                </tr>
-                                <tr>
-                                    <td>9</td>
-                                    <td>Bramson Adams</td>
-                                    <td>$109,222</td>
-                                    <td>Philippines</td>
-                                    <td>Camp John</td>
-                                </tr>
-                                <tr>
-                                    <td>10</td>
-                                    <td>Jessie Williams</td>
-                                    <td>$55,123</td>
-                                    <td>Malaysia</td>
-                                    <td>Glosterine</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            
+                  <!-- Main content -->
+    <br>
+    <br>
+    <section class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+              <!-- general form elements -->
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Student Complaint</h3>
                 </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                  <div class="table">
+                      <table class="table">
+                          <tr>
+                              <th>Student Reg No</th>
+                              <th>Student Name</th>
+                              <th>Message</th>  
+                              <th>Sended On</th>
+                              <th>Reply</th>
+                          </tr>
+                          {% for feedback in feedbacks %}
+                           <tr>
+                              <td>{{ feedback.user.regno }} </td>
+                              <td>{{ feedback.user.first_name }} {{ feedback.user.last_name }}</td>
+                              <td>{{ feedback.complaint }}</td>
+                              <td>{{ feedback.created_at }}</td>
+                              <td>
+                                  {% if feedback.complaint_reply == "" %}
+                                  <button class="btn btn-success reply_open_modal" data-toggle="modal" data-target="#reply_modal">Reply</button>
+                                  {% else %}
+                                  {{ feedback.complaint_reply }}
+                                  {% endif %}
+                              </td>
+                            </tr>
+                          {% endfor %}
+                      </table>
+                  </div>
+                 </div>
+              <!-- /.card -->
+  
+  
+  
             </div>
-                
-                
-                    
-                    
-                    
+            </div>
+        </div>
+      </section>
+    <!-- Modal -->
+    <div class="modal fade" id="reply_modal" role="dialog">
+      <div class="modal-dialog">
+  
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Reply</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+  
+          </div>
+          <div class="modal-body">
+            <p>Reply To : <span id="reply_name"></span></p>
+              <input type="hidden" id="reply_id" name="reply_id">
+              <textarea class="form-control" rows="5" id="reply_message"></textarea>
+              <button id="reply_btn" class="btn btn-info btn-block">Reply</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+      <!-- /.content -->
+      {% block custom_js %}
+      <script>
+          $(document).ready(function(){
+              $(".reply_open_modal").click(function(){
+                  var id=$(this).parents("tr").children("td:eq(0)").text();
+                  var name=$(this).parents("tr").children("td:eq(2)").text();
+                  $("#reply_id").val(id);
+                  $("#reply_name").text(name);
+              });
+      
+      
+              $(document).on("click","#reply_btn",function(){
+      
+                      $(this).attr("disabled","disabled")
+                      $(this).text("Sending Reply...")
+      
+                      var id=$("#reply_id").val();
+                      var message=$("#reply_message").val()
+      
+                      $.ajax({
+                              url:"{% url 'student_complaint_message_replied' %}",
+                              type:'POST',
+                              data:{id:id,message:message},
+                          })
+                          .done(function(response){
+      
+                              if(response=="True"){
+                                  alert("Reply Sent")
+                              }
+                              else{
+                                  alert("Error in Sending Reply")
+                              }
+                              location.reload()
+                          })
+                          .fail(function(){
+                              alert("Error in Sending Reply")
+                          })
+                 });
+      
+          });
+      </script>
+      {% endblock custom_js %}
+       
+                       
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
     <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
     <script src="{% static 'vendor/chartsjs/Chart.min.js'%}"></script>

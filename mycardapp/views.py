@@ -23,7 +23,7 @@ from django.core.mail import send_mail
 from django.views import generic
 from . import  models
 
-from datetime import date
+# from datetime import date
 # from twilio.rest import Client
 
 
@@ -574,55 +574,80 @@ def WardenMess(request):
     return render(request,'WardenMess.html',{'messfee':messfee})
 
 
+ 
+##################################################################################
+
+from django.conf import settings
+from twilio.rest import Client
+from django.http import HttpResponse
+
+def send_sms(request):
+    account_sid = settings.TWILIO_ACCOUNT_SID
+    auth_token = settings.TWILIO_AUTH_TOKEN
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        to=request.POST.get('to'),
+        from_=settings.TWILIO_FROM_NUMBER,
+        body=request.POST.get('message')
+    )
+    return HttpResponse('SMS sent!')
+
+#####################################################
+#####################################################
+
+# def Student_complaint(request):
+#     return render(request,'Student_complaint.html')
    
 
 # def Student_complaint_save(request):
-#     user = request.user
-#     if request.method == 'POST':
-#         complaint = request.POST.get('complaint')
-#         created_at = request.POST.get('created_at')
-#         updated_at = request.POST.get('updated_at')
-#         user = ComplaintStudent(user_id=user.id,complaint=complaint, created_at=created_at,updated_at=updated_at)
-#         user.save()
-#     return render(request, "Student_complaint.html")
-
-# def student_complaintview(request):
-#     user = request.user
-#     stucom =ComplaintStudent.objects.filter(user_id=user)
-#     return render(request,'Student_complaint.html',{'stucom':stucom })  
-
-############################################################################
-
-def broadcast_sms(request):
-    message_to_broadcast = ("Have you played the incredible TwilioQuest "
-                                                "yet? Grab it here: https://www.twilio.com/quest")
-    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-    for recipient in settings.SMS_BROADCAST_TO_NUMBERS:
-        if recipient:
-            client.messages.create(to=recipient,
-                                   from_=settings.TWILIO_NUMBER,
-                                   body=message_to_broadcast)
-    return HttpResponse("messages sent!", 200)
-
-
-###########################################################################
+#     if request.method=="POST":
+#         complaint = request.POST.get("feedback")
+#         student=Account.objects.get(user=request.user.id)
+#         complaint = ComplaintStudent(
+#             user=student,
+#             complaint=complaint,
+#             complaint_reply="",
+#         )
+#         complaint.save()
+#     return redirect('Student_complaint')
+   
 
 
 def Student_complaint(request):
-    feedback_data =ComplaintStudent.objects.all()
-    return render(request,'Student_complaint.html',{'feedback_data':feedback_data})
-   
+    stu_id=Account.objects.get(id=request.user.id)
+    complaint_data=ComplaintStudent.objects.filter(user=stu_id)
+    return render(request,"Student_complaint.html",{"complaint_data":complaint_data})
 
 def Student_complaint_save(request):
     if request.method!="POST":
         return redirect('Student_complaint')
     else:
-        feedback_msg=request.POST.get("feedback_msg")
+        complaint_msg=request.POST.get("complaint_msg")
+
+        student_obj=Account.objects.get(id=request.user.id)
         try:
-            feedback=ComplaintStudent(complaint=feedback_msg,complaint_reply="")
-            feedback.save()
-            messages.success(request, "Successfully Sent Feedback")
+            complaint=ComplaintStudent(user=student_obj,complaint=complaint_msg,complaint_reply="")
+            complaint.save()
+            messages.success(request, "Successfully Sent Complaint")
             return redirect('Student_complaint')
         except:
-            messages.error(request, "Failed To Send Feedback")
+            messages.error(request, "Failed To Send Complaint")
             return redirect('Student_complaint')
+
+
+def WardenComplaintView(request):
+    feedbacks=ComplaintStudent.objects.all()
+    return render(request,"WardenComplaintView.html",{"feedbacks":feedbacks})
+
+
+def student_complaint_message_replied(request):
+    feedback_id=request.POST.get("id")
+    feedback_message=request.POST.get("message")
+
+    try:
+        feedback=ComplaintStudent.objects.get(id=feedback_id)
+        feedback.complaint_reply=feedback_message
+        feedback.save()
+        return HttpResponse("True")
+    except:
+        return HttpResponse("False")

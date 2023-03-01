@@ -29,16 +29,19 @@
             </div>
             <ul class="list-unstyled components text-secondary">
                 <li>
+                    <a href="{% url 'Wardenhome' %}"><i class="fas fa-home"></i>Dashboard</a>
+                </li>
+                <li>
                     <a href="{% url 'WardenOutpassView' %}"><i class="fas fa-home"></i>OutPass Details</a>
                 </li>
                 <li>
-                    <a href="forms.html"><i class="fas fa-file-alt"></i> Complaints</a>
+                    <a href="{% url 'WardenComplaintView' %}"><i class="fas fa-file-alt"></i> Complaints</a>
                 </li>
                 <li>
                     <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-copy"></i> Payment Details</a>
                     <ul class="collapse list-unstyled" id="pagesmenu">
                         <li>
-                            <a href="404.html"><i class="fas fa-info-circle"></i> Mess Fee</a>
+                            <a href="{% url 'WardenMess'%}"><i class="fas fa-info-circle"></i> Mess Fee</a>
                         </li>
                         <li>
                             <a href="500.html"><i class="fas fa-info-circle"></i> Hostel Rent</a>

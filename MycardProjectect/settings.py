@@ -46,7 +46,7 @@ SMS_BROADCAST_TO_NUMBERS = [
 INSTALLED_APPS = [
     # 'adminlte3',
     # 'adminlte3_theme',
-    # 'twilio',
+    'twilio',
     'jazzmin',
     'mycardapp',
     'django.contrib.admin',

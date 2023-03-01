@@ -1,4 +1,4 @@
-<!doctype html>
+'<!doctype html>
 <!DOCTYPE html>
 {% load static %}
 <!-- 
@@ -115,7 +115,7 @@
                                           {% csrf_token %}
                                         <div class="form-group">
                                           <label>Complaint</label>
-                                          <textarea class="form-control" rows="6" name="feedback_msg"></textarea>
+                                          <textarea class="form-control" rows="6" name="complaint_msg"></textarea>
                                         </div>
                                          <div class="form-group">
                                             {% if messages %}
@@ -140,8 +140,8 @@
                             </div>
                       </div>
 
-                  
-                      
+                      <br>
+                      <br>
                       <div class="row">
                         <div class="col-lg-10">
                           <h3 class="card-title">Complaint History</h3>
@@ -150,13 +150,15 @@
                          <div class="table">
                          <table class="table">
                              <tr>
+                                <th>Date</th>
                                  <th>Complaint Message</th>
                                  <th>Complaint Reply</th>
                              </tr>
-                             {% for stucom in Student_complaint_save %}
+                             {% for stucom in complaint_data %}
                                   <tr>
+                                      <td>{{ stucom.created_at }}</td>
                                       <td>{{ stucom.complaint }}</td>
-                                      <td>{{ stucom.feedback_reply }}</td>
+                                      <td>{{ stucom.complaint_reply }}</td>
                                   </tr>
                              {% endfor %}
                          </table>
