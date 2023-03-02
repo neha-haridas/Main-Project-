@@ -61,7 +61,7 @@ class Account(AbstractBaseUser,PermissionsMixin):
     regno           = models.BigIntegerField(default=0 , unique=True)
     dpmnt           = models.CharField(max_length=50, default='')
     sem             = models.CharField(max_length=50, default='')
-
+    img             =models.ImageField(upload_to='pics', default=0)
 
 
     # required

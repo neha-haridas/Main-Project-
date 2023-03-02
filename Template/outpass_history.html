@@ -109,11 +109,11 @@
           <td>{{opass.purpose}}</td>
           <td>
             {% if opass.status == 1 %}
-                <span class="alert alert-success">Approved</span>
+                <span class="alert alert-success btn-sm">Approved</span>
             {% elif opass.status == 2 %}
-                <span class="alert alert-danger">Rejected</span>
+                <span class="alert alert-danger btn-sm">Rejected</span>
             {% else %}
-                <span class="alert alert-info">Pending</span>
+                <span class="alert alert-info btn-sm">Pending</span>
             {% endif %}
         </td> 
           
