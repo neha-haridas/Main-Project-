@@ -221,7 +221,6 @@ class tbl_Outpass(models.Model):
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
     parents_email  = models.EmailField(max_length=100, default=0)
     parents_contact  = models.BigIntegerField(default=0)
-    action=models.BooleanField(default=0)
 
 
 class addmessfee(models.Model):

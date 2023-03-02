@@ -60,8 +60,8 @@ def Library_home(request):
 def addbook(request):
     return render(request,'addbook.html')
 
-def demo(request):
-    return render(request,'demo.html')
+def Librarianhome(request):
+    return render(request,'Librarianhome.html')
 
 
 
@@ -82,6 +82,8 @@ def login(request):
             request.session['email'] = email
             if user.is_admin:
                 return redirect('admin/')
+            if user.is_libry:
+                return redirect('Librarianhome')
             if user.is_staff:
                 return redirect('Wardenhome')
             else:
