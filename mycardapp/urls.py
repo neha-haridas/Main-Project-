@@ -45,7 +45,7 @@ urlpatterns = [
     path('Student_complaint_save', views.Student_complaint_save, name="Student_complaint_save"),
     # path('send-sms/', views.send_sms, name='send_sms'),
     path('WardenComplaintView', views.WardenComplaintView, name="WardenComplaintView"),
-    path('student_complaint_message_replied', views.student_complaint_message_replied,name="student_complaint_message_replied"),
+    path('student_complaint_message_replied', views.student_complaint_message_replied, name="student_complaint_message_replied"),
     path('Librarianhome', views.Librarianhome, name="Librarianhome"),
 
 

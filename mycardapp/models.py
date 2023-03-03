@@ -227,7 +227,7 @@ class addmessfee(models.Model):
     id  =  models.AutoField(primary_key=True)
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
     feestatus=models.BooleanField(default=False)
-    amount = models.IntegerField(blank=True,null=True)
+    amount = models.FloatField(blank=True,null=True)
     date_paid = models.DateField(auto_now=True)
     
 
@@ -275,5 +275,5 @@ class ComplaintStudent(models.Model):
 #         return super().save(*args, **kwargs)
 
 
-
+   
 

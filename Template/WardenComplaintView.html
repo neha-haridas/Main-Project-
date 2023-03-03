@@ -19,6 +19,7 @@
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
     <link href="{% static 'css/master.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/flagiconcss/css/flag-icon.min.css'%}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 </head>
         
@@ -194,11 +195,11 @@
     </div>
       <!-- /.content -->
       {% block custom_js %}
-      <script>
+      <script type="text/javascript">
           $(document).ready(function(){
               $(".reply_open_modal").click(function(){
                   var id=$(this).parents("tr").children("td:eq(0)").text();
-                  var name=$(this).parents("tr").children("td:eq(2)").text();
+                  var name=$(this).parents("tr").children("td:eq(1)").text();
                   $("#reply_id").val(id);
                   $("#reply_name").text(name);
               });
@@ -211,11 +212,11 @@
       
                       var id=$("#reply_id").val();
                       var message=$("#reply_message").val()
-      
+                        
                       $.ajax({
-                              url:"{% url 'student_complaint_message_replied' %}",
-                              type:'POST',
-                              data:{id:id,message:message},
+                            type:'POST',
+                            url: 'student_complaint_message_replied',
+                            data:{id:id, message:message},
                           })
                           .done(function(response){
       
@@ -228,7 +229,7 @@
                               location.reload()
                           })
                           .fail(function(){
-                              alert("Error in Sending Reply")
+                              alert("oops!")
                           })
                  });
       

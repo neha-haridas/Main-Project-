@@ -568,11 +568,12 @@ def WardenDue(request):
 
 
 def WardenMess(request):
-    is_user = request.user
+    # is_user = request.user
     messfee=Account.objects.filter(is_user = True)
-    amount = request.POST.get("amount",True)
-    pay = addmessfee(user_id=is_user.id,amount=amount)
-    pay.save() 
+    if request.method=="POST":
+        amount = request.POST.get("amount",True)
+        pay = addmessfee(amount=amount)
+        pay.save() 
     return render(request,'WardenMess.html',{'messfee':messfee})
 
 
@@ -645,7 +646,6 @@ def WardenComplaintView(request):
 def student_complaint_message_replied(request):
     feedback_id=request.POST.get("id")
     feedback_message=request.POST.get("message")
-
     try:
         feedback=ComplaintStudent.objects.get(id=feedback_id)
         feedback.complaint_reply=feedback_message

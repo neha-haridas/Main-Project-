@@ -142,17 +142,8 @@
                                     <td>{{messfee.sem}}</td>
                                     <td>{{messfee.contact}}</td>
                                     <td>
-                                        <div class="mb-3 col-md-7">
-                                            <label for="amount" class="form-label" name="amount">Amount</label>
-                                            <select name="state" class="form-select" required>
-                                                <option value="" selected>Choose...</option>
-                                                <option value="1">1500</option>
-                                                <option value="2">2500</option>
-                                                <option value="3">3500</option>
-                                                <option value="4">4500</option>
-                                            </select>
-                                            <div class="valid-feedback">Looks good!</div>
-                                            <div class="invalid-feedback">Please select a Amount.</div>
+                                        <div class="mb-3 col-md-6">
+                                            <input type="text" class="form-control" id="amount" name="amount" placeholder="Amount" required>
                                         </div>
                                     </td>
                                     <td>
