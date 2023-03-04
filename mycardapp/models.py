@@ -5,8 +5,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,Permiss
 from PIL import Image
 from datetime import datetime,timedelta, timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
-# from twilio.rest import Client
-# import os
+from twilio.rest import Client
+import os
 
 
 # Create your models here.
@@ -223,6 +223,36 @@ class tbl_Outpass(models.Model):
     parents_contact  = models.BigIntegerField(default=0)
 
 
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.status == 1:
+            account_sid = os.environ['AC7e1b12f105b868c334e9923e237a3e2a']
+            auth_token = os.environ['080cc05e21e9313086823c94f15094a7']
+            client = Client(account_sid, auth_token)
+
+            message = client.messages.create(
+                     body="Heloo ",
+                     from_='+13215946647',
+                     to='+91702590093'
+            )
+        else:
+            account_sid = os.environ['AC7e1b12f105b868c334e9923e237a3e2a']
+            auth_token = os.environ['080cc05e21e9313086823c94f15094a7']
+            client = Client(account_sid, auth_token)
+
+            message = client.messages.create(
+                body=f"Sorry {self.name}, your score is  Try again",
+                from_='+13215946647',
+                to='+91702590093'
+            )
+
+        print(message.sid)
+        return super().save(*args, **kwargs)
+
+
+
 class addmessfee(models.Model):
     id  =  models.AutoField(primary_key=True)
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
@@ -241,38 +271,6 @@ class ComplaintStudent(models.Model):
 
 #############################################################
 
-    
-# class Message(models.Model):
-#     name = models.CharField(max_length=100)
-#     score = models.IntegerField(default=0)
-
-#     def __str__(self):
-#         return self.name
-
-#     def save(self, *args, **kwargs):
-#         if self.score >= 70:
-#             account_sid = os.environ['TWILIO_ACCOUNT_SID']
-#             auth_token = os.environ['TWILIO_AUTH_TOKEN']
-#             client = Client(account_sid, auth_token)
-
-#             message = client.messages.create(
-#                      body="Heloo ",
-#                      from_='+15017122661',
-#                      to='+15558675310'
-#             )
-#         else:
-#             account_sid = os.environ['TWILIO_ACCOUNT_SID']
-#             auth_token = os.environ['TWILIO_AUTH_TOKEN']
-#             client = Client(account_sid, auth_token)
-
-#             message = client.messages.create(
-#                 body=f"Sorry {self.name}, your score is {self.score}. Try again",
-#                 from_='+12019924209',
-#                 to='+233244895256'
-#             )
-
-#         print(message.sid)
-#         return super().save(*args, **kwargs)
 
 
    

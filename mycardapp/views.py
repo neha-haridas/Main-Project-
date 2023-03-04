@@ -11,6 +11,7 @@ from django.http import HttpResponse,HttpResponseRedirect, JsonResponse
 from .models import Account, Category, ComplaintStudent,tbl_Outpass,addmessfee,Book,Category_Book,Files
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -567,54 +568,49 @@ def WardenDue(request):
     return render(request,'Warden_Due.html')
 
 
-def WardenMess(request):
-    # is_user = request.user
+# def WardenMess(request):
+#     # is_user = request.user
+#     messfee=Account.objects.filter(is_user = True)
+#     amount = request.POST.get("amount")
+#     pay = addmessfee(amount=amount)
+#     pay.save() 
+#     return render(request,'WardenMess.html',{'messfee':messfee})
+
+
+from django.shortcuts import render, get_object_or_404
+def WardenMess(request,ms_id):
+    msfe=Account.objects.get(id=ms_id)
     messfee=Account.objects.filter(is_user = True)
-    if request.method=="POST":
-        amount = request.POST.get("amount",True)
-        pay = addmessfee(amount=amount)
-        pay.save() 
-    return render(request,'WardenMess.html',{'messfee':messfee})
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        user = get_object_or_404(Account)
+        payment = addmessfee(user=user, amount=amount)
+        payment.save()
+        return redirect('success')
+    else:
+        return render(request, 'WardenMess.html',{'messfee':messfee,'msfe':msfe})
 
 
- 
+    
 ##################################################################################
 
-from django.conf import settings
-from twilio.rest import Client
-from django.http import HttpResponse
+# from django.conf import settings
+# from twilio.rest import Client
+# from django.http import HttpResponse
 
-def send_sms(request):
-    account_sid = settings.TWILIO_ACCOUNT_SID
-    auth_token = settings.TWILIO_AUTH_TOKEN
-    client = Client(account_sid, auth_token)
-    message = client.messages.create(
-        to=request.POST.get('to'),
-        from_=settings.TWILIO_FROM_NUMBER,
-        body=request.POST.get('message')
-    )
-    return HttpResponse('SMS sent!')
+# def send_sms(request):
+#     account_sid = settings.TWILIO_ACCOUNT_SID
+#     auth_token = settings.TWILIO_AUTH_TOKEN
+#     client = Client(account_sid, auth_token)
+#     message = client.messages.create(
+#         to=request.POST.get('to'),
+#         from_=settings.TWILIO_FROM_NUMBER,
+#         body=request.POST.get('message')
+#     )
+#     return HttpResponse('SMS sent!')
 
 #####################################################
 #####################################################
-
-# def Student_complaint(request):
-#     return render(request,'Student_complaint.html')
-   
-
-# def Student_complaint_save(request):
-#     if request.method=="POST":
-#         complaint = request.POST.get("feedback")
-#         student=Account.objects.get(user=request.user.id)
-#         complaint = ComplaintStudent(
-#             user=student,
-#             complaint=complaint,
-#             complaint_reply="",
-#         )
-#         complaint.save()
-#     return redirect('Student_complaint')
-   
-
 
 def Student_complaint(request):
     stu_id=Account.objects.get(id=request.user.id)
@@ -643,6 +639,7 @@ def WardenComplaintView(request):
     return render(request,"WardenComplaintView.html",{"feedbacks":feedbacks})
 
 
+@csrf_exempt
 def student_complaint_message_replied(request):
     feedback_id=request.POST.get("id")
     feedback_message=request.POST.get("message")

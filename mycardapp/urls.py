@@ -40,12 +40,12 @@ urlpatterns = [
     path('outpassapproved/<str:leave_id>',views.outpassapproved,name='outpassapproved'),
     path('outpassdisapprove/<str:leave_id>', views.outpassdisapprove,name="outpassdisapprove"),
     path('WardenDue/', views.WardenDue, name='WardenDue'),
-    path('WardenMess/', views.WardenMess, name='WardenMess'),
+    path('WardenMess/<str:ms_id>', views.WardenMess, name='WardenMess'),
     path('Student_complaint/', views.Student_complaint, name='Student_complaint'),
     path('Student_complaint_save', views.Student_complaint_save, name="Student_complaint_save"),
     # path('send-sms/', views.send_sms, name='send_sms'),
     path('WardenComplaintView', views.WardenComplaintView, name="WardenComplaintView"),
-    path('student_complaint_message_replied', views.student_complaint_message_replied, name="student_complaint_message_replied"),
+    path('student_complaint_message_replied/', views.student_complaint_message_replied, name="student_complaint_message_replied"),
     path('Librarianhome', views.Librarianhome, name="Librarianhome"),
 
 

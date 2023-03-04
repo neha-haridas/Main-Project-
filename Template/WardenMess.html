@@ -143,13 +143,13 @@
                                     <td>{{messfee.contact}}</td>
                                     <td>
                                         <div class="mb-3 col-md-6">
-                                            <input type="text" class="form-control" id="amount" name="amount" placeholder="Amount" required>
+                                            <input type="text" class="form-control" id="amount" name="amount"  placeholder="Amount" required>
                                         </div>
                                     </td>
                                     <td>
                                         <td>
                                           
-                                            <button type="button" class="btn btn-success" >Submit</button></td>    
+                                            <a href="{% url 'WardenMess' ms_id=msfe.id %}"   button type="button" class="btn btn-success" >Submit</button></td>    
                                             
                                         </td>
                                     </td>

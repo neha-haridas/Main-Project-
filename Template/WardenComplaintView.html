@@ -195,7 +195,7 @@
     </div>
       <!-- /.content -->
       {% block custom_js %}
-      <script type="text/javascript">
+      <script>
           $(document).ready(function(){
               $(".reply_open_modal").click(function(){
                   var id=$(this).parents("tr").children("td:eq(0)").text();
@@ -212,11 +212,12 @@
       
                       var id=$("#reply_id").val();
                       var message=$("#reply_message").val()
-                        
+                      alert(console.log(message));
+      
                       $.ajax({
-                            type:'POST',
-                            url: 'student_complaint_message_replied',
-                            data:{id:id, message:message},
+                              url:"{% url 'student_complaint_message_replied' %}",
+                              type:'GET',
+                              data:{id:id, message:message},
                           })
                           .done(function(response){
       
@@ -229,13 +230,14 @@
                               location.reload()
                           })
                           .fail(function(){
-                              alert("oops!")
+                              alert("Unknown Error outside function")
                           })
                  });
       
           });
       </script>
       {% endblock custom_js %}
+      
        
                        
                         

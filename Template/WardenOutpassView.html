@@ -130,8 +130,8 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Department</th>
-                                        <th>Semester</th>
+                                        <th>Regno</th>
+                                        <th>Department & Semester</th>
                                         <th>Destination</th>
                                         <th>Date Of Leaving</th>
                                         <th>Incoming Date</th>
@@ -146,8 +146,8 @@
                                     {% for appout in outpas %}
                                     <tr>
                                         <td>{{appout.name}}</td>
-                                        <td>{{appout.dept}}</td>
-                                        <td>{{appout.sem}}</td>
+                                        <td>{{appout.user.regno}}</td>
+                                        <td>{{appout.dept}} {{appout.sem}}</td>     
                                         <td>{{appout.dest}}</td>
                                         <td>{{appout.ldate}}</td>
                                         <td>{{appout.idate}}</td>
