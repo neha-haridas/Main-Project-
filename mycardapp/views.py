@@ -67,7 +67,6 @@ def Librarianhome(request):
 
 
 
-
 def login(request):
     
     if request.method == 'POST':
@@ -568,30 +567,16 @@ def WardenDue(request):
     return render(request,'Warden_Due.html')
 
 
-# def WardenMess(request):
-#     # is_user = request.user
-#     messfee=Account.objects.filter(is_user = True)
-#     amount = request.POST.get("amount")
-#     pay = addmessfee(amount=amount)
-#     pay.save() 
-#     return render(request,'WardenMess.html',{'messfee':messfee})
-
-
-from django.shortcuts import render, get_object_or_404
-def WardenMess(request,ms_id):
-    msfe=Account.objects.get(id=ms_id)
+def WardenMess(request):
     messfee=Account.objects.filter(is_user = True)
     if request.method == 'POST':
-        amount = request.POST.get('amount')
-        user = get_object_or_404(Account)
-        payment = addmessfee(user=user, amount=amount)
-        payment.save()
-        return redirect('success')
-    else:
-        return render(request, 'WardenMess.html',{'messfee':messfee,'msfe':msfe})
+        amount = request.POST.get("amount")
+        pay = addmessfee(amount=amount)
+        pay.save() 
+    return render(request,'WardenMess.html',{'messfee':messfee})
 
 
-    
+
 ##################################################################################
 
 # from django.conf import settings
@@ -650,3 +635,4 @@ def student_complaint_message_replied(request):
         return HttpResponse("True")
     except:
         return HttpResponse("False")
+    

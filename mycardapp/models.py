@@ -259,7 +259,9 @@ class addmessfee(models.Model):
     feestatus=models.BooleanField(default=False)
     amount = models.FloatField(blank=True,null=True)
     date_paid = models.DateField(auto_now=True)
-    
+
+
+  
 
 class ComplaintStudent(models.Model):
     id = models.AutoField(primary_key=True)
