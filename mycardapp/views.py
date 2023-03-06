@@ -571,9 +571,62 @@ def WardenMess(request):
     messfee=Account.objects.filter(is_user = True)
     if request.method == 'POST':
         amount = request.POST.get("amount")
-        pay = addmessfee(amount=amount)
-        pay.save() 
+        user = Account.objects.get(id=request.user.id)
+        pay = addmessfee(user=user,amount=amount)
+        pay.save()    
     return render(request,'WardenMess.html',{'messfee':messfee})
+
+
+
+
+# def WardenMess(request):
+#     # messfee=Account.objects.filter(is_user = True)
+#     user = request.user
+#     if user is not None:
+#         if not user.is_warden:
+#             return HttpResponse('Invalid Login')
+#         else:
+#             if request.method == 'POST':
+#                 amount = request.POST.get("amount")
+#                 user = Account.objects.get(id=request.user.id)
+#                 pay = addmessfee(user=user,amount=amount)
+#                 pay.save()    
+#     return render(request,'WardenMess.html')
+
+
+
+
+# def warden_dues(request):
+#     user = request.user
+#     if user is not None:
+#         if not user.is_warden:
+#             return HttpResponse('Invalid Login')
+#         else:
+#             students = Account.objects.all()
+#             return render(request, 'dues.html', {'students': students})
+#     else:
+#         return HttpResponse('Invalid Login')
+    
+
+
+# def warden_add_due(request):
+#     user = request.user
+#     if user is not None:
+#         if not user.is_warden:
+#             return HttpResponse('Invalid Login')
+#         else:
+#             if request.method == "POST":
+#                 form = DuesForm(request.POST)
+#                 if form.is_valid():
+#                     student = form.cleaned_data.get('choice')
+#                     student.no_dues = False
+#                     student.save()
+#                     return HttpResponse('Done')
+#             else:
+#                 form = DuesForm()
+#                 return render(request, 'add_due.html', {'form': form})
+#     else:
+#         return HttpResponse('Invalid Login')
 
 
 
@@ -635,4 +688,6 @@ def student_complaint_message_replied(request):
         return HttpResponse("True")
     except:
         return HttpResponse("False")
+    
+
     

@@ -43,11 +43,13 @@ urlpatterns = [
     path('WardenMess/', views.WardenMess, name='WardenMess'),
     path('Student_complaint/', views.Student_complaint, name='Student_complaint'),
     path('Student_complaint_save', views.Student_complaint_save, name="Student_complaint_save"),
-    # path('send-sms/', views.send_sms, name='send_sms'),
     path('WardenComplaintView', views.WardenComplaintView, name="WardenComplaintView"),
     path('student_complaint_message_replied/', views.student_complaint_message_replied, name="student_complaint_message_replied"),
     path('Librarianhome', views.Librarianhome, name="Librarianhome"),
-
+    # path('warden_dues/', views.warden_dues, name='warden_dues'),
+    # path('warden_add_due/', views.warden_add_due, name='warden_add_due'),
+    # path('warden_remove_due/', views.warden_remove_due, name='warden_remove_due'),
+    # path('send-sms/', views.send_sms, name='send_sms'),
 
 
     # path('return_book/<int:id>',views.return_issued_book,name="return_issued_book"),

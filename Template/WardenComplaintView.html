@@ -156,7 +156,7 @@
                           {% endfor %}
                       </table>
                   </div>
-                 </div>
+                </div>
               <!-- /.card -->
   
   
@@ -166,9 +166,9 @@
         </div>
       </section>
     <!-- Modal -->
-    <!-- <div class="modal fade" id="reply_modal" role="dialog">
+    <div class="modal fade" id="reply_modal" role="dialog">
       <div class="modal-dialog">
-   -->
+  
         <!-- Modal content-->
         <section class="content">
             <div class="container">
@@ -181,10 +181,14 @@
   
           </div>
           <div class="modal-body">
+            <form class="form-horizontal" method="post" action="{% url 'student_complaint_message_replied' %}" onclick="return validation()" enctype="multipart/form-data">
+                {% csrf_token %}
             <p>Reply To : <span id="reply_name"></span></p>
               <input type="hidden" id="reply_id" name="reply_id">
-              <textarea class="form-control" rows="5" id="reply_message"></textarea><br>
-              <button id="reply_btn" class="btn btn-info btn-block">Reply</button>
+             
+                <textarea class="form-control" rows="5" id="reply_message"></textarea><br>
+                <button id="reply_btn" class="btn btn-info btn-block">Reply</button>
+              </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -193,52 +197,49 @@
   
       </div>
     </div>
-      <!-- /.content -->
-      {% block custom_js %}
-      <script>
-          $(document).ready(function(){
-              $(".reply_open_modal").click(function(){
-                  var id=$(this).parents("tr").children("td:eq(0)").text();
-                  var name=$(this).parents("tr").children("td:eq(1)").text();
-                  $("#reply_id").val(id);
-                  $("#reply_name").text(name);
-              });
-      
-      
-              $(document).on("click","#reply_btn",function(){
-      
-                      $(this).attr("disabled","disabled")
-                      $(this).text("Sending Reply...")
-      
-                      var id=$("#reply_id").val();
-                      var message=$("#reply_message").val()
-                      alert(console.log(message));
-      
-                      $.ajax({
-                              url:"{% url 'student_complaint_message_replied' %}",
-                              type:'GET',
-                              data:{id:id, message:message},
-                          })
-                          .done(function(response){
-      
-                              if(response=="True"){
-                                  alert("Reply Sent")
-                              }
-                              else{
-                                  alert("Error in Sending Reply")
-                              }
-                              location.reload()
-                          })
-                          .fail(function(){
-                              alert("Unknown Error outside function")
-                          })
-                 });
-      
-          });
-      </script>
-      {% endblock custom_js %}
-      
-       
+         
+<script>
+    $(document).ready(function(){
+        $(".reply_open_modal").click(function(){
+            var id=$(this).parents("tr").children("td:eq(0)").text();
+            var name=$(this).parents("tr").children("td:eq(1)").text();
+            $("#reply_id").val(id);
+            $("#reply_name").text(name);
+        });
+
+
+        $(document).on("click","#reply_btn",function(){
+
+                $(this).attr("disabled","disabled")
+                $(this).text("Sending Reply...")
+
+                var id=$("#reply_id").val();
+                var message=$("#reply_message").val()
+
+                $.ajax({
+                        url:'{% url 'student_complaint_message_replied' %}',
+                        type:'POST',
+                        data:{id:id,message:message},
+                    })
+                    .done(function(response){
+
+                        if(response=="True"){
+                            alert("Reply Sent")
+                        }
+                        else{
+                            alert("Error in Sending Reply")
+                        }
+                        location.reload()
+                    })
+                    .fail(function(){
+                        alert("Error in Sending Reply")
+                    })
+           });
+
+    });
+</script>
+
+
                        
                         
                     </div>
