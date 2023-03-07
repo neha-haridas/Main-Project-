@@ -661,20 +661,40 @@ def student_complaint_message_replied(request):
 ###############################################################################################
 
 
+def present_leaves(request):
+    user = request.user
+    if user is not None:
+        if not user.is_staff:
+            return HttpResponse('Invalid Login')
+        elif user.is_active:
+            regno = user.id
+            stud = Account.objects.filter(regno=regno)
+            leaves = Leave.objects.filter(user__in=stud, status=True,ldate=datetime.date.today(), idate=datetime.date.today()).values_list('user', flat=True).distinct()
+            stud = Account.objects.filter(id__in= leaves)
+            # print(leaves.query)
+            print(stud.query)
+            # print(stud)
+            return render(request, 'present_leaves.html', {'student': stud})
+        else:
+            return HttpResponse('Disabled account')
+    else:
+        return HttpResponse('Invalid Login')
+
+
 def mess_rebate(request):
     if request.method == 'POST':
         user = request.user
         form = RebateForm(request.POST)
         if user is not None:
-            if not user.is_warden:
+            if not user.is_staff:
                 return HttpResponse('Invalid Login')
             elif user.is_active and form.is_valid():
 
                 reb = form.cleaned_data['rebate']
                 print(reb)
-                warden_hostel = user.warden.hostel
-                stud = Account.objects.filter(room__hostel=warden_hostel).order_by('regno')
-                leaves = Leave.objects.filter(student__in=stud, accept=True).order_by('student__enrollment_no')
+                warden_hostel = user.id
+                stud = Account.objects.filter(regno=warden_hostel).order_by('regno')
+                leaves = Leave.objects.filter(user__in=stud, status=True).order_by('id')
                 stud_rebate_list = {}
                 this_month = reb.month
                 first_day = datetime.date(reb.year, this_month, 1)
@@ -697,8 +717,7 @@ def mess_rebate(request):
                 #stud = Student.objects.filter(id__in=leaves)
                 # this_month = datetime.datetime.now().month
                 # HourEntries.objects.filter(date__month=this_month).aggregate(Sum("quantity"))
-                return render(request, 'mess_rebate.html',
-                              {'form': form, 'count_rebate': stud_rebate_list, 'student': stud})
+                return render(request, 'mess_rebate.html',{'form': form, 'count_rebate': stud_rebate_list, 'student': stud})
             else:
                 return HttpResponse('Disabled account')
         else:
@@ -709,3 +728,5 @@ def mess_rebate(request):
         stud=Account.objects.none()
 
         return render(request, 'mess_rebate.html', {'form': form,'count_rebate': stud_rebate_list,'student': stud})
+
+

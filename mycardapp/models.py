@@ -225,27 +225,33 @@ class Leave(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def __str__(self):
+        return self.parents_contact
+    
+    def __str__(self):
+        return self.purpose
 
     def save(self, *args, **kwargs):
         if self.status == 1:
-            account_sid = os.environ['AC7e1b12f105b868c334e9923e237a3e2a']
-            auth_token = os.environ['080cc05e21e9313086823c94f15094a7']
+            account_sid = 'AC7e1b12f105b868c334e9923e237a3e2a'
+            auth_token = '080cc05e21e9313086823c94f15094a7'
             client = Client(account_sid, auth_token)
 
             message = client.messages.create(
                      body="Heloo ",
                      from_='+13215946647',
-                     to='+91702590093'
+                     to={self.parents_contact}
             )
         else:
-            account_sid = os.environ['AC7e1b12f105b868c334e9923e237a3e2a']
-            auth_token = os.environ['080cc05e21e9313086823c94f15094a7']
+            account_sid = 'AC7e1b12f105b868c334e9923e237a3e2a'
+            auth_token = '080cc05e21e9313086823c94f15094a7'
             client = Client(account_sid, auth_token)
 
             message = client.messages.create(
-                body=f"Sorry {self.name}, your score is  Try again",
+                body=f"Dear Parent,{self.name}, applying Outpass for {self.purpose}",
                 from_='+13215946647',
-                to='+91702590093'
+                to={self.parents_contact}
             )
 
         print(message.sid)

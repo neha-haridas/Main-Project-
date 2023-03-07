@@ -50,6 +50,8 @@ urlpatterns = [
     # path('warden_add_due/', views.warden_add_due, name='warden_add_due'),
     # path('warden_remove_due/', views.warden_remove_due, name='warden_remove_due'),
     # path('send-sms/', views.send_sms, name='send_sms'),
+    path('present_leaves/', views.present_leaves, name='present_leaves'),
+    path('mess_rebate/', views.mess_rebate, name='mess_rebate'),
 
 
     # path('return_book/<int:id>',views.return_issued_book,name="return_issued_book"),

@@ -20,6 +20,7 @@
     <link href="{% static 'css/master.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/flagiconcss/css/flag-icon.min.css'%}" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    
 
 </head>
         
@@ -217,7 +218,7 @@
                 var message=$("#reply_message").val()
 
                 $.ajax({
-                        url:'{% url 'student_complaint_message_replied' %}',
+                        url:"{% url 'student_complaint_message_replied' %}",
                         type:'POST',
                         data:{id:id,message:message},
                     })
