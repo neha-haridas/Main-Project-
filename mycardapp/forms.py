@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
 from . import models
+import datetime
 
+YEARS= [x for x in range(2023,2024)]
 # class BookForm(forms.ModelForm):
 #     class Meta:
 #         model=models.Book
@@ -19,4 +21,7 @@ from . import models
 # class NoDuesForm(forms.Form):
 #     choice = forms.ModelChoiceField(queryset=models.addmessfee.objects.all().filter(feestatus=False))
 
+
+class RebateForm(forms.Form):
+    rebate = forms.DateField(initial=datetime.date.today, widget=forms.SelectDateWidget(years=YEARS))
 

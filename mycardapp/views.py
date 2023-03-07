@@ -8,7 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.http import HttpResponse,HttpResponseRedirect, JsonResponse
-from .models import Account, Category, ComplaintStudent,tbl_Outpass,addmessfee,Book,Category_Book,Files
+from .models import Account, Category, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -22,12 +22,13 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
 from django.views import generic
-from . import  models
+
 
 # from datetime import date
 # from twilio.rest import Client
 
-
+import datetime,calendar
+from .forms import *
 
 
 
@@ -522,7 +523,7 @@ def Outpass(request):
      parents_email= request.POST.get("parents_email",False)
      parents_contact=request.POST.get("parents_contact",False)
     #  sign = request.POST.get("sign",True)
-     o = tbl_Outpass(user_id=user.id,name=name,dept=dept,sem=sem,mobno=mobno,idate=idate,ldate=ldate,purpose=purpose,dest=dest,parents_email=parents_email,parents_contact=parents_contact)
+     o = Leave(user_id=user.id,name=name,dept=dept,sem=sem,mobno=mobno,idate=idate,ldate=ldate,purpose=purpose,dest=dest,parents_email=parents_email,parents_contact=parents_contact)
      o.save()
     return render(request,'Outpass.html')
 
@@ -534,7 +535,7 @@ def Outpass(request):
 @login_required(login_url='view_login')
 def outpass_history(request):
     user = request.user
-    opass =tbl_Outpass.objects.filter(user_id=user)
+    opass =Leave.objects.filter(user_id=user)
     return render(request,'outpass_history.html',{'opass':opass })  
 
 
@@ -544,19 +545,19 @@ def Wardenhome(request):
 
 
 def WardenOutpassView(request):
-    outpas =tbl_Outpass.objects.all()
+    outpas =Leave.objects.all()
     return render(request,'WardenOutpassView.html',{'outpas':outpas})
 
 
 def outpassapproved(request,leave_id):
-    appout=tbl_Outpass.objects.get(id=leave_id)
+    appout=Leave.objects.get(id=leave_id)
     appout.status=1
     appout.save()
     return redirect('WardenOutpassView')
     
 
 def outpassdisapprove(request,leave_id):
-    appout=tbl_Outpass.objects.get(id=leave_id)
+    appout=Leave.objects.get(id=leave_id)
     appout.status=2
     appout.save()
     return redirect('WardenOutpassView')
@@ -594,39 +595,6 @@ def WardenMess(request):
 #     return render(request,'WardenMess.html')
 
 
-
-
-# def warden_dues(request):
-#     user = request.user
-#     if user is not None:
-#         if not user.is_warden:
-#             return HttpResponse('Invalid Login')
-#         else:
-#             students = Account.objects.all()
-#             return render(request, 'dues.html', {'students': students})
-#     else:
-#         return HttpResponse('Invalid Login')
-    
-
-
-# def warden_add_due(request):
-#     user = request.user
-#     if user is not None:
-#         if not user.is_warden:
-#             return HttpResponse('Invalid Login')
-#         else:
-#             if request.method == "POST":
-#                 form = DuesForm(request.POST)
-#                 if form.is_valid():
-#                     student = form.cleaned_data.get('choice')
-#                     student.no_dues = False
-#                     student.save()
-#                     return HttpResponse('Done')
-#             else:
-#                 form = DuesForm()
-#                 return render(request, 'add_due.html', {'form': form})
-#     else:
-#         return HttpResponse('Invalid Login')
 
 
 
@@ -690,4 +658,54 @@ def student_complaint_message_replied(request):
         return HttpResponse("False")
     
 
-    
+###############################################################################################
+
+
+def mess_rebate(request):
+    if request.method == 'POST':
+        user = request.user
+        form = RebateForm(request.POST)
+        if user is not None:
+            if not user.is_warden:
+                return HttpResponse('Invalid Login')
+            elif user.is_active and form.is_valid():
+
+                reb = form.cleaned_data['rebate']
+                print(reb)
+                warden_hostel = user.warden.hostel
+                stud = Account.objects.filter(room__hostel=warden_hostel).order_by('regno')
+                leaves = Leave.objects.filter(student__in=stud, accept=True).order_by('student__enrollment_no')
+                stud_rebate_list = {}
+                this_month = reb.month
+                first_day = datetime.date(reb.year, this_month, 1)
+
+                for stud_id in stud:
+                    cnt = 0
+                    for leave in leaves:
+                        if leave.user.id == stud_id.id and (leave.ldate.month == this_month or leave.idate.month == this_month)  :
+                            if (reb-leave.idate).days > 0:
+
+                                dayz = abs(leave.idate-first_day).days - abs(leave.ldate-first_day).days + 1
+                            else:
+                                dayz = abs(reb - first_day).days - abs(leave.ldate - first_day).days
+                            #print(leave.start_date, first_day, abs(leave.start_date - first_day).days)
+                            print(leave.idate,first_day,stud_id.first_name,dayz)
+                            cnt = cnt+dayz
+                    stud_rebate_list[stud_id.regno] = cnt
+                print(stud_rebate_list)
+                month_name = calendar.month_name[this_month]
+                #stud = Student.objects.filter(id__in=leaves)
+                # this_month = datetime.datetime.now().month
+                # HourEntries.objects.filter(date__month=this_month).aggregate(Sum("quantity"))
+                return render(request, 'mess_rebate.html',
+                              {'form': form, 'count_rebate': stud_rebate_list, 'student': stud})
+            else:
+                return HttpResponse('Disabled account')
+        else:
+            return HttpResponse('Invalid Login')
+    else:
+        form = RebateForm()
+        stud_rebate_list={}
+        stud=Account.objects.none()
+
+        return render(request, 'mess_rebate.html', {'form': form,'count_rebate': stud_rebate_list,'student': stud})

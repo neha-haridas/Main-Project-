@@ -205,7 +205,7 @@ class IssuedBook(models.Model):
 
 
 
-class tbl_Outpass(models.Model):
+class Leave(models.Model):
     sem_choices=(('First','First'),('Second','Second'),('Third','Third'),('Fourth','Fourth'),('Fifth','Fifth'),('Sixth','Sixth'),('Seventh','Seventh'),('Eighth','Eighth'),('None','None'))
     status_choices=(('Approved','Approved'),('Pending','Pending'),('None','None'))
     id  =  models.AutoField(primary_key=True)
