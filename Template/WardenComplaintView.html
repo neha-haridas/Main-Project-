@@ -35,13 +35,13 @@
                     <a href="{% url 'Wardenhome' %}"><i class="fas fa-home"></i>Dashboard</a>
                 </li>
                 <li>
-                    <a href="{% url 'WardenOutpassView' %}"><i class="fas fa-home"></i>OutPass Details</a>
+                    <a href="{% url 'WardenOutpassView' %}"><i class="fas fa-receipt"></i>OutPass Details</a>
                 </li>
                 <li>
                     <a href="{% url 'WardenComplaintView' %}"><i class="fas fa-file-alt"></i> Complaints</a>
                 </li>
                 <li>
-                    <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-copy"></i> Payment Details</a>
+                    <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-money-bill"></i> Payment Details</a>
                     <ul class="collapse list-unstyled" id="pagesmenu">
                         <li>
                             <a href="{% url 'WardenMess'%}"><i class="fas fa-info-circle"></i> Mess Fee</a>
@@ -182,14 +182,11 @@
   
           </div>
           <div class="modal-body">
-            <form class="form-horizontal" method="post" action="{% url 'student_complaint_message_replied' %}" onclick="return validation()" enctype="multipart/form-data">
-                {% csrf_token %}
             <p>Reply To : <span id="reply_name"></span></p>
               <input type="hidden" id="reply_id" name="reply_id">
              
                 <textarea class="form-control" rows="5" id="reply_message"></textarea><br>
                 <button id="reply_btn" class="btn btn-info btn-block">Reply</button>
-              </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -218,7 +215,7 @@
                 var message=$("#reply_message").val()
 
                 $.ajax({
-                        url:"{% url 'student_complaint_message_replied' %}",
+                        url:'{% url 'student_complaint_message_replied' %}',
                         type:'POST',
                         data:{id:id,message:message},
                     })
@@ -240,7 +237,6 @@
     });
 </script>
 
-
                        
                         
                     </div>
@@ -248,7 +244,10 @@
             </div>
         </div>
     </div>
-
+    <script
+        src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+        crossorigin="anonymous"></script>
     <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
     <script src="{% static 'vendor/chartsjs/Chart.min.js'%}"></script>

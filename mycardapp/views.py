@@ -29,8 +29,7 @@ from django.views import generic
 
 import datetime,calendar
 from .forms import *
-
-
+from datetime import date
 
 
 
@@ -658,27 +657,44 @@ def student_complaint_message_replied(request):
         return HttpResponse("False")
     
 
+
+
+
 ###############################################################################################
+
+
+# def present_leaves(request):
+#     user = request.user
+#     if user is not None:
+#         if not user.is_staff:
+#             return HttpResponse('Invalid Login')
+#         elif user.is_active:
+#             id = user.id
+#             stud = Account.objects.filter(regno=id)
+#             leaves = Leave.objects.filter(user__in=stud,status=1,ldate=datetime.date.today(), idate=datetime.date.today()).values_list('user', flat=True)
+#             stud = Account.objects.filter(id__in= leaves)
+#             # print(leaves.query)
+#             print(stud.query)
+#             # print(stud)
+#             return render(request, 'present_leaves.html', {'user': stud})
+#         else:
+#             return HttpResponse('Disabled account')
+#     else:
+#         return HttpResponse('Invalid Login')
 
 
 def present_leaves(request):
     user = request.user
-    if user is not None:
-        if not user.is_staff:
-            return HttpResponse('Invalid Login')
-        elif user.is_active:
-            regno = user.id
-            stud = Account.objects.filter(regno=regno)
-            leaves = Leave.objects.filter(user__in=stud, status=True,ldate=datetime.date.today(), idate=datetime.date.today()).values_list('user', flat=True).distinct()
-            stud = Account.objects.filter(id__in= leaves)
-            # print(leaves.query)
-            print(stud.query)
-            # print(stud)
-            return render(request, 'present_leaves.html', {'student': stud})
-        else:
-            return HttpResponse('Disabled account')
+    if user.is_active:
+        regno = user.id
+        if regno:
+            leaves = Leave.objects.filter(ldate=date.today(),status= 1)
+            stud = Account.objects.filter(leave__in=leaves).distinct()
+            return render(request, 'present_leaves.html', {'students': stud})
     else:
-        return HttpResponse('Invalid Login')
+        return HttpResponse('Disabled account')
+
+   
 
 
 def mess_rebate(request):

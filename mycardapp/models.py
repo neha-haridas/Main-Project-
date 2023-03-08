@@ -251,7 +251,7 @@ class Leave(models.Model):
             message = client.messages.create(
                 body=f"Dear Parent,{self.name}, applying Outpass for {self.purpose}",
                 from_='+13215946647',
-                to={self.parents_contact}
+                to=[self.parents_contact]
             )
 
         print(message.sid)

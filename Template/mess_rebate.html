@@ -36,18 +36,18 @@
             {% for stud in student %}
                 <div class="row">
                     <div class="cell">
-                        {{stud.student_name}}
+                        {{stud.first_name}}
                     </div>
                     <div class="cell">
-                        {{stud.enrollment_no}}
+                        {{stud.regno}}
                     </div>
                      <div class="cell">
-                        {{stud.course.code}}
+                        {{stud.dpmnt}}
                     </div>
 
                     <div class="cell">
                         {% for key,value in count_rebate.items %}
-                        {% if key == stud.enrollment_no %}
+                        {% if key == stud.regno %}
                         {{ value }}
                         {% endif %}
                         {% endfor %}
