@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from . import models
+from .models import *
 import datetime
 
 YEARS= [x for x in range(2023,2024)]
@@ -21,6 +21,19 @@ YEARS= [x for x in range(2023,2024)]
 # class NoDuesForm(forms.Form):
 #     choice = forms.ModelChoiceField(queryset=models.addmessfee.objects.all().filter(feestatus=False))
 
+
+class LeaveForm(forms.ModelForm):
+    start_date = forms.DateField(initial=datetime.date.today, widget=forms.SelectDateWidget(years=YEARS))
+    end_date = forms.DateField(initial=datetime.date.today, widget=forms.SelectDateWidget(years=YEARS))
+    reason = forms.CharField(max_length=100, help_text='100 characters max.',
+                             widget=forms.TextInput(attrs={'placeholder': 'Enter Reason here'}))
+    class Meta:
+        model = Leaves
+        fields = [
+            'start_date',
+            'end_date',
+            'reason']
+        
 
 class RebateForm(forms.Form):
     rebate = forms.DateField(initial=datetime.date.today, widget=forms.SelectDateWidget(years=YEARS))

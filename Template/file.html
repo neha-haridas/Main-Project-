@@ -149,7 +149,7 @@
                                     <td>{{ file.filename }}</td>
                                      <td>
                                     {% if file.pdf %}
-                                      <a href="{{ file.pdf.url }}" class="btn btn-outline-primary" target="_blank">
+                                      <a href="{{ file.pdf.encrypt_key }}" class="btn btn-outline-primary" target="_blank">
                                     View PDF</a>
                                     {% else %}
                                     <span class="text-muted">No PDF</span>

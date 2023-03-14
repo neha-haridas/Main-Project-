@@ -1,5 +1,6 @@
 from django.urls import path, include
 from .import views
+from django.conf import settings
 urlpatterns = [
 
  
@@ -53,6 +54,7 @@ urlpatterns = [
     path('present_leaves/', views.present_leaves, name='present_leaves'),
     path('mess_rebate/', views.mess_rebate, name='mess_rebate'),
 
+   
 
     # path('return_book/<int:id>',views.return_issued_book,name="return_issued_book"),
     # # path('edit_issued/<int:id>',views.edit_issued,name="edit_issued"),
@@ -60,7 +62,5 @@ urlpatterns = [
     # path("acceptedOutpassNotifications", views.acceptedOutpassNotifications, name="acceptedOutpassNotifications"),
     # path("acceptedOutpassNotifications1", views.acceptedOutpassNotifications1, name="acceptedOutpassNotifications1"),
 
-
-
-
+################################################################################################################################
 ]

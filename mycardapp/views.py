@@ -1,14 +1,15 @@
 from audioop import reverse
 from contextvars import Token
 from importlib.metadata import files
-from django import forms
 # from django.conf import settings
 from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.http import HttpResponse,HttpResponseRedirect, JsonResponse
-from .models import Account, Category, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files
+
+from mycardapp.utils import send_twilio_message
+from .models import Account, Category, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files,Leaves
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -30,7 +31,7 @@ from django.views import generic
 import datetime,calendar
 from .forms import *
 from datetime import date
-
+from mycardapp.encryption_util import *
 
 
 
@@ -484,6 +485,11 @@ from django.db.models import Q
 def files(request):
     user = request.user
     file=Files.objects.filter(user_id=user)
+    l=[]
+    for i in list:
+        i['encrypt_key']=encrypt(i['id'])
+        i['id']=i['id']
+    print(l)
     return render(request, 'file.html',{'files':file})
 
 
@@ -527,8 +533,20 @@ def Outpass(request):
     return render(request,'Outpass.html')
 
 
+# from django.conf import settings
+# from twilio.rest import Client
+# from django.http import HttpResponse
 
-
+# def send_sms(request):
+#     account_sid = settings.TWILIO_ACCOUNT_SID
+#     auth_token = settings.TWILIO_AUTH_TOKEN
+#     client = Client(account_sid, auth_token)
+#     message = client.messages.create(
+#         to=request.POST.get('parents_contact'),
+#         from_=settings.TWILIO_FROM_NUMBER,
+#         body=request.POST.get('message')
+#     )
+#     return HttpResponse('SMS sent!')
 
 
 @login_required(login_url='view_login')
@@ -594,27 +612,6 @@ def WardenMess(request):
 #     return render(request,'WardenMess.html')
 
 
-
-
-
-##################################################################################
-
-# from django.conf import settings
-# from twilio.rest import Client
-# from django.http import HttpResponse
-
-# def send_sms(request):
-#     account_sid = settings.TWILIO_ACCOUNT_SID
-#     auth_token = settings.TWILIO_AUTH_TOKEN
-#     client = Client(account_sid, auth_token)
-#     message = client.messages.create(
-#         to=request.POST.get('to'),
-#         from_=settings.TWILIO_FROM_NUMBER,
-#         body=request.POST.get('message')
-#     )
-#     return HttpResponse('SMS sent!')
-
-#####################################################
 #####################################################
 
 def Student_complaint(request):
@@ -662,39 +659,24 @@ def student_complaint_message_replied(request):
 
 ###############################################################################################
 
-
-# def present_leaves(request):
-#     user = request.user
-#     if user is not None:
-#         if not user.is_staff:
-#             return HttpResponse('Invalid Login')
-#         elif user.is_active:
-#             id = user.id
-#             stud = Account.objects.filter(regno=id)
-#             leaves = Leave.objects.filter(user__in=stud,status=1,ldate=datetime.date.today(), idate=datetime.date.today()).values_list('user', flat=True)
-#             stud = Account.objects.filter(id__in= leaves)
-#             # print(leaves.query)
-#             print(stud.query)
-#             # print(stud)
-#             return render(request, 'present_leaves.html', {'user': stud})
-#         else:
-#             return HttpResponse('Disabled account')
-#     else:
-#         return HttpResponse('Invalid Login')
-
-
 def present_leaves(request):
     user = request.user
-    if user.is_active:
-        regno = user.id
-        if regno:
-            leaves = Leave.objects.filter(ldate=date.today(),status= 1)
-            stud = Account.objects.filter(leave__in=leaves).distinct()
-            return render(request, 'present_leaves.html', {'students': stud})
+    if user is not None:
+        if not user.is_staff:
+            return HttpResponse('Invalid Login')
+        elif user.is_active:
+            warden_hostel = user.is_warden
+            stud = Account.objects.filter(room__hostel=warden_hostel)
+            leaves = Leave.objects.filter(user__in=stud,status='1',ldate__lte=datetime.date.today(), idate__gte=datetime.date.today()).values_list('user', flat=True).distinct()
+            stud = Account.objects.filter(id__in= leaves)
+            # print(leaves.query)
+            print(stud.query)
+            # print(stud)
+            return render(request, 'present_leaves.html', {'student': stud})
+        else:
+            return HttpResponse('Disabled account')
     else:
-        return HttpResponse('Disabled account')
-
-   
+        return HttpResponse('Invalid Login')
 
 
 def mess_rebate(request):
@@ -708,9 +690,9 @@ def mess_rebate(request):
 
                 reb = form.cleaned_data['rebate']
                 print(reb)
-                warden_hostel = user.id
-                stud = Account.objects.filter(regno=warden_hostel).order_by('regno')
-                leaves = Leave.objects.filter(user__in=stud, status=True).order_by('id')
+                warden_hostel = user.is_warden
+                stud = Account.objects.filter(is_user=True).order_by('regno')
+                leaves = Leave.objects.filter(user__in=stud, status=True).order_by('user__regno')
                 stud_rebate_list = {}
                 this_month = reb.month
                 first_day = datetime.date(reb.year, this_month, 1)
@@ -725,7 +707,7 @@ def mess_rebate(request):
                             else:
                                 dayz = abs(reb - first_day).days - abs(leave.ldate - first_day).days
                             #print(leave.start_date, first_day, abs(leave.start_date - first_day).days)
-                            print(leave.idate,first_day,stud_id.first_name,dayz)
+                            print(leave.end_date,first_day,stud_id.first_name,dayz)
                             cnt = cnt+dayz
                     stud_rebate_list[stud_id.regno] = cnt
                 print(stud_rebate_list)
