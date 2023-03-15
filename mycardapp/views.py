@@ -485,11 +485,11 @@ from django.db.models import Q
 def files(request):
     user = request.user
     file=Files.objects.filter(user_id=user)
-    l=[]
-    for i in list:
-        i['encrypt_key']=encrypt(i['id'])
-        i['id']=i['id']
-    print(l)
+    # l=[]
+    # for i in list:
+    #     i['encrypt_key']=encrypt(i['id'])
+    #     i['id']=i['id']
+    # print(l)
     return render(request, 'file.html',{'files':file})
 
 
