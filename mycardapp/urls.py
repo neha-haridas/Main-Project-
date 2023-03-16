@@ -27,8 +27,8 @@ urlpatterns = [
     path('profile/update',views.profile_update,name='profile_update'),
     path('Library_home/', views.Library_home, name='Library_home'),
     path('Viewbookindex/', views.Viewbookindex, name='Viewbookindex'),
-    path('onebook/<int:id>/',views.onebook,name='onebook'),
-    path('Catagory_Books/<int:id>/',views.Catagory_Books,name='Catagory_Books'),
+    path('onebook/<str:id>/',views.onebook,name='onebook'),
+    path('Catagory_Books/<str:id>/',views.Catagory_Books,name='Catagory_Books'),
     path('searchbar',views.searchbar,name='searchbar'),
     path('form/', views.uploadForm, name='form'),
     path('files/', views.files, name='files'),
@@ -62,5 +62,13 @@ urlpatterns = [
     # path("acceptedOutpassNotifications", views.acceptedOutpassNotifications, name="acceptedOutpassNotifications"),
     # path("acceptedOutpassNotifications1", views.acceptedOutpassNotifications1, name="acceptedOutpassNotifications1"),
 
+
+    path('bookhome/',views.bookhome, name='bookhome'),
+    path('select/<int:res_id>/',views.select, name='select'),
+    # url(r'profile/^$', guest_view.profile, name='profile'),
+    path('confirm/<int:res_id>/', views.confirm, name='confirm'),
+    path('cancel/<int:res_id>/', views.cancel, name='cancel'),
+    path('pdf/<int:res_id>/', views.generate_pdf, name='pdf'),
+    path('bookings/', views.bookings, name='bookings'),
 ################################################################################################################################
 ]
