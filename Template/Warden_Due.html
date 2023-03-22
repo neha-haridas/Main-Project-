@@ -8,11 +8,12 @@
 -->
 <html lang="en">
 
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>My Card-Library</title>
+    <title>My Card-Warden</title>
     <link href="{% static 'vendor/fontawesome/css/fontawesome.min.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/fontawesome/css/solid.min.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/fontawesome/css/brands.min.css'%}" rel="stylesheet">
@@ -36,6 +37,17 @@
                     <a href="{% url 'WardenOutpassView' %}"><i class="fas fa-receipt"></i>OutPass Details</a>
                 </li>
                 <li>
+                    <a href="#authmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-user-shield"></i> Rooms</a>
+                    <ul class="collapse list-unstyled" id="authmenu">
+                        <li>
+                            <a href="{% url 'Addroom' %}"><i class="fas fa-lock"></i> Add Rooms</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'table' %}"><i class="fas fa-user-plus"></i> Room List</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a href="{% url 'WardenComplaintView' %}"><i class="fas fa-file-alt"></i> Complaints</a>
                 </li>
                 <li>
@@ -51,12 +63,6 @@
                             <a href="{% url 'WardenDue' %}"><i class="fas fa-info-circle"></i> Dues</a>
                         </li>
                     </ul>
-                </li>
-                <li>
-                    <a href="users.html"><i class="fas fa-user-friends"></i>Users</a>
-                </li>
-                <li>
-                    <a href="settings.html"><i class="fas fa-cog"></i>Settings</a>
                 </li>
             </ul>
         </nav>

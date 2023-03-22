@@ -53,6 +53,15 @@ urlpatterns = [
     # path('send-sms/', views.send_sms, name='send_sms'),
     path('present_leaves/', views.present_leaves, name='present_leaves'),
     path('mess_rebate/', views.mess_rebate, name='mess_rebate'),
+    path('Addroom', views.Addroom, name='Addroom'),
+    path('table/',views.table,name='table'),
+    path('addproducttable/<int:id>/',views.addroomtable,name='addproducttable'),
+    # path('viewproduct',views.view_wishlist,name='view_wishlist'),
+    path('productedit/<int:id>/',views.productedit,name='productedit'),
+    path('productupdate/',views.productupdate,name='productupdate'),
+    path('deleteproduct/<int:id>/',views.deleteproduct,name='deleteproduct'),
+    path('Room_view',views.Room_view,name='Room_view'),
+    path('RoomDetails/<int:id>/',views.RoomDetails,name='RoomDetails'),
 
    
 
@@ -63,12 +72,5 @@ urlpatterns = [
     # path("acceptedOutpassNotifications1", views.acceptedOutpassNotifications1, name="acceptedOutpassNotifications1"),
 
 
-    path('bookhome/',views.bookhome, name='bookhome'),
-    path('select/<int:res_id>/',views.select, name='select'),
-    # url(r'profile/^$', guest_view.profile, name='profile'),
-    path('confirm/<int:res_id>/', views.confirm, name='confirm'),
-    path('cancel/<int:res_id>/', views.cancel, name='cancel'),
-    path('pdf/<int:res_id>/', views.generate_pdf, name='pdf'),
-    path('bookings/', views.bookings, name='bookings'),
 ################################################################################################################################
 ]

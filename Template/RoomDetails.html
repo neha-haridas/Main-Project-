@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>My Card</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'img/favicon.png'%}" rel="icon">
+  <link href="{% static 'img/apple-touch-icon.png'%}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/aos/aos.css'%}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css'%}" rel="stylesheet">
+  <link href="{% static 'vendor/boxicons/css/boxicons.min.css'%}" rel="stylesheet">
+  <link href="{% static 'vendor/glightbox/css/glightbox.min.css'%}" rel="stylesheet">
+  <link href="{% static 'vendor/swiper/swiper-bundle.min.css'%}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'css/style.css'%}" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- ======= Top Bar ======= -->
+  <section id="topbar" class="d-flex align-items-center">
+    <div class="container d-flex justify-content-center justify-content-md-between">
+      <div class="contact-info d-flex align-items-center">
+        <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">mycardshelp@gmail.com</a></i>
+        <i class="bi bi-phone d-flex align-items-center ms-4"><span>+91 9633652368</span></i>
+      </div>
+      <div class="social-links d-none d-md-flex align-items-center">
+        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <h1 class="logo"><a href="{% url 'Student_Home' %}">My Cards<span>.</span></a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt=""></a>-->
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="{% url 'Student_Home' %}">Home</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'about' %}">About</a></li>
+          <li><a class="nav-link scrollto" href="#team">Contact</a></li>
+           {% if request.user.is_authenticated %}
+          <li class="dropdown"><a href="#"><span>{{request.user.first_name}}</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{% url 'profile' %}">Account</a></li>
+              <li><a href="{% url 'changepassword' %}">Change Password</a></li>
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+              {% else %}
+
+            </ul>
+          </li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav>
+      <!-- .navbar -->
+      <a href="{% url 'login' %}">Login</a>
+      {% endif %}
+            
+      <!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+    <!-- ======= Portfolio Details Section ======= -->
+    <section id="portfolio-details" class="portfolio-details">
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-8">
+            <div class="portfolio-details-slider swiper">
+              <div class="swiper-wrapper align-items-center">
+                {% for i in room %}
+                <div class="swiper-slide">
+                  <img src="{{i.room_image.url}}" alt="">
+                </div>
+
+                <!-- <div class="swiper-slide">
+                  <img src="assets/img/portfolio/portfolio-details-2.jpg" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/portfolio/portfolio-details-3.jpg" alt="">
+                </div> -->
+
+              </div>
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="portfolio-info">
+              <h3>Room information</h3>
+              <ul>
+                <li><strong>Category </strong>: {{ i.get_room_type_display }}</li>
+                <li><strong>Available </strong>: {{i.available}}</li>
+                <li><strong>Price </strong>: {{i.price}}</li>
+                <li><strong>Book now </strong>: <a href="#"><button id="rzp-button1">Pay Now</a></li></button>
+                <!-- <li><strong>Book now</strong>: <a href="#">Pay Now</a></li> -->
+              </ul>
+            </div>
+            <div class="portfolio-description">
+              <h2>Room Detail</h2>
+              <p>
+                {{i.description}}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Details Section -->
+    {% endfor %}
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "rzp_test_atlnSmR0BK0uGq", // Enter the Key ID generated from the Dashboard
+    "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "My Card",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+  </main><!-- End #main -->
+
+      <!-- ======= Footer ======= -->
+      <footer id="footer">
+        <div class="footer-newsletter">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-6">
+                <h4>Join Our Newsletter</h4>
+                <p></p>
+                <form action="" method="post">
+                  <input type="email" name="email"><input type="submit" value="Subscribe">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="footer-top">
+          <div class="container">
+            <div class="row">
+    
+              <div class="col-lg-3 col-md-6 footer-contact">
+                <h3>My Cards<span>.</span></h3>
+                <p>
+                  Amal Jyothi College of Engineering <br>
+                  P.O Kanjirapally - Erumely Road, <br>
+                   Kerala <br>686518<br>
+                  <strong>Phone:</strong>+91 9633652368<br>
+                  <strong>Email:</strong> mycardshelp@gmail.com<br>
+                </p>
+              </div>
+    
+              <div class="col-lg-3 col-md-6 footer-links">
+                <h4>Useful Links</h4>
+                <ul>
+                  <li><i class="bx bx-chevron-right"></i> <a href="{% url 'Student_Home' %}">Home</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="{% url 'about' %}">About us</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+                </ul>
+              </div>
+    
+              
+    
+              <div class="col-lg-3 col-md-6 footer-links">
+                <h4>Our Social Networks</h4>
+                <p></p>
+                <div class="social-links mt-3">
+                  <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+                  <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+                  <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                  <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+                  <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                </div>
+              </div>
+    
+            </div>
+          </div>
+        </div>
+      </footer><!-- End Footer -->
+    
+      <div id="preloader"></div>
+      <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    
+      <!-- Vendor JS Files -->
+      <script src="{% static 'endor/purecounter/purecounter_vanilla.js'%}"></script>
+      <script src="{% static 'vendor/aos/aos.js'%}"></script>
+      <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+      <script src="{% static 'vendor/glightbox/js/glightbox.min.js'%}"></script>
+      <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js'%}"></script>
+      <script src="{% static 'vendor/swiper/swiper-bundle.min.js'%}"></script>
+      <script src="{% static 'vendor/waypoints/noframework.waypoints.js'%}"></script>
+      <script src="{% static 'vendor/php-email-form/validate.js'%}"></script>
+    
+      <!-- Template Main JS File -->
+      <script src="{% static 'js/main.js'%}"></script>
+    
+    </body>
+    
+    </html>

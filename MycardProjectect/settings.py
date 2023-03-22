@@ -40,6 +40,8 @@ SMS_BROADCAST_TO_NUMBERS = [
     "", 
 ]
 
+razor_pay_key_id ='rzp_test_atlnSmR0BK0uGq'
+key_secret = 'IqCklsj8xA9HxtlN2FziELL1'
 
 # Application definition
 

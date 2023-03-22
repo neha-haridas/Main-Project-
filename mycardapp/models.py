@@ -108,6 +108,16 @@ class Account(AbstractBaseUser,PermissionsMixin):
 
     def has_module_perms(self, add_label):
         return True
+    
+
+
+class LastFace(models.Model):
+    last_face = models.CharField(max_length=200)
+    date = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.last_face
+
+
 
 ######################################Library########################################
 
@@ -121,39 +131,6 @@ class librarian(models.Model):
     is_active       = models.BooleanField(default=True)
     is_admin        = models.BooleanField(default=False)
 
-
-
-
-
-
-
-class Category(models.Model):
-    class Meta:
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
-
-    user = models.ForeignKey(
-        Account, on_delete=models.SET_NULL, null=True, blank=True)
-    name = models.CharField(max_length=100, null=False, blank=False)
-
-    def __str__(self):
-        return self.name
-
-
-class Document(models.Model):
-    class Meta:
-        verbose_name = 'Photo'
-        verbose_name_plural = 'Photos'
-    
-    category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, blank=True)
-    image = models.ImageField(null=False, blank=False)
-    description = models.TextField()
-
-
-
-    def __str__(self):
-        return self.description
 
 
 class Category_Book(models.Model):
@@ -263,7 +240,7 @@ class Leave(models.Model):
             message = client.messages.create(
                 body=f"Dear Parent,{self.name}, applying Outpass for {self.purpose}",
                 from_='+13215946647',
-                to='+917025920093'
+                to={self.parents_contact}
             )
 
         print(message.sid)
@@ -292,83 +269,15 @@ class ComplaintStudent(models.Model):
 #############################################################
 
 
-class Rooms(models.Model):
-    # room_id = models.AutoField(primary_key=True)
-    room_choice = [('S', 'Single Occupancy'), ('D', 'Double Occupancy')]
-    no = models.CharField(validators=[MinLengthValidator(2)],max_length=5,unique=True)
-    max_persons = models.IntegerField(default=2)
-    room_type = models.CharField(choices=room_choice, max_length=1, default=None)
-    price = models.IntegerField(default=500)
+class Course(models.Model):
+    # if a student has enrollment number iit2017001 then the course code is iit2017
+    code = models.CharField(max_length=100, default=None)
+    room_choice = [('S', 'Single Occupancy'), ('D', 'Double Occupancy'), ('P', 'Reserved for Research Scholars'), ('B', 'Both Single and Double Occupancy')]
+    room_type = models.CharField(choices=room_choice, max_length=1, default='D')
 
     def __str__(self):
-        return 'Room no: %s price: %s' %(str(self.no), str(self.price))
-
-
-class Reservation(models.Model):
-    room = models.ForeignKey('Room', default=None,null=True, on_delete=models.CASCADE)
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    checkIn = models.DateField()
-    checkOut = models.DateField()
-    booking_id = models.AutoField(primary_key=True)
-    guest = models.ForeignKey('Guest', default=None, null=True, on_delete=models.CASCADE)
-    room_alloted = models.BooleanField(default=False)
-    accept = models.BooleanField(default=False)
-    reject = models.BooleanField(default=False)
-
-    class Meta:
-        verbose_name_plural = 'Reservation'
-
-    def __str__(self):
-        return str(self.booking_id)
-
-
-class Guest(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
-    guest_id = models.AutoField(primary_key=True)
-    first_name = models.CharField(validators=[MinLengthValidator(3)],max_length=255,null=True)
-    last_name = models.CharField(validators=[MinLengthValidator(3)],max_length=255,null=True)
-    phone = models.CharField(validators=[MinLengthValidator(5)],max_length=12,null=True)
-    email = models.EmailField(
-        verbose_name='e-mail',
-        null=True
-    )
-    city = models.CharField(
-        max_length=20,null=True)
-    # room = models.OneToOneField(
-    #     'Room',
-    #     blank=True,
-    #     on_delete=models.CASCADE,
-    #     null=True)
-    # room_allotted = models.BooleanField(default=False)
-
-    def __str__(self):
-        return str(self.guest_id)
-
-
-###################################################################
-
-class Room(models.Model):
-    room_choice = [('S', 'Single Occupancy'), ('D', 'Double Occupancy'), ('P', 'Reserved for Research Scholars'),('B', 'Both Single and Double Occupancy')]
-    no = models.CharField(max_length=5)
-    name = models.CharField(max_length=10)
-    room_type = models.CharField(choices=room_choice, max_length=1, default=None)
-    vacant = models.BooleanField(default=False)
-    hostel = models.ForeignKey('Hostel', on_delete=models.CASCADE)
-    repair = models.CharField(max_length=100, blank=True)
-
-
-    def __str__(self):
-        return '%s %s' %(self.name, self.hostel)
-
-    def delete(self, *args, **kwargs):
-        stud = Account.objects.filter(room=self)
-        print('pppppppppppppppppppppppppppppppppppppppp')
-        for s in stud:
-            s.room_allotted = False
-            s.save()
-            print('***********')
-        super(Room, self).delete(*args, **kwargs)
-
+        return self.code
+    
 
 class Hostel(models.Model):
     name = models.CharField(max_length=5)
@@ -386,50 +295,24 @@ class Hostel(models.Model):
         return self.name
 
 
-class Course(models.Model):
-    # if a student has enrollment number iit2017001 then the course code is iit2017
-    code = models.CharField(max_length=100, default=None)
-    room_choice = [('S', 'Single Occupancy'), ('D', 'Double Occupancy'), ('P', 'Reserved for Research Scholars'), ('B', 'Both Single and Double Occupancy')]
-    room_type = models.CharField(choices=room_choice, max_length=1, default='D')
+class Room(models.Model):
+    id = models.AutoField(primary_key=True)
+    room_choice = [('S', 'Single Room'), ('D', 'Double Room'), ('T', 'Triple Room'),('P', 'Reserved for Research Scholars'),('B', 'Both Single and Double Occupancy')]
+    room_type = models.CharField(choices=room_choice, max_length=1, default=None)
+    room_image = models.ImageField(upload_to='room_image/',default='')
+    price          = models.IntegerField(default=0)
+    available          = models.IntegerField(default=0)
+    description    = models.TextField(max_length=1000,default='')
 
-    def __str__(self):
-        return self.code
-
-
-class Warden(models.Model):
-    user = models.OneToOneField(Account,
-        default=None,
-        null=True,
-        on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, null=True)
-    hostel = models.ForeignKey('Hostel',default=None,null=True,
-                               on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if self.user.is_staff is False:  # Set default reference
-            self.user.is_staff = True
-            self.user.save()
-        super(Warden, self).save(*args, **kwargs)
+    
 
     def delete(self, *args, **kwargs):
-        self.user.is_staff = False
-        self.user.save()
+        stud = Account.objects.filter(room=self)
         print('pppppppppppppppppppppppppppppppppppppppp')
+        for s in stud:
+            s.room_allotted = False
+            s.save()
+            print('***********')
+        super(Room, self).delete(*args, **kwargs)
 
-        super(Warden, self).delete(*args, **kwargs)
-
-
-class Leaves(models.Model):
-    student = models.ForeignKey('Account', on_delete=models.CASCADE)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    reason = models.CharField(max_length=100,blank = False)
-    accept = models.BooleanField(default=False)
-    reject = models.BooleanField(default=False)
-    confirm_time = models.DateTimeField(auto_now_add=True)
-
-   
 

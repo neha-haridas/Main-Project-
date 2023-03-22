@@ -1,0 +1,51 @@
+ <!-- {% csrf_token %}
+    <div class="form-group">
+      <label for="exampleFormControlSelect1">Book Name</label>
+      <select class="form-control" id="exampleFormControlSelect1" name="bookname" placeholder="Book Name">
+        {% for x in products %}
+        <option>{{x.book_name}}</option>
+        {% endfor %} 
+      </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Author</label>
+        <select class="form-control" id="exampleFormControlSelect1"name="bookname" placeholder="Book Name">
+            <ul class="dropdown-menu">
+                {% for x in products %}
+                <option>{{x.book_author}}</option>
+                {% endfor %}                  
+              </ul>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="exampleFormControlSelect1">Catagory</label>
+        <select class="form-control" id="exampleFormControlSelect1"name="bookname" placeholder="Book Name">
+            <ul class="dropdown-menu">
+                {% for x in category %}
+                <option>{{x.category_name}}</option>
+                {% endfor %}                   
+              </ul>
+                      </select>
+      </div>
+
+      <script>
+        // Use the datepicker for the DateField
+        const dateInput = document.querySelector('#id_date');
+        dateInput.type = 'text';
+        dateInput.addEventListener('focus', function () {
+          this.type = 'date';
+        });
+        dateInput.addEventListener('blur', function () {
+          if (!this.value) {
+            this.type = 'text';
+          }
+        });
+      </script>
+  
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+  </form>
+                       -->

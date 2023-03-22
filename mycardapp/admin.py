@@ -6,13 +6,10 @@ from django.contrib import admin
 from .models import Account, Book, Category_Book,librarian
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Document, Category
 from mycardapp import models
 
 # admin.site.unregister(Group)
-admin.site.register(Category)
-admin.site.register(Document)
-     
+
 
 class AccountAdmin(admin.ModelAdmin):
     list_display=['first_name','email','contact','regno','dpmnt']

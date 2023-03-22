@@ -6,8 +6,7 @@
     <style type="text/css">
 
         @import url(https://fonts.googleapis.com/css?family=Inconsolata:700);
-    {% block design %}
-    {% endblock design %}
+   
 
         body {
             font-family: 'Inconsolata', sans-serif;
@@ -608,7 +607,7 @@
 
 
 <div class="center" style = "text-align: center;" >
-<a class="btn btn-primary" href="{% url 'guest:select' res.booking_id %}"> Select a Room </a>
+<a class="btn btn-primary" href="{% url 'select' res.booking_id %}"> Select a Room </a>
 </div>
 
 {% else %}
@@ -624,8 +623,8 @@
 
 {% block more_links %}
     
-    <a href="{% url 'guest:cancel' res.booking_id %}">Cancel Booking</a>
-   <a href="{% url 'guest:logout' %}">Logout</a>
+    <a href="{% url 'cancel' res.booking_id %}">Cancel Booking</a>
+  
 
 {% endblock more_links %}
 
