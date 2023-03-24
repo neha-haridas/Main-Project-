@@ -222,17 +222,6 @@ class Leave(models.Model):
         return self.purpose
 
     def save(self, *args, **kwargs):
-        if self.status == 1:
-            account_sid = 'AC7e1b12f105b868c334e9923e237a3e2a'
-            auth_token = '080cc05e21e9313086823c94f15094a7'
-            client = Client(account_sid, auth_token)
-
-            message = client.messages.create(
-                     body="Heloo ",
-                     from_='+13215946647',
-                     to={self.parents_contact}
-            )
-        else:
             account_sid = 'AC7e1b12f105b868c334e9923e237a3e2a'
             auth_token = '080cc05e21e9313086823c94f15094a7'
             client = Client(account_sid, auth_token)
@@ -243,8 +232,8 @@ class Leave(models.Model):
                 to={self.parents_contact}
             )
 
-        print(message.sid)
-        return super().save(*args, **kwargs)
+            print(message.sid)
+            return super().save(*args, **kwargs)
 
 
 
@@ -303,7 +292,7 @@ class Room(models.Model):
     price          = models.IntegerField(default=0)
     available          = models.IntegerField(default=0)
     description    = models.TextField(max_length=1000,default='')
-
+    
     
 
     def delete(self, *args, **kwargs):
@@ -316,3 +305,40 @@ class Room(models.Model):
         super(Room, self).delete(*args, **kwargs)
 
 
+
+class Payment(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    amount = models.FloatField(blank=True,null=True)
+    razorpay_order_id = models.CharField(max_length=100,blank=True,null=True)
+    razorpay_payment_id = models.CharField(max_length=100,blank=True,null=True)
+    razorpay_payment_status = models.CharField(max_length=100,blank=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    paid = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return str(self.user)
+
+
+
+
+class OrderPlaced(models.Model):
+    STATUS = (
+        ('New', 'New'),
+        ('Accepted', 'Accepted'),
+        ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
+
+    )
+    user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
+    payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True, blank=True)
+    product = models.ForeignKey(Room, on_delete=models.CASCADE) 
+    status = models.CharField(max_length=10, choices=STATUS, default='New')
+    is_ordered = models.BooleanField(default=False)
+    ordered_date = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    
+
+    def __str__(self):
+        return str(self.user)     

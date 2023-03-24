@@ -60,6 +60,7 @@
         <ul>
           <li><a class="nav-link scrollto active" href="{% url 'Student_Home' %}">Home</a></li>
           <li><a class="nav-link scrollto" href="{% url 'about' %}">About</a></li>
+          <li><a class="nav-link scrollto" href="">Message</a></li>
           <li><a class="nav-link scrollto" href="#team">Contact</a></li>
            {% if request.user.is_authenticated %}
           <li class="dropdown"><a href="#"><span>{{request.user.first_name}}</span> <i class="bi bi-chevron-down"></i></a>
@@ -141,7 +142,7 @@
             </div> -->
 
             {% for room in triple_rooms %}
-            <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+            <div class="col-lg-4 col-md-6 portfolio-item filter-card">
               <img src="{{ room.room_image.url }}" class="img-fluid" alt="">
               <div class="portfolio-info">
                 <h4>{{ room.get_room_type_display }}</h4>

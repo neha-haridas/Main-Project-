@@ -5,11 +5,35 @@
     <meta charset="utf-8">
     <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
     <!--  All snippets are MIT license http://bootdey.com/license -->
-    <title>User profile</title>
+	<title>My Card</title>
+	
+	<meta content="width=device-width, initial-scale=1.0" name="viewport"> 
+	<meta content="" name="description">
+	<meta content="" name="keywords">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+
+	<!-- Favicons -->
+	<link href="{% static 'img/favicon.png'%}" rel="icon">
+	<link href="{% static 'img/apple-touch-icon.png'%}" rel="apple-touch-icon">
+  
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+	<!-- Vendor CSS Files -->
+	<link href="{% static 'vendor/aos/aos.css'%}" rel="stylesheet">
+	<link href="{% static 'vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+	<link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css'%}" rel="stylesheet">
+	<link href="{% static 'vendor/boxicons/css/boxicons.min.css'%}" rel="stylesheet">
+	<link href="{% static 'vendor/glightbox/css/glightbox.min.css'%}" rel="stylesheet">
+	<link href="{% static 'vendor/swiper/swiper-bundle.min.css'%}" rel="stylesheet">
+  
+	<!-- Template Main CSS File -->
+	<link href="{% static 'css/style.css'%}" rel="stylesheet">
+  
 
     
 <script>
@@ -287,6 +311,58 @@
 
 
 
+  <!-- ======= Top Bar ======= -->
+  <section id="topbar" class="d-flex align-items-center">
+    <div class="container d-flex justify-content-center justify-content-md-between">
+      <div class="contact-info d-flex align-items-center">
+        <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">mycardshelp@gmail.com</a></i>
+        <i class="bi bi-phone d-flex align-items-center ms-4"><span>+91 9633652368</span></i>
+      </div>
+      <div class="social-links d-none d-md-flex align-items-center">
+        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <h1 class="logo"><a href="{% url 'Student_Home' %}">My Cards<span>.</span></a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt=""></a>-->
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="{% url 'Student_Home' %}">Home</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'about' %}">About</a></li>
+		  <li><a class="nav-link scrollto" href="#team">Message</a></li>
+          <li><a class="nav-link scrollto" href="#team">Contact</a></li>
+           {% if request.user.is_authenticated %}
+          <li class="dropdown"><a href="#"><span>{{request.user.first_name}}</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{% url 'profile' %}">Account</a></li>
+              <li><a href="{% url 'changepassword' %}">Change Password</a></li>
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+              {% else %}
+
+            </ul>
+          </li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav>
+      <!-- .navbar -->
+      <a href="{% url 'login' %}">Login</a>
+      {% endif %}
+            
+      <!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
 
 </head>
 <body>
@@ -297,7 +373,7 @@
             <div class="module-inner">
                 <div class="side-bar">
                     <div class="user-info">
-                        <!-- <img class="img-profile img-circle img-responsive center-block" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt=""> -->
+                        <img class="img-profile img-circle img-responsive center-block" src="{{user.img.url}}"alt="">
                         <ul class="meta list list-unstyled">
                                 <!-- <label class="label label-info">UX Designer</label> -->
                             </li>
@@ -308,7 +384,6 @@
             		<nav class="side-menu">
         				<ul class="nav">
         					<li class="active"><a href="{% url 'profile' %}"><span class="fa fa-user"></span> Profile</a></li>
-        					<li><a href="#"><span class="fa fa-cog"></span> Settings</a></li>
         					<!-- <li><a href="#"><span class="fa fa-envelope"></span> Messages</a></li> -->
         				</ul>
         			</nav>
@@ -321,10 +396,10 @@
                             <h3 class="fieldset-title">Personal Info</h3>
                             <div class="form-group avatar">
                                 <figure class="figure col-md-2 col-sm-3 col-xs-12">
-                                    <img class="img-rounded img-responsive" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                                    <img class="img-rounded " src="" alt="">
                                 </figure>
                                 <div class="form-inline col-md-10 col-sm-9 col-xs-12">
-                                    <input type="file" class="file-uploader pull-left">
+                                    <input type="file" name="img" class="file-uploader pull-left" accept=".png, .jpeg, .jpg"  id="file" >
                                     <button type="submit" class="btn btn-sm btn-default-alt pull-left">Update Image</button>
                                 </div>
                             </div>
@@ -1041,5 +1116,85 @@ color: #a2a6af
 <script type="text/javascript">
 
 </script>
+
+<!-- ======= Footer ======= -->
+<footer id="footer">
+    <div class="footer-newsletter">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <h4>Join Our Newsletter</h4>
+            <p></p>
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Subscribe">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 footer-contact">
+            <h3>My Cards<span>.</span></h3>
+            <p>
+              Amal Jyothi College of Engineering <br>
+              P.O Kanjirapally - Erumely Road, <br>
+               Kerala <br>686518<br>
+              <strong>Phone:</strong>+91 9633652368<br>
+              <strong>Email:</strong> mycardshelp@gmail.com<br>
+            </p>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="{% url 'Student_Home' %}">Home</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="{% url 'about' %}">About us</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Our Social Networks</h4>
+            <p></p>
+            <div class="social-links mt-3">
+              <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+              <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+              <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'endor/purecounter/purecounter_vanilla.js'%}"></script>
+  <script src="{% static 'vendor/aos/aos.js'%}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js'%}"></script>
+  <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js'%}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js'%}"></script>
+  <script src="{% static 'vendor/waypoints/noframework.waypoints.js'%}"></script>
+  <script src="{% static 'vendor/php-email-form/validate.js'%}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js'%}"></script>
+
+</body>
+
+</html>
 </body>
 </html>

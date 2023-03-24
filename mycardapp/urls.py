@@ -56,13 +56,13 @@ urlpatterns = [
     path('Addroom', views.Addroom, name='Addroom'),
     path('table/',views.table,name='table'),
     path('addproducttable/<int:id>/',views.addroomtable,name='addproducttable'),
-    # path('viewproduct',views.view_wishlist,name='view_wishlist'),
     path('productedit/<int:id>/',views.productedit,name='productedit'),
     path('productupdate/',views.productupdate,name='productupdate'),
     path('deleteproduct/<int:id>/',views.deleteproduct,name='deleteproduct'),
     path('Room_view',views.Room_view,name='Room_view'),
     path('RoomDetails/<int:id>/',views.RoomDetails,name='RoomDetails'),
-
+    path('showbill',views.showbill,name='showbill'),
+    path('Warden_AttendenceView',views.Warden_AttendenceView,name='Warden_AttendenceView'),
    
 
     # path('return_book/<int:id>',views.return_issued_book,name="return_issued_book"),
