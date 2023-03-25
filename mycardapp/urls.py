@@ -62,7 +62,7 @@ urlpatterns = [
     path('Room_view',views.Room_view,name='Room_view'),
     path('RoomDetails/<int:id>/',views.RoomDetails,name='RoomDetails'),
     path('showbill',views.showbill,name='showbill'),
-    path('Warden_AttendenceView',views.Warden_AttendenceView,name='Warden_AttendenceView'),
+    # path('Warden_AttendenceView',views.Warden_AttendenceView,name='Warden_AttendenceView'),
    
 
     # path('return_book/<int:id>',views.return_issued_book,name="return_issued_book"),
