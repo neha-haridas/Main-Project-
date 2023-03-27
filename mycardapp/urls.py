@@ -55,15 +55,27 @@ urlpatterns = [
     path('mess_rebate/', views.mess_rebate, name='mess_rebate'),
     path('Addroom', views.Addroom, name='Addroom'),
     path('table/',views.table,name='table'),
-    path('addproducttable/<int:id>/',views.addroomtable,name='addproducttable'),
+    path('addroomtable/<int:id>/',views.addroomtable,name='addroomtable'),
     path('productedit/<int:id>/',views.productedit,name='productedit'),
     path('productupdate/',views.productupdate,name='productupdate'),
     path('deleteproduct/<int:id>/',views.deleteproduct,name='deleteproduct'),
     path('Room_view',views.Room_view,name='Room_view'),
     path('RoomDetails/<int:id>/',views.RoomDetails,name='RoomDetails'),
+    path('paymentdone',views.payment_done,name='paymentdone'),
     path('showbill',views.showbill,name='showbill'),
-    # path('Warden_AttendenceView',views.Warden_AttendenceView,name='Warden_AttendenceView'),
-   
+    path('Warden_AttendenceView',views.Warden_AttendenceView,name='Warden_AttendenceView'),
+    path('ajax/', views.ajax, name= 'ajax'),
+    path('scan/',views.scan,name='scan'),
+    path('details/', views.details, name= 'details'),
+    path('reset/',views.reset,name='reset'),
+    path('clear_history/',views.clear_history,name='clear_history'),
+    path('LibrarianAddBook', views.LibrarianAddBook, name='LibrarianAddBook'),
+    path('booktable', views.booktable, name='booktable'),
+    path('addbooktable/<int:id>/',views.addbooktable,name='addbooktable'),
+    path('bookedit/<int:id>/',views.bookedit,name='bookedit'),
+    path('bookupdate/',views.bookupdate,name='bookupdate'),
+    path('deletebook/<int:id>/',views.deletebook,name='deletebook')
+
 
     # path('return_book/<int:id>',views.return_issued_book,name="return_issued_book"),
     # # path('edit_issued/<int:id>',views.edit_issued,name="edit_issued"),
@@ -71,6 +83,4 @@ urlpatterns = [
     # path("acceptedOutpassNotifications", views.acceptedOutpassNotifications, name="acceptedOutpassNotifications"),
     # path("acceptedOutpassNotifications1", views.acceptedOutpassNotifications1, name="acceptedOutpassNotifications1"),
 
-
-################################################################################################################################
 ]

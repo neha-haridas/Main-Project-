@@ -30,30 +30,30 @@
             </div>
             <ul class="list-unstyled components text-secondary">
                 <li>
-                    <a href="{% url 'WardenOutpassView' %}"><i class="fas fa-home"></i>OutPass Details</a>
+                    <a href=""><i class="fas fa-book-reader"></i>Book issue Details</a>
                 </li>
                 <li>
-                    <a href="forms.html"><i class="fas fa-file-alt"></i> Complaints</a>
+                    <a href=""><i class="fas fa-file-alt"></i> Complaints</a>
                 </li>
                 <li>
-                    <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-copy"></i> Payment Details</a>
-                    <ul class="collapse list-unstyled" id="pagesmenu">
+                    <a href="#authmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-book"></i> Books</a>
+                    <ul class="collapse list-unstyled" id="authmenu">
                         <li>
-                            <a href="404.html"><i class="fas fa-info-circle"></i> Mess Fee</a>
+                            <a href="{% url 'LibrarianAddBook' %}"><i class="fas fa-plus"></i> Add Books</a>
                         </li>
                         <li>
-                            <a href="500.html"><i class="fas fa-info-circle"></i> Hostel Rent</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'WardenDue' %}"><i class="fas fa-info-circle"></i> Dues</a>
+                            <a href="{% url 'booktable' %}"><i class="fas fa-list"></i> Book List</a>
                         </li>
                     </ul>
                 </li>
                 <li>
-                    <a href="users.html"><i class="fas fa-user-friends"></i>Users</a>
-                </li>
-                <li>
-                    <a href="settings.html"><i class="fas fa-cog"></i>Settings</a>
+                    <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-money-bill"></i> Payment Details</a>
+                    <ul class="collapse list-unstyled" id="pagesmenu">
+                        <li>
+                            <a href="404.html"><i class="fas fa-rupee-sign"></i> Book penalty details</a>
+                        </li>
+                       
+                    </ul>
                 </li>
             </ul>
         </nav>

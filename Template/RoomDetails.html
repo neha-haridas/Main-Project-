@@ -27,6 +27,7 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'css/style.css'%}" rel="stylesheet">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 </head>
 
@@ -93,9 +94,8 @@
           <div class="col-lg-8">
             <div class="portfolio-details-slider swiper">
               <div class="swiper-wrapper align-items-center">
-                {% for i in room %}
                 <div class="swiper-slide">
-                  <img src="{{i.room_image.url}}" alt="">
+                  <img src="{{room.room_image.url}}" alt="">
                 </div>
 
                 <!-- <div class="swiper-slide">
@@ -115,9 +115,9 @@
             <div class="portfolio-info">
               <h3>Room information</h3>
               <ul>
-                <li><strong>Category </strong>: {{ i.get_room_type_display }}</li>
-                <li><strong>Available </strong>: {{i.available}}</li>
-                <li><strong>Price </strong>: {{i.price}}</li>
+                <li><strong>Category </strong>: {{ room.get_room_type_display }}</li>
+                <li><strong>Available </strong>: {{room.available}}</li>
+                <li><strong>Price </strong>: {{room.price}}</li>
                 <form  id="myform">
                 <li><strong>Book now </strong>: <a href="#"><button id="rzp-button1">Pay Now</a></li></button></form>
                 <!-- <li><strong>Book now</strong>: <a href="#">Pay Now</a></li> --> 
@@ -126,7 +126,7 @@
             <div class="portfolio-description">
               <h2>Room Detail</h2>
               <p>
-                {{i.description}}
+                {{room.description}}
               </p>
             </div>
           </div>
@@ -135,14 +135,13 @@
 
       </div>
     </section><!-- End Portfolio Details Section -->
-    {% endfor %}
 
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
 var options = {
     "key": "rzp_test_atlnSmR0BK0uGq", // Enter the Key ID generated from the Dashboard
-    "amount": "{{razoramount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "amount": "{{razor_amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
     "currency": "INR",
     "name": "My Card",
     "description": "Test Transaction",
@@ -152,7 +151,7 @@ var options = {
             console.log("success")
             var form = document.getElementById["myform"];
             var a = response.razorpay_payment_id;
-            alert({{order_id}}'Payment Done Successfully....')
+            alert('Payment Done Successfully....')
             window.location.href = 'http://127.0.0.1:8000/paymentdone?order_id=${response.razorpay_order_id}&user_id=${response.USER}&payment_id='+a
 
         },

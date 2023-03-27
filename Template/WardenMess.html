@@ -36,21 +36,35 @@
                     <a href="{% url 'WardenOutpassView' %}"><i class="fas fa-receipt"></i>OutPass Details</a>
                 </li>
                 <li>
+                    <a href="#authmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-user-shield"></i> Rooms</a>
+                    <ul class="collapse list-unstyled" id="authmenu">
+                        <li>
+                            <a href="{% url 'Addroom' %}"><i class="fas fa-plus"></i> Add Rooms</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'table' %}"><i class="fas fa-list"></i> Room List</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a href="{% url 'WardenComplaintView' %}"><i class="fas fa-file-alt"></i> Complaints</a>
                 </li>
                 <li>
-                    <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-money-bill"><i class="fas fa-copy"></i> Payment Details</a>
+                    <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-money-bill"></i> Payment Details</a>
                     <ul class="collapse list-unstyled" id="pagesmenu">
                         <li>
-                            <a href="{% url 'WardenMess' %}"><i class="fas fa-info-circle"></i> Mess Fee</a>
+                            <a href="{% url 'WardenMess' %}"><i class="fas fa-rupee-sign"></i> Mess Fee</a>
                         </li>
                         <li>
-                            <a href="500.html"><i class="fas fa-info-circle"></i> Hostel Rent</a>
+                            <a href="500.html"><i class="fas fa-rupee-sign"></i> Hostel Rent</a>
                         </li>
                         <li>
                             <a href="{% url 'WardenDue' %}"><i class="fas fa-info-circle"></i> Dues</a>
                         </li>
                     </ul>
+                </li>
+                <li>
+                    <a href="{% url 'Warden_AttendenceView' %}"><i class="fas fa-user-friends"></i>Face Detection</a>
                 </li>
             </ul>
         </nav>
@@ -106,8 +120,7 @@
                 {% endif %}
                       
                 </div>
-            </nav>
-            <!-- end of navbar navigation -->
+            </nav>        <!-- end of navbar navigation -->
             <div class="content">
             <div class="container">
             <div class="col-md-12 col-lg-12">

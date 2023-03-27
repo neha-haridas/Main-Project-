@@ -8,7 +8,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from twilio.rest import Client
 import os
 from django.core.validators import MinLengthValidator
-
+import datetime
+from time import time
 
 # Create your models here.
 class MyAccount(BaseUserManager):
@@ -62,17 +63,13 @@ class Account(AbstractBaseUser,PermissionsMixin):
     regno           = models.BigIntegerField(default=0 , unique=True)
     dpmnt           = models.CharField(max_length=50, default='')
     sem             = models.CharField(max_length=50, default='')
-    img             = models.ImageField(upload_to='pics', default=0)
+    image             = models.ImageField(upload_to='pics', default=0)
     gender_choices = [('N','None'),('M', 'Male'), ('F', 'Female')]
     gender = models.CharField(
         choices=gender_choices,
         max_length=1,
         default='N',null=True)
-    room = models.OneToOneField(
-        'Room',
-        blank=True,
-        on_delete= models.SET_NULL,
-        null=True)
+    present = models.BooleanField(default=False)
     room_allotted = models.BooleanField(default=False)
     no_dues = models.BooleanField(default=True)
 
@@ -292,7 +289,8 @@ class Room(models.Model):
     price          = models.IntegerField(default=0)
     available          = models.IntegerField(default=0)
     description    = models.TextField(max_length=1000,default='')
-    
+    user           = models.ForeignKey(Account,on_delete=models.CASCADE,default=1)
+
     
 
     def delete(self, *args, **kwargs):
@@ -342,3 +340,6 @@ class OrderPlaced(models.Model):
 
     def __str__(self):
         return str(self.user)     
+
+
+

@@ -6,10 +6,10 @@ from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from django.http import HttpResponse
-from django.http import HttpResponse,HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 
 from mycardapp.utils import send_twilio_message
-from .models import Account, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files,Room
+from .models import Account, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files,Room,Payment,OrderPlaced,ComplaintStudent,LastFace
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -38,6 +38,15 @@ from django.core.paginator import Paginator
 import razorpay 
 
 
+
+from django.shortcuts import render, HttpResponse, redirect
+import face_recognition
+import cv2
+import numpy as np
+import winsound
+from django.db.models import Q
+from playsound import playsound
+import os
 
 
 # Create your views here.
@@ -492,7 +501,6 @@ def student_issued_books(request):
 
 
 
-from django.db.models import Q
 
 
 # class FileView(generic.ListView):
@@ -824,41 +832,85 @@ def Room_view(request):
     return render(request, "Room_view.html",{'single_rooms':single_rooms, 'double_rooms':double_rooms, 'triple_rooms':triple_rooms, 'both_rooms':both_rooms})
 
 
+
 # def RoomDetails(request,id):
 #     room =Room.objects.filter(id=id)
-#     return render(request,'RoomDetails.html',{'room':room })
+#     product = Room.objects.all()
+#     # user = request.user
+#     # cart=Room.objects.filter(user_id=user)
+#     for i in room:
+#         total = i.price
+#     razoramount = total*100
+#     client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY,settings.RAZORPAY_API_SECRET_KEY))
+#     data = {
+#         "amount": total,
+#         "currency": "INR",
+#         "receipt": "order_rcptid_11"
+#     }
+#     payment_response = client.order.create(data=data)
+#     print(payment_response)
+#     order_id = payment_response['id']
+#     request.session['order_id'] = order_id
+#     order_status = payment_response['status']
+#     if order_status == 'created':
+#         payment = Payment(
+#             user=request.user,
+#             amount=total,
+#             razorpay_order_id = order_id,
+#             razorpay_payment_status = order_status
+#             )
+#         payment.save()
+#     return render(request,'RoomDetails.html',{'room':room,'total':total,'razoramount':razoramount})
 
-
-
-
-def RoomDetails(request,id):
-    room =Room.objects.filter(id=id)
-    product = Room.objects.all()
-    # user = request.user
-    # cart=Room.objects.filter(user_id=user)
-    for i in room:
-        total = i.price
-    razoramount = total*100
-    client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY,settings.RAZORPAY_API_SECRET_KEY))
+def RoomDetails(request, id):
+    room = Room.objects.filter(id=id).first()
+    razor_amount = room.price * 100
+    client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
     data = {
-        "amount": total,
+        "amount": razor_amount,
         "currency": "INR",
-        "receipt": "order_rcptid_11"
+        "receipt": f"order_rcptid_{room.id}"
     }
     payment_response = client.order.create(data=data)
-    print(payment_response)
     order_id = payment_response['id']
     request.session['order_id'] = order_id
     order_status = payment_response['status']
     if order_status == 'created':
-        payment = Payment(
+        payment = Payment.objects.create(
             user=request.user,
-            amount=total,
-            razorpay_order_id = order_id,
-            razorpay_payment_status = order_status
-            )
+            amount=room.price,
+            razorpay_order_id=order_id,
+            razorpay_payment_status=order_status
+        )
         payment.save()
-    return render(request,'RoomDetails.html',{'room':room,'total':total,'razoramount':razoramount, })
+    return render(request, 'RoomDetails.html', {'room': room, 'razor_amount': razor_amount})
+
+
+
+@login_required(login_url='login')
+def payment_done(request):
+    order_id = request.session['order_id']
+    payment_id = request.GET.get('payment_id')
+    print(payment_id)
+    payment = Payment.objects.get(razorpay_order_id=order_id)
+    payment.paid = True
+    payment.razorpay_payment_id = payment_id
+    payment.save()
+    room = Room.objects.filter(user=request.user)
+    OrderPlaced(
+        user=request.user,
+        payment=payment,
+        product=room,
+        is_ordered=True
+    ).save()
+    return redirect('RoomDetails')
+
+
+
+@login_required(login_url='login')
+def showbill(request):
+    orders = OrderPlaced.objects.filter(user=request.user, is_ordered=True).order_by('ordered_date')
+    return render(request, "showbill.html", {'orders': orders})
 
 
 
@@ -869,92 +921,34 @@ def RoomDetails(request,id):
 #     payment=Payment.objects.get(razorpay_order_id = order_id)
 #     payment.paid = True
 #     payment.razorpay_payment_id = payment_id
+#     payment.razorpay_payment_status = 'paid'
 #     payment.save()
 
-#     room = Room.objects.filter(id=id)
-#     room.update(available=models.F('available') - 1)
+#     rm=Room.objects.filter(user=request.user)
+#     # item = Product.objects.get(product=product, id=item_id)
 
-#     OrderPlaced.objects.create(
-#         user=request.user,
-#         payment=payment,
-#         product=room.first(),
-#         is_ordered=True
-#     ).save() 
-#     return redirect('Room_view')
-
-# def payment_done(request):
-#     order_id = request.session['order_id']
-#     payment_id = request.GET.get('payment_id')
-
-#     payment = Payment.objects.get(razorpay_order_id=order_id)
-
-#     payment.paid = True
-#     payment.razorpay_payment_id = payment_id
-#     payment.razorpay_payment_status = 'paid' # set payment status to 'paid'
-#     payment.save()
-
-#     room_id = payment.orderplaced_set.first().product.id
-#     room = Room.objects.get(id=room_id)
-#     room.available -= 1
-#     room.save()
-
-#     OrderPlaced.objects.create(
-#         user=request.user,
-#         payment=payment,
-#         product=room,
-#         status='New',
-#         is_ordered=True
-#     )
-
-#     return redirect('Room_view')
-
-
-def payment_done(request):
-    order_id=request.session['order_id']
-    payment_id = request.GET.get('payment_id')
-    print(payment_id)
-    payment=Payment.objects.get(razorpay_order_id = order_id)
-    payment.paid = True
-    payment.razorpay_payment_id = payment_id
-    payment.razorpay_payment_status = 'paid'
-    payment.save()
-
-    cart=Room.objects.filter(user=request.user)
-    # item = Product.objects.get(product=product, id=item_id)
-
-    for c in cart:
-        OrderPlaced(user=request.user,room_type=c.room_type,available=c.available,payment=payment,is_ordered=True).save()
-        c.delete()
-        c.cart.available -= 1
-        c.cart.save()
-    # messages.success(request, 'Payment done successfully you can view the order details on your profile'
-    #                           'Continue Shopping')
-    return redirect('showbill')
+#     for c in rm:
+#         OrderPlaced(user=request.user,room_type=c.room_type,available=c.available,payment=payment,is_ordered=True).save()
+#         c.delete()
+#         c.cart.available -= 1
+#         c.cart.save()
+#     # messages.success(request, 'Payment done successfully you can view the order details on your profile'
+#     #                           'Continue Shopping')
+#     return redirect('showbill')
 
 
 
-@login_required(login_url='login')
-def showbill(request):
-    orders = OrderPlaced.objects.filter(
-        user=request.user, is_ordered=True).order_by('ordered_date')
-    context = {
-        'orders': orders
-    }
-    return render(request, "showbill.html",context)
+# @login_required(login_url='login')
+# def showbill(request):
+#     orders = OrderPlaced.objects.filter(
+#         user=request.user, is_ordered=True).order_by('ordered_date')
+#     context = {
+#         'orders': orders
+#     }
+#     return render(request, "showbill.html",context)
 
 
 #########################Attendence######################################
-
-from django.shortcuts import render, HttpResponse, redirect
-from .models import *
-from .forms import *
-import face_recognition
-import cv2
-import numpy as np
-import winsound
-from django.db.models import Q
-from playsound import playsound
-import os
 
 
 last_face = 'no_face'
@@ -966,12 +960,12 @@ sound = os.path.join(sound_folder, 'beep.wav')
 
 def Warden_AttendenceView(request):
     scanned = LastFace.objects.all().order_by('date').reverse()
-    present = Account.objects.filter(present=True).order_by('updated').reverse()
-    # absent = Account.objects.filter(present=False).order_by('shift')
+    present = Account.objects.filter(present=True).order_by('id').reverse()
+    absent = Account.objects.filter(present=False).order_by('id')
     context = {
         'scanned': scanned,
         'present': present,
-        # 'absent': absent,
+        'absent': absent,
     }
     return render(request, 'Warden_AttendenceView.html', context)
 
@@ -994,7 +988,7 @@ def scan(request):
     profiles = Account.objects.all()
     for profile in profiles:
         person = profile.image
-        image_of_person = face_recognition.load_image_file(f'media/{person}')
+        image_of_person = face_recognition.load_image_file(f'images/pics/{person}')
         person_face_encoding = face_recognition.face_encodings(image_of_person)[0]
         known_face_encodings.append(person_face_encoding)
         known_face_names.append(f'{person}'[:-4])
@@ -1070,4 +1064,143 @@ def scan(request):
 
     video_capture.release()
     cv2.destroyAllWindows()
-#     return HttpResponse('scaner closed', last_face)
+    return HttpResponse('scaner closed', last_face)
+
+
+def details(request):
+    try:
+        last_face = LastFace.objects.last()
+        profile = Account.objects.get(Q(image__icontains=last_face))
+    except:
+        last_face = None
+        profile = None
+
+    context = {
+        'profile': profile,
+        'last_face': last_face
+    }
+    return render(request, 'details.html', context)
+
+
+
+def clear_history(request):
+    history = LastFace.objects.all()
+    history.delete()
+    return redirect('Warden_AttendenceView')
+
+def reset(request):
+    profiles = Account.objects.all()
+    for profile in profiles:
+        if profile.present == True:
+            profile.present = False
+            profile.save()
+        else:
+            pass
+    return redirect('Warden_AttendenceView')
+################################Libraran####################
+
+
+def LibrarianAddBook(request):
+    cat = Category_Book.objects.all()
+    if request.method == 'POST':
+        book_name = request.POST['book_name']
+        category_id = request.POST.get('category') 
+        print("category_id:", category_id)
+        book_category = Category_Book.objects.get(category_id=category_id)
+        book_language = request.POST['book_language']
+        book_author = request.POST['book_author']
+        book_desc = request.POST['book_desc']
+        book_year = request.POST['book_year']
+        book_publisher = request.POST['book_publisher']
+        img = request.FILES.get('img', '')
+        book_price = request.POST['book_price']
+        isbn = request.POST['isbn']
+        book_quantity = request.POST['book_quantity']
+
+        book = Book(
+            book_category=book_category,
+            book_name=book_name,
+            book_language=book_language,
+            book_author=book_author,
+            book_desc=book_desc,
+            book_year=book_year,
+            book_publisher=book_publisher,
+            img=img,
+            book_price=book_price,
+            isbn=isbn,
+            book_quantity=book_quantity
+        )
+        book.save()
+        messages.success(request, "Successfully Add room")
+        return redirect('booktable')       
+ 
+    return render(request, 'LibrarianAddBook.html',{'cat':cat})
+
+
+
+def booktable(request):
+    products = Book.objects.all()
+    return render(request, "booktable.html",{'products':products})
+
+def addbooktable(request,id):
+    return redirect('booktable')
+
+
+
+
+def bookedit(request,id):
+    products = Book.objects.get(id=id)
+
+    context = {
+        'products':products
+    }
+        
+    return render(request, "bookedit.html",context) 
+
+
+def bookupdate(request):
+    cat = Category_Book.objects.all()
+    if request.method == "POST":
+        book_name = request.POST['book_name']
+        category_id = request.POST.get('category_id') 
+        book_category = Category_Book.objects.get(id=category_id)
+        book_language = request.POST['book_language']
+        book_author = request.POST['book_author']
+        book_desc = request.POST['book_desc']
+        book_year = request.POST['book_year']
+        book_publisher = request.POST['book_publisher']
+        img = request.FILES.get('img', '')
+        book_price = request.POST['book_price']
+        isbn = request.POST['isbn']
+        book_quantity = request.POST['book_quantity']
+        value = Book.objects.get(id=id)  
+        value.book_name = book_name
+        value.category_id = category_id
+        value.book_category = book_category
+        value.book_language = book_language
+        value.book_author = book_author
+        value.book_desc = book_desc
+        value.book_year = book_year
+        value.book_publisher = book_publisher
+        value.img = img
+        value.book_price = book_price
+        value.isbn = isbn
+        value.book_quantity = book_quantity
+        value.save()
+        return redirect('booktable')
+
+        # print(cate,pname,pdesc,pimg,price,stock)
+    return render(request, "productedit.html")
+
+def deletebook(request,id):
+    item  = Book.objects.get(id=id)
+    item.delete()
+    return redirect('booktable') 
+    
+def Room_view(request):
+    single_rooms = Room.objects.filter(room_type='S')
+    double_rooms = Room.objects.filter(room_type='D')
+    triple_rooms = Room.objects.filter(room_type='T')
+    both_rooms = Room.objects.filter(room_type='B')
+    return render(request, "Room_view.html",{'single_rooms':single_rooms, 'double_rooms':double_rooms, 'triple_rooms':triple_rooms, 'both_rooms':both_rooms})
+
