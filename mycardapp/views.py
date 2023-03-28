@@ -1001,8 +1001,8 @@ def get(request,id,*args, **kwargs,):
 @login_required(login_url='login')
 def showbill(request):
     orders = Payment.objects.filter(user=request.user, paid=True).order_by('created_at')
-    return render(request, "showbill.html", {'orders': orders})
-
+    return render(request, "PaymentdetailsStudent.html", {'orders': orders})
+    
 
 
 

@@ -94,33 +94,25 @@
       <table>
     <tr>
       <th>Room Name</th>
+      <th>Amount</th>
       <th>Date Of Payment</th>
       <th>Status</th>
-      <th>Action</th>
 
       
     </tr>
-    {% for opass in opass %}
+    {% for orders in orders %}
     <tr>
       
           
-          <td>{{opass.dest}}</td>
-          <td>{{opass.ldate}}</td>
-          <td>{{opass.idate}}</td>
-          <td>{{opass.purpose}}</td>
-          <td>
-            {% if opass.status == 1 %}
-                <span class="alert alert-success btn">Approved</span>
-            {% elif opass.status == 2 %}
-                <span class="alert alert-danger btn">Rejected</span>
-            {% else %}
-                <span class="alert alert-info btn">Pending</span>
-            {% endif %}
-        </td>
-        <td><a href="" class="alert alert-info btn" >Edit</a></td>
-        <td><a href="{% url 'deleteoutpass' opass.id %}" class="alert alert-danger btn">Delete</a></td> 
-          
-      
+          <td>{{orders.product.room_type}}</td>
+          <td>{{orders.amount}}</td>
+          <td>{{orders.created_at}}</td>
+          <td>{{orders.razorpay_payment_status}}</td>
+        {% if orders %}
+        <td><a href="{% url 'pdf' orders.id %}" class="btn btn-success">View bill</a></td> 
+        <td><a href="{% url 'pdf' orders.id %}" class="btn btn-success"  download class="btn btn-outline-success">Download Bill</a></td> 
+        </p>
+        {% endif %} 
     </tr>
     {% endfor %}
     
