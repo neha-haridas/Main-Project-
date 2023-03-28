@@ -86,7 +86,7 @@
 
 
     <!-- ======= Services Section ======= -->
-    <section id="services" class="services">
+    <section id="featured-services" class="featured-services">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -95,38 +95,38 @@
           <!-- <p>Ut possimus qui ut temporibus culpa velit eveniet modi omnis est adipisci expedita at voluptas atque vitae autem.</p> -->
         </div>
 
-        <div class="row">
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
-            <div class="icon-box">
-              <div class="icon"><i class="bi bi-layout-text-sidebar-reverse"></i></div>
-              <h4><a href="{% url 'Outpass' %}">Outpass</a></h4>
-              <p>Getting Outpass</p>
+          <div class="row">
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+              <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+                <div class="icon"><i class="bi bi-layout-text-sidebar-reverse"></i></div>
+                <h4 class="title"><a href="{% url 'Outpass' %}">Outpass</a></h4>
+                <p class="description">Getting Outpass</p>
+              </div>
+            </div>
+
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
+              <div class="icon"><i class="bi bi-shop-window"></i></div>
+              <h4 class="title"><a href="{% url 'Room_view' %}">Select Rooms</a></h4>
+              <p class="description">Select your Own wish  </p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
+              <div class="icon"><i class="bi bi-file-text"></i></div>
+              <h4 class="title"><a href="{% url 'Student_complaint_save' %}">Complaints</a></h4>
+              <p class="description">Register your Complaint</p>
             </div>
           </div>
 
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="300">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-tachometer"></i></div>
-              <h4><a href="{% url 'Room_view' %}">Select Rooms</a></h4>
-              <p>Select your Own wish  </p>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-5 d-flex align-items-stretch mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="300">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-tachometer"></i></div>
-              <h4><a href="{% url 'Student_complaint_save' %}">Complaints</a></h4>
-              <p>Register your Complaint </p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
-            <div class="icon-box">
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="400">
               <div class="icon"><i class="bi bi-currency-rupee"></i></div>
-              <h4><a href="">Payment</a></h4>
-              <p>Payment Section</p>
+              <h4 class="title"><a href="">Payment</a></h4>
+              <p class="description">Payment Details</p>
             </div>
           </div>
+
         </div>
 
       </div>

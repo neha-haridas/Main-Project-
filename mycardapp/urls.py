@@ -23,6 +23,8 @@ urlpatterns = [
     path('Hostel_home/', views.Hostel_home, name='Hostel_home'),
     path('Outpass/', views.Outpass, name='Outpass'),
     path('outpass_history/',views.outpass_history,name='outpass_history'),
+    path('outpassedit/',views.outpassedit,name='outpassedit'),
+    path('deleteoutpass/<int:id>/',views.deleteoutpass,name='deleteoutpass'),
     path('profile/', views.profile, name='profile'),
     path('profile/update',views.profile_update,name='profile_update'),
     path('Library_home/', views.Library_home, name='Library_home'),
@@ -74,7 +76,8 @@ urlpatterns = [
     path('addbooktable/<int:id>/',views.addbooktable,name='addbooktable'),
     path('bookedit/<int:id>/',views.bookedit,name='bookedit'),
     path('bookupdate/',views.bookupdate,name='bookupdate'),
-    path('deletebook/<int:id>/',views.deletebook,name='deletebook')
+    path('deletebook/<int:id>/',views.deletebook,name='deletebook'),
+    path('pdf/<int:id>/', views.get,name='pdf'),
 
 
     # path('return_book/<int:id>',views.return_issued_book,name="return_issued_book"),

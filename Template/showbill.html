@@ -86,7 +86,7 @@
         <br><br> <br><br>
         <center>
         <div class="main-product-thumbnail pb-60">
-            <!-- <div class="container">
+            <div class="container">
                 {% if orders %}
                     <p><a href="{% url 'pdf' orders.last.id %}" class="btn btn-success">View bill</a>
                        <a href="{% url 'pdf' orders.last.id %}" class="btn btn-success"  download class="btn btn-outline-success">Download Bill</a>
@@ -94,12 +94,12 @@
                 {% endif %} <br><br>
                     <div class="col-lg-4 col-md-5">
                     <div class="buttons-cart">
-                        <!-- <input type="submit" value="Update Cart" /> -->
-                        <a href="{% url 'Room_view' %}">Continue Shopping</a>
+                        <input type="submit" value="Update Cart" />
+                        <a href="{% url 'Room_view' %}">Successfully Book Room </a>
                     </div>
                 </div>
                 <br> <br> <br>
-            </div> -->
+            </div> 
         </div> 
     </center>
     

@@ -25,6 +25,12 @@ from django.core.mail import send_mail
 from django.views import generic
 
 
+
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 # from datetime import date
 # from twilio.rest import Client
 
@@ -582,6 +588,45 @@ def outpass_history(request):
     return render(request,'outpass_history.html',{'opass':opass })  
 
 
+def deleteoutpass(request,id):
+    item  = Leave.objects.get(id=id)
+    item.delete()
+    return redirect('outpass_history') 
+
+
+def outpassedit(request):
+    user = request.user
+    if request.method=="POST":
+     id = request.POST.get('id')
+     name= request.POST.get("name")
+     dept = request.POST.get("dept")
+     sem = request.POST.get("sem")
+     mobno=request.POST.get("mobno")
+     ldate = request.POST.get("ldate")
+     idate = request.POST.get("idate")
+     purpose = request.POST.get("purpose")
+     dest = request.POST.get("dest")
+     parents_email= request.POST.get("parents_email")
+     parents_contact=request.POST.get("parents_contact")
+     value = Leave.objects.get(id=id)  
+     value.name = name
+     value.dept = dept
+     value.sem = sem
+     value.mobno = mobno
+     value.ldate = ldate
+     value.idate = idate
+     value.purpose = purpose
+     value.dest = dest
+     value.parents_email = parents_email
+     value.parents_contact = parents_contact
+     value.save()
+     return redirect('table')
+
+    #  sign = request.POST.get("sign",True)
+        # print(cate,pname,pdesc,pimg,price,stock)
+    return render(request, "Outpass.html")
+
+
 def Wardenhome(request):
     return render(request,'Wardenhome.html')
 
@@ -876,11 +921,12 @@ def RoomDetails(request, id):
     request.session['order_id'] = order_id
     order_status = payment_response['status']
     if order_status == 'created':
-        payment = Payment.objects.create(
+        payment = Payment(
             user=request.user,
             amount=room.price,
             razorpay_order_id=order_id,
-            razorpay_payment_status=order_status
+            razorpay_payment_status=order_status,
+            product=room
         )
         payment.save()
     return render(request, 'RoomDetails.html', {'room': room, 'razor_amount': razor_amount})
@@ -893,24 +939,71 @@ def payment_done(request):
     payment_id = request.GET.get('payment_id')
     print(payment_id)
     payment = Payment.objects.get(razorpay_order_id=order_id)
+    
     payment.paid = True
     payment.razorpay_payment_id = payment_id
+    payment.razorpay_payment_status = 'paid'
     payment.save()
-    room = Room.objects.filter(user=request.user)
-    OrderPlaced(
-        user=request.user,
-        payment=payment,
-        product=room,
-        is_ordered=True
-    ).save()
-    return redirect('RoomDetails')
+    rooms = Payment.objects.filter(user=request.user,razorpay_payment_status='paid')
+    for room in rooms:
+        # room.save()
+        student = Account.objects.get(id=room.user.id)
+        student.room_allotted = True
+        # student.room = room
+        # student.save()
+        order=OrderPlaced(user=request.user, product=room.product, payment=payment, is_ordered=True)
+        order.save()
+        # room.available -= 1
+        print(order)
+    return redirect('showbill')
 
 
+
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+def get(request,id,*args, **kwargs,):
+        
+        place = Payment.objects.get(id=id)
+        date=place.created_at
+
+        orders=Payment.objects.filter(user_id=request.user.id,created_at=date)
+        for o in orders:
+            total=o.product.price
+        addrs=Account.objects.get(id=request.user.id)
+     
+        #     print(i.user,"#######################")
+        data = {
+            "total":total,
+            "orders":orders,
+            "shipping":addrs,
+    
+ 
+        }
+        pdf = render_to_pdf('report.html',data)
+        if pdf:
+            response=HttpResponse(pdf,content_type='application/pdf')
+            # filename = "Report_for_%s.pdf" %(data['id'])
+            filename = "Bill.pdf"
+
+            content = "inline; filename= %s" %(filename)
+            response['Content-Disposition']=content
+            return response
+        return HttpResponse("Page Not Found") 
 
 @login_required(login_url='login')
 def showbill(request):
-    orders = OrderPlaced.objects.filter(user=request.user, is_ordered=True).order_by('ordered_date')
+    orders = Payment.objects.filter(user=request.user, paid=True).order_by('created_at')
     return render(request, "showbill.html", {'orders': orders})
+
+
 
 
 
@@ -1064,7 +1157,7 @@ def scan(request):
 
     video_capture.release()
     cv2.destroyAllWindows()
-    return HttpResponse('scaner closed', last_face)
+    return HttpResponse('scaner closed')
 
 
 def details(request):
@@ -1149,10 +1242,12 @@ def addbooktable(request,id):
 
 
 def bookedit(request,id):
+    cat = Category_Book.objects.all()
     products = Book.objects.get(id=id)
 
     context = {
-        'products':products
+        'products':products,
+        'cat':cat
     }
         
     return render(request, "bookedit.html",context) 
@@ -1161,9 +1256,8 @@ def bookedit(request,id):
 def bookupdate(request):
     cat = Category_Book.objects.all()
     if request.method == "POST":
+        id = request.POST.get['id']
         book_name = request.POST['book_name']
-        category_id = request.POST.get('category_id') 
-        book_category = Category_Book.objects.get(id=category_id)
         book_language = request.POST['book_language']
         book_author = request.POST['book_author']
         book_desc = request.POST['book_desc']
@@ -1175,8 +1269,6 @@ def bookupdate(request):
         book_quantity = request.POST['book_quantity']
         value = Book.objects.get(id=id)  
         value.book_name = book_name
-        value.category_id = category_id
-        value.book_category = book_category
         value.book_language = book_language
         value.book_author = book_author
         value.book_desc = book_desc
@@ -1188,8 +1280,6 @@ def bookupdate(request):
         value.book_quantity = book_quantity
         value.save()
         return redirect('booktable')
-
-        # print(cate,pname,pdesc,pimg,price,stock)
     return render(request, "productedit.html")
 
 def deletebook(request,id):
@@ -1197,10 +1287,12 @@ def deletebook(request,id):
     item.delete()
     return redirect('booktable') 
     
-def Room_view(request):
-    single_rooms = Room.objects.filter(room_type='S')
-    double_rooms = Room.objects.filter(room_type='D')
-    triple_rooms = Room.objects.filter(room_type='T')
-    both_rooms = Room.objects.filter(room_type='B')
-    return render(request, "Room_view.html",{'single_rooms':single_rooms, 'double_rooms':double_rooms, 'triple_rooms':triple_rooms, 'both_rooms':both_rooms})
+# def Room_view(request):
+#     single_rooms = Room.objects.filter(room_type='S')
+#     double_rooms = Room.objects.filter(room_type='D')
+#     triple_rooms = Room.objects.filter(room_type='T')
+#     both_rooms = Room.objects.filter(room_type='B')
+#     return render(request, "Room_view.html",{'single_rooms':single_rooms, 'double_rooms':double_rooms, 'triple_rooms':triple_rooms, 'both_rooms':both_rooms})
+
+##############################################################################################################################################################################
 

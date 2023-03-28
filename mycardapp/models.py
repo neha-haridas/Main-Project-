@@ -312,6 +312,7 @@ class Payment(models.Model):
     razorpay_payment_status = models.CharField(max_length=100,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
+    product = models.ForeignKey(Room, on_delete=models.CASCADE,default=0) 
 
 
     def __str__(self):
@@ -331,6 +332,7 @@ class OrderPlaced(models.Model):
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True, blank=True)
     product = models.ForeignKey(Room, on_delete=models.CASCADE) 
+    quantity = models.IntegerField(default=1) 
     status = models.CharField(max_length=10, choices=STATUS, default='New')
     is_ordered = models.BooleanField(default=False)
     ordered_date = models.DateTimeField(auto_now_add=True)
