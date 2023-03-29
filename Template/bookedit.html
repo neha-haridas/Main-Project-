@@ -129,66 +129,64 @@
                         <div class="card">
                             <div class="card-header"></div>
                             <div class="card-body">
+                                {% for value in value %}
                                 <!-- <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5> -->
-                                <form accept-charset="utf-8" method="POST" action="{% url 'bookupdate' %}" enctype="multipart/form-data">
+                                <form accept-charset="utf-8" method="POST" action="{% url 'bookupdate' value.id %}" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     
                                     <div class="row g-2">
+                                        
                                       <div class="mb-3 col-md-6">
                                         <label for="password" class="form-label">Book Name</label>
-                                        <input type="text" class="form-control" name="book_name" value="{{products.book_name}}" placeholder="Book Name" onkeyup='pincodeValidation(this)' required>
+                                        <input type="text" class="form-control" name="book_name" value="{{value.book_name}}" placeholder="Book Name" onkeyup='pincodeValidation(this)' required>
                                       </div>
                                         <div class="mb-3 col-md-6">
                                             <label for="email" class="form-label">Select Book Category </label>
-                                            <select class="form-select" name="category" placeholder="Book Category" required >
-                                                {% for c in cat %}
-                                                <option value="{{ c.category_id }}">{{c.category_name}}</option >
-                                                {% endfor %}
-                                            </select>
+                                                <input type="text" class="form-control" name="book_category"  value="{{value.book_category}}" placeholder="Book Category" onkeyup='pincodeValidation(this)' readonly>
                                         </div>    
                                     </div>
                                     <div class="row g-2">
                                       <div class="mb-3 col-md-6">
                                         <label for="password" class="form-label">Book Language</label>
-                                        <input type="text" class="form-control" name="book_language"  value="{{products.book_language}}" placeholder="Book Language" onkeyup='pincodeValidation(this)' required>
+                                        <input type="text" class="form-control" name="book_language"  value="{{value.book_language}}" placeholder="Book Language" onkeyup='pincodeValidation(this)' required>
                                       </div>
                                       <div class="mb-3 col-md-6">
                                         <label for="password" class="form-label">Book Author</label>
-                                        <input type="text" class="form-control" name="book_author"  value="{{products.book_author}}" placeholder="Book Author" onkeyup='pincodeValidation(this)' required>
+                                        <input type="text" class="form-control" name="book_author"  value="{{value.book_author}}" placeholder="Book Author" onkeyup='pincodeValidation(this)' required>
                                       </div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Add description about Book</label>
-                                        <input class="form-control"  name="book_desc"  value="{{products.book_desc}}"  placeholder="Book description" onkeyup='addressValidation(this)' required>
+                                        <input class="form-control"  name="book_desc"  value="{{value.book_desc}}"  placeholder="Book description" onkeyup='addressValidation(this)' required>
                                     </div>
                                     <div class="row g-2">
                                       <div class="mb-3 col-md-6">
                                         <label for="password" class="form-label">Book Year</label>
-                                        <input type="text" class="form-control" name="book_year"  value="{{products.book_year}}" placeholder="Book Year" onkeyup='pincodeValidation(this)' required>
+                                        <input type="text" class="form-control" name="book_year"  value="{{value.book_year}}" placeholder="Book Year" onkeyup='pincodeValidation(this)' required>
                                       </div>
                                       <div class="mb-3 col-md-6">
                                         <label for="password" class="form-label">Book Publisher</label>
-                                        <input type="text" class="form-control" name="book_publisher"  value="{{products.book_publisher}}" placeholder="Book Publisher" onkeyup='pincodeValidation(this)' required>
+                                        <input type="text" class="form-control" name="book_publisher"  value="{{value.book_publisher}}" placeholder="Book Publisher" onkeyup='pincodeValidation(this)' required>
                                       </div>
                                     </div>
                                     <div class="row g-2">
                                         <div class="mb-3 col-md-6">
                                             <label for="email" class="form-label">Add Book image</label>
-                                            <input class="form-control" name="img"  value="{{products.img}}" type="file" accept=".png, .jpeg, .jpg"  id="file" onkeyup="return fileValidation(this)" required>
+                                            <input class="form-control" name="img"  value="{{value.img}}" type="text" accept=".png, .jpeg, .jpg"  id="file" onkeyup="return fileValidation(this)" readonly>
                                             <small class="text-muted">The image must have be in jpeg/png format</small>
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <label for="password" class="form-label">Price</label>
-                                            <input type="number" class="form-control" name="book_price"  value="{{products.book_price}}" placeholder="Price" onkeyup='pincodeValidation(this)' required>
+                                            <input type="number" class="form-control" name="book_price"  value="{{value.book_price}}" placeholder="Price" onkeyup='pincodeValidation(this)' required>
                                         </div>
                                         <div class="row g-2">
                                             <div class="mb-3 col-md-6">
                                               <label for="password" class="form-label">Book isbn</label>
-                                              <input type="text" class="form-control" name="isbn"  value="{{products.isbn}}" placeholder="Book Isbn" onkeyup='pincodeValidation(this)' required>
+                                              <input type="text" class="form-control" name="isbn"  value="{{value.isbn}}" placeholder="Book Isbn" onkeyup='pincodeValidation(this)' readonly>
                                             </div>
                                             <div class="mb-3 col-md-6">
                                                 <label for="state" class="form-label">Available</label>
-                                                <input type="number" class="form-control" name="book_quantity"  value="{{products.book_quantity}}" onkeyup='pinValidation(this)' placeholder="Available" required>
+                                                <input type="number" class="form-control" name="book_quantity"  value="{{value.book_quantity}}" onkeyup='pinValidation(this)' placeholder="Available" required>
                                             </div>
                                            
                                             
@@ -197,6 +195,7 @@
                                         <button class="btn btn-success" type="submit"><i class="fas fa-check"></i> Save</button>
                                     </div>
                                 </form>
+                                {% endfor %}
     <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
     <script src="{% static 'vendor/chartsjs/Chart.min.js'%}"></script>

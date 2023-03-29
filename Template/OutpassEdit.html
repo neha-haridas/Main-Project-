@@ -125,35 +125,33 @@
     
     <br>
 <h1>Outpass Form</h1>
-<form class="cf" action="{% url 'Outpass' %}" autocomplete="off" method="POST" enctype="multipart/form-data">
+{% for value in value %}
+<form class="cf" action="{% url 'Outpass' value.id %}" autocomplete="off" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="half left cf"> 
-    <input type="text" id="name" name="name"  value="{{request.user.first_name}} {{request.user.last_name}}">
-    <input type="text" id="sem" name="sem" placeholder="Semester" value="{{request.user.sem}}">
-    <input class="input100" type="Phone number" id="mobno" name="mobno" value="{{request.user.contact}}" onkeyup='phoneValidation(this)' required>
+    <input type="text" id="name" name="name" value="{{request.user.first_name}} {{request.user.last_name}}" placeholder="Name" readonly>
+    <input type="text" id="sem" name="sem" value="{{user.sem}}" placeholder="Semester" readonly>
+    <input class="input100" type="Phone number" id="mobno" name="mobno" value="{{user.contact}}"  placeholder="Mobile number"onkeyup='phoneValidation(this)'   readonly>
     <span id="pho" class="new" style="color: red;"></span>
     <input type="text" id="ldate" Value="Date Of Leaving" disabled>
     <input type="text" id="idate" Value="Incoming Date" disabled>
-    <input type="text" id="parents_contact" name="parents_contact" placeholder="Parents PhoneNumber">
-    <!-- <input type="text" id="sign" Value="Student Signature" disabled> -->
+    <input type="text" id="parents_contact" name="parents_contact" value="{{value.parents_contact}}" placeholder="Parents PhoneNumber">
   </div>
   <div class="half right cf">
    
-    <input type="text" id="dept" name="dept" value="{{request.user.dpmnt}}">
-    <input type="text" id="dest" name="dest" placeholder="Destination">
-    <input type="text" id="purpose" name="purpose" placeholder="Purpose Of Leaving">
-    <input type="datetime-local" id="ldate" name="ldate" placeholder="Date Of Leaving">
-    <input type="datetime-local" id="idate" name="idate" placeholder="Incoming Date">
-    <input type="email" id="parents_email" name="parents_email" placeholder="Parents Email">
-    
-    <!-- <input type="file" id="sign" name="sign"  accept="image/png, image/jpeg ,image/jpg"> -->
-    <!-- <textarea name="message" type="text" id="input-message" placeholder="Message"></textarea> -->
+    <input type="text" id="dept" name="dept" value="{{user.dpmnt}}"  placeholder="Department">
+    <input type="text" id="dest" name="dest"  value="{{value.dest}}" placeholder="Destination">
+    <input type="text" id="purpose" name="purpose"  value="{{value.purpose}}"  placeholder="Purpose Of Leaving">
+    <input type="datetime-local" id="ldate" value="{{value.ldate}}"  name="ldate" placeholder="Date Of Leaving">
+    <input type="datetime-local" id="idate" value="{{value.idate}}"  name="idate" placeholder="Incoming Date">
+    <input type="email" id="parents_email" value="{{value.parents_email}}"  name="parents_email" placeholder="Parents Email">
   </div>
    
 <br>
   <input type="submit" value="Submit" id="input-submit">
   <br><br><br><br><br><br><br>
 </form>
+{% endfor %}
 
   <!-- ======= Footer ======= -->
   <footer id="footer">

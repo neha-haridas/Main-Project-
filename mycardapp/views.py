@@ -545,7 +545,7 @@ def uploadFile(request):
         return redirect('files')
  
 ###############################################################################################
-
+@login_required(login_url='view_login')
 def Outpass(request):
     user = request.user
     if request.method=="POST":
@@ -594,41 +594,35 @@ def deleteoutpass(request,id):
     return redirect('outpass_history') 
 
 
-def outpassedit(request):
+def outpassedit(request,id):
     user = request.user
     if request.method=="POST":
-     id = request.POST.get('id')
-     name= request.POST.get("name")
-     dept = request.POST.get("dept")
-     sem = request.POST.get("sem")
-     mobno=request.POST.get("mobno")
-     ldate = request.POST.get("ldate")
-     idate = request.POST.get("idate")
-     purpose = request.POST.get("purpose")
-     dest = request.POST.get("dest")
-     parents_email= request.POST.get("parents_email")
-     parents_contact=request.POST.get("parents_contact")
-     value = Leave.objects.get(id=id)  
-     value.name = name
-     value.dept = dept
-     value.sem = sem
-     value.mobno = mobno
-     value.ldate = ldate
-     value.idate = idate
-     value.purpose = purpose
-     value.dest = dest
-     value.parents_email = parents_email
-     value.parents_contact = parents_contact
-     value.save()
-     return redirect('table')
-
-    #  sign = request.POST.get("sign",True)
-        # print(cate,pname,pdesc,pimg,price,stock)
-    return render(request, "Outpass.html")
-
+        id = request.POST.get('id')
+        ldate = request.POST.get("ldate")
+        idate = request.POST.get("idate")
+        purpose = request.POST.get("purpose")
+        dest = request.POST.get("dest")
+        parents_email= request.POST.get("parents_email")
+        parents_contact=request.POST.get("parents_contact")
+        value = Leave.objects.get(id=id)  
+        value.ldate = ldate
+        value.idate = idate
+        value.purpose = purpose
+        value.dest = dest
+        value.parents_email = parents_email
+        value.parents_contact = parents_contact
+        value.save()
+        return redirect('outpass_history')
+    return render(request,'OutpassEdit.html')
 
 def Wardenhome(request):
-    return render(request,'Wardenhome.html')
+    user = Account.objects.filter(is_user=True).count
+    order = Payment.objects.all().count()
+    amount = Payment.objects.all()
+    Revenue = 0
+    for i in amount:
+        Revenue += i.product.price
+    return render(request,'Wardenhome.html',{'user':user,'order':order,'amount':amount,'Revenue':Revenue})
 
 
 
@@ -980,44 +974,6 @@ def showbill(request):
     orders = Payment.objects.filter(user=request.user, paid=True).order_by('created_at')
     return render(request, "PaymentdetailsStudent.html", {'orders': orders})
     
-
-
-
-
-# def payment_done(request):
-#     order_id=request.session['order_id']
-#     payment_id = request.GET.get('payment_id')
-#     print(payment_id)
-#     payment=Payment.objects.get(razorpay_order_id = order_id)
-#     payment.paid = True
-#     payment.razorpay_payment_id = payment_id
-#     payment.razorpay_payment_status = 'paid'
-#     payment.save()
-
-#     rm=Room.objects.filter(user=request.user)
-#     # item = Product.objects.get(product=product, id=item_id)
-
-#     for c in rm:
-#         OrderPlaced(user=request.user,room_type=c.room_type,available=c.available,payment=payment,is_ordered=True).save()
-#         c.delete()
-#         c.cart.available -= 1
-#         c.cart.save()
-#     # messages.success(request, 'Payment done successfully you can view the order details on your profile'
-#     #                           'Continue Shopping')
-#     return redirect('showbill')
-
-
-
-# @login_required(login_url='login')
-# def showbill(request):
-#     orders = OrderPlaced.objects.filter(
-#         user=request.user, is_ordered=True).order_by('ordered_date')
-#     context = {
-#         'orders': orders
-#     }
-#     return render(request, "showbill.html",context)
-
-
 #########################Attendence######################################
 
 
@@ -1219,27 +1175,19 @@ def addbooktable(request,id):
 
 
 def bookedit(request,id):
-    cat = Category_Book.objects.all()
-    products = Book.objects.get(id=id)
 
-    context = {
-        'products':products,
-        'cat':cat
-    }
-        
-    return render(request, "bookedit.html",context) 
+    value = Book.objects.filter(id=id) 
+    return render(request, "bookedit.html",{'value':value}) 
 
 
-def bookupdate(request):
+def bookupdate(request,id):
     if request.method == "POST":
-        id = request.POST.get('id')
         book_name = request.POST['book_name']
         book_language = request.POST['book_language']
         book_author = request.POST['book_author']
         book_desc = request.POST['book_desc']
         book_year = request.POST['book_year']
         book_publisher = request.POST['book_publisher']
-        img = request.FILES.get('img', '')
         book_price = request.POST['book_price']
         isbn = request.POST['isbn']
         book_quantity = request.POST['book_quantity']
@@ -1250,25 +1198,17 @@ def bookupdate(request):
         value.book_desc = book_desc
         value.book_year = book_year
         value.book_publisher = book_publisher
-        value.img = img
         value.book_price = book_price
         value.isbn = isbn
         value.book_quantity = book_quantity
         value.save()
         return redirect('booktable')
-    return render(request, "bookedit.html")
+    return render(request,"bookupdate.html")   
 
 def deletebook(request,id):
     item  = Book.objects.get(id=id)
     item.delete()
     return redirect('booktable') 
-    
-# def Room_view(request):
-#     single_rooms = Room.objects.filter(room_type='S')
-#     double_rooms = Room.objects.filter(room_type='D')
-#     triple_rooms = Room.objects.filter(room_type='T')
-#     both_rooms = Room.objects.filter(room_type='B')
-#     return render(request, "Room_view.html",{'single_rooms':single_rooms, 'double_rooms':double_rooms, 'triple_rooms':triple_rooms, 'both_rooms':both_rooms})
-
+  
 ##############################################################################################################################################################################
 

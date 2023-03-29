@@ -117,7 +117,7 @@
                 <span class="alert alert-info btn">Pending</span>
             {% endif %}
         </td>
-        <td><a href="" class="alert alert-info btn" >Edit</a></td>
+        <td><a href="{% url 'outpassedit' opass.id %}" class="alert alert-info btn" >Edit</a></td>
         <td><a href="{% url 'deleteoutpass' opass.id %}" class="alert alert-danger btn">Delete</a></td> 
           
       
