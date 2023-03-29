@@ -864,6 +864,13 @@ def productupdate(request):
         # print(cate,pname,pdesc,pimg,price,stock)
     return render(request, "productedit.html")
 
+
+
+def WardenViewPaymentDetails(request):
+    orders = Payment.objects.all()
+    return render(request,'WardenViewPaymentDetails.html', {'orders': orders})
+
+
 def deleteproduct(request,id):
     item  = Room.objects.get(id=id)
     item.delete()
@@ -876,36 +883,6 @@ def Room_view(request):
     both_rooms = Room.objects.filter(room_type='B')
     return render(request, "Room_view.html",{'single_rooms':single_rooms, 'double_rooms':double_rooms, 'triple_rooms':triple_rooms, 'both_rooms':both_rooms})
 
-
-
-# def RoomDetails(request,id):
-#     room =Room.objects.filter(id=id)
-#     product = Room.objects.all()
-#     # user = request.user
-#     # cart=Room.objects.filter(user_id=user)
-#     for i in room:
-#         total = i.price
-#     razoramount = total*100
-#     client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY,settings.RAZORPAY_API_SECRET_KEY))
-#     data = {
-#         "amount": total,
-#         "currency": "INR",
-#         "receipt": "order_rcptid_11"
-#     }
-#     payment_response = client.order.create(data=data)
-#     print(payment_response)
-#     order_id = payment_response['id']
-#     request.session['order_id'] = order_id
-#     order_status = payment_response['status']
-#     if order_status == 'created':
-#         payment = Payment(
-#             user=request.user,
-#             amount=total,
-#             razorpay_order_id = order_id,
-#             razorpay_payment_status = order_status
-#             )
-#         payment.save()
-#     return render(request,'RoomDetails.html',{'room':room,'total':total,'razoramount':razoramount})
 
 def RoomDetails(request, id):
     room = Room.objects.filter(id=id).first()
@@ -1254,9 +1231,8 @@ def bookedit(request,id):
 
 
 def bookupdate(request):
-    cat = Category_Book.objects.all()
     if request.method == "POST":
-        id = request.POST.get['id']
+        id = request.POST.get('id')
         book_name = request.POST['book_name']
         book_language = request.POST['book_language']
         book_author = request.POST['book_author']
@@ -1280,7 +1256,7 @@ def bookupdate(request):
         value.book_quantity = book_quantity
         value.save()
         return redirect('booktable')
-    return render(request, "productedit.html")
+    return render(request, "bookedit.html")
 
 def deletebook(request,id):
     item  = Book.objects.get(id=id)

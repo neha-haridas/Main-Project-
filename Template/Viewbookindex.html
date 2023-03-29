@@ -154,28 +154,29 @@
 
                       <h2 class="h2">Latest Book</h2>
                       <br>
-                      
                       <div class="row" data-aos="zoom-in" data-aos-delay="100"></div>
                       <div class="col-md-12 col-md-pull-5">
                         {% for i in datas %}
-               <div class="row">
-                <div class="col-md-3 ">
-                  <div class="card float-right">
-                    <img class="card-img-top" src="{% static  i.img.url %}" style="height:20; width:20;" alt="Card image cap">
-                    <div class="card-body">
-                      <h5 class="card-title"><a href="{% url 'onebook' i.encrypt_key %}">{{i.book_name}}</a></h5>
-                      <p class="card-text">{{i.book_author}} &nbsp;|&nbsp; {{i.book_language}}</p>
-                    </div>
-                    <!-- <div class="card-footer">
-                      <small class="text-muted">Last updated 3 mins ago</small>
-                    </div> -->
-                  </div>
-                </div>
-               </div>
+                          <div class="row">
+                            <div class="col-md-3 ">
+                              <div class="card float-right">
+                                <img class="card-img-top" src="{% static  i.img.url %}" style="height:20; width:20;" alt="Card image cap">
+                                <div class="card-body">
+                                  <h5 class="card-title"><a href="{% url 'onebook' i.encrypt_key %}">{{i.book_name}}</a></h5>
+                                  <p class="card-text">{{i.book_author}} &nbsp;|&nbsp; {{i.book_language}}</p>
+                                </div>
+                                <!-- <div class="card-footer">
+                                  <small class="text-muted">Last updated 3 mins ago</small>
+                                </div> -->
+                              </div>
+                            </div>
+                          </div>
                         {% endfor %}
                     </div>
                   </div><br>
                 </div>
+      </div>    
+                    
       </div>    
 
 <!-- ======= Footer ======= -->

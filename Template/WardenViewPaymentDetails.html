@@ -1,5 +1,11 @@
 <!doctype html>
 {% load static %}
+<!-- 
+* Bootstrap Simple Admin Template
+* Version: 2.1
+* Author: Alexis Luna
+* Website: https://github.com/alexis-luna/bootstrap-simple-admin-template
+-->
 <html lang="en">
 
 <head>
@@ -15,7 +21,7 @@
     <link href="{% static 'vendor/flagiconcss/css/flag-icon.min.css'%}" rel="stylesheet">
    
 </head>
-       
+        
 <body>
     <div class="wrapper">
         <nav id="sidebar" class="active">
@@ -50,7 +56,7 @@
                             <a href="{% url 'WardenMess' %}"><i class="fas fa-rupee-sign"></i> Mess Fee</a>
                         </li>
                         <li>
-                            <a href="{% url 'WardenViewPaymentDetails' %}"><i class="fas fa-rupee-sign"></i> Hostel Rent</a>
+                            <a href="{% url 'WardenViewPaymentDetails' %}">><i class="fas fa-rupee-sign"></i> Hostel Rent</a>
                         </li>
                         <li>
                             <a href="{% url 'WardenDue' %}"><i class="fas fa-info-circle"></i> Dues</a>
@@ -111,129 +117,55 @@
                 </nav>
                 <!-- .navbar -->
                 <a href="{% url 'login' %}">Login</a>
-                {% endif %}  
-                 </div>
-            </nav>                 
-            <div class="container emp-profile">
-
-                <div class="row">
-                    <div class="col-md-3">
-                        <img src="" alt="" width="50%">
-                        <h6 class="text-muted p-1"> Students Attendance </h6>
-            
-                    </div>
-                    <div class="col-md-6">
-                        <div class="profile-head">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <a target="_blank" class="scan" href="{% url 'details' %}"><input type="submit" class="profile-edit-btn m-2"
-                                name="btnAddMore" value="Run Scanner" /></a>
-                       
+                {% endif %}
+                      
+                </div>
+            </nav>
+            <!-- end of navbar navigation -->
+            <div class="content">
+            <div class="container">
+            <div class="col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header"> Room Rent Payment Details</div>
+                    <div class="card-body">
+                        <p class="card-title"></p>
+                        <table class="table table-hover" id="dataTables-example" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Regno</th>
+                                    <th>Name</th>
+                                    <th>Payment Amount</th>
+                                    <th>Room Type</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {% for orders in orders %}
+                                    <tr> 
+                                        <td>{{orders.user.regno}}</td>
+                                        <td>{{orders.user.first_name}}</td>
+                                        <td>{{orders.amount}}</td>
+                                        <td>{{orders.product.room_type}}</td>
+                                        <td>{{orders.created_at}}</td>
+                                    </tr>
+                                    {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <hr>
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="present-tab" data-toggle="tab" href="#present" role="tab"
-                            aria-controls="home" aria-selected="true">Present</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="contact"
-                            aria-selected="false">Attendance</a>
-                    </li>
-                </ul>
-            
-                <div class="tab-content" id="myTabContent">
-                    <br>
-                    <div class="tab-pane fade show active" id="present" role="tabpanel" aria-labelledby="home-tab">
-            
-                        <table class="table table-striped ">
-                            <thead>
-                                <tr>
-                                    <th scope="col"> </th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Entry Time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for profile in present %}
-                                <tr>
-                                    <th scope="row">-</th>
-                                    <td>{{profile.first_name}} {{profile.last_name}}</td>
-                                    <td>{{profile.status}}</td>
-                                    <td>{{profile.updated |date:"h:iA"}}</td>
-                                </tr>
-                                {% endfor%}
-                            </tbody>
-                        </table>
-                        <a href="{% url 'reset' %}"><button type="button" class="btn btn-outline-primary">Refresh</button></a>
-            
-                    </div>
-            
-                    <div class="tab-pane fade" id="absent" role="tabpanel" aria-labelledby="profile-tab">
-                        <table class="table table-striped ">
-                            <thead>
-                                <tr>
-                                    <th scope="col"> </th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Department</th>
-                                    <th scope="col">Reg No</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for profile in absent %}
-                                <tr>
-                                    <th scope="row">-</th>
-                                    <td>{{profile.first_name}} {{profile.last_name}}</td>
-                                    <td>{{profile.dpmnt}}</td>
-                                    <td>{{profile.regno}}</td>
-                                    
-                                </tr>
-                                {% endfor%}
-                            </tbody>
-                        </table>
-            
-                    </div>
-            
-                    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="contact-tab">
-                        <table class="table table-striped ">
-                            <thead>
-                                <tr>
-                                    <th scope="col"> </th>
-                                    <th scope="col">Profile ID</th>
-                                    <th scope="col">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for face in scanned %}
-                                <tr>
-                                    <th scope="row">-</th>
-                                    <td>{{face.last_face}}</td>
-                                    <td>{{face.date}}</td>
-                                    
-                                </tr>
-                                {% endfor%}
-                            </tbody>
-                        </table>
-                        <a href="{% url 'clear_history' %}"><button type="button" class="btn btn-outline-secondary">Clear History</button></a>
-                    </div>
-                </div>
-            
             </div>
-             <script>
-                $(".scan").click(function () {
-                    var postData = { csrfmiddlewaretoken: '{{ csrf_token }}' }
-                    $.ajax({
-                        url: "{% url 'scan' %}",
-                        data: {
-            
-                        },
-                    });
-                });
-            </script>
- <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
+                
+                
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
     <script src="{% static 'vendor/chartsjs/Chart.min.js'%}"></script>
     <script src="{% static 'js/dashboard-charts.js'%}"></script>

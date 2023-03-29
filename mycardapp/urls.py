@@ -78,6 +78,7 @@ urlpatterns = [
     path('bookupdate/',views.bookupdate,name='bookupdate'),
     path('deletebook/<int:id>/',views.deletebook,name='deletebook'),
     path('pdf/<int:id>/', views.get,name='pdf'),
+    path('WardenViewPaymentDetails/',views.WardenViewPaymentDetails,name='WardenViewPaymentDetails'),
 
 
     # path('return_book/<int:id>',views.return_issued_book,name="return_issued_book"),
