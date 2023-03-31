@@ -102,9 +102,9 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end nav-link-menu">
                                     <ul class="nav-list">
-                                        <li><a href="" class="dropdown-item"><i class="fas fa-address-card"></i> Profile</a></li>
+                                        <!-- <li><a href="" class="dropdown-item"><i class="fas fa-address-card"></i> Profile</a></li>
                                         <li><a href="" class="dropdown-item"><i class="fas fa-envelope"></i> Messages</a></li>
-                                        <li><a href="" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a></li>
+                                        <li><a href="" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a></li> -->
                                         <div class="dropdown-divider"></div>
                                         <li><a href="{% url 'logout' %}" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                                         {% else %}
@@ -217,8 +217,8 @@
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="detail">
-                                                <p class="detail-subtitle">Support Request</p>
-                                                <span class="number">75</span>
+                                                <p class="detail-subtitle">Complaints</p>
+                                                <span class="number">{{complaint}}</span>
                                             </div>
                                         </div>
                                     </div>

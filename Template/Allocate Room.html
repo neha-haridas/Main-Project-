@@ -1,0 +1,23 @@
+
+
+
+  <h1>Allocate Room</h1>
+  <p>Select a room to allocate:</p>
+  <form method="post">
+    {% csrf_token %}
+    <label for="room_type">Room Type:</label>
+    <select name="room_type" id="room_type">
+      <option value="S">Single</option>
+      <option value="D">Double</option>
+      <option value="T">Triple</option>
+      <option value="B">Bunk Bed</option>
+    </select>
+    <label for="dpmnt">Department:</label>
+    <select name="dpmnt" id="dpmnt">
+      <option value="1">Department 1</option>
+      <option value="2">Department 2</option>
+      <option value="3">Department 3</option>
+    </select>
+    <button type="submit">Allocate Room</button>
+  </form>
+

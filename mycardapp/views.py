@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect, JsonResponse
 
 from mycardapp.utils import send_twilio_message
-from .models import Account, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files,Room,Payment,OrderPlaced,ComplaintStudent,LastFace
+from .models import Account, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files,Room,Payment,OrderPlaced,ComplaintStudent,LastFace,tbl_BookIssue
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -31,8 +31,12 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
-# from datetime import date
-# from twilio.rest import Client
+from datetime import date
+from twilio.rest import Client
+
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from twilio.rest import Client
 
 import datetime,calendar
 from .forms import *
@@ -81,8 +85,7 @@ def Library_home(request):
 def addbook(request):
     return render(request,'addbook.html')
 
-def Librarianhome(request):
-    return render(request,'Librarianhome.html')
+
 
 
 
@@ -412,6 +415,48 @@ def searchbar(request):
             print("No information to show")
     return render(request, 'searchbar.html', {}) 
 
+############################################################################
+
+# def issuebooklib(request):
+#     obj = tbl_BookIssue.objects.all()
+#     today = date.today()
+#     for ob in obj:
+#         exp = ob.date_of_issue + timedelta(days=10)
+
+#         print(ob)
+#         ob.expiry_date = exp
+#         ob.save()
+#         if ob.expiry_date < today and not ob.issuedstatus:
+#             days_late = (today - ob.expiry_date).days
+#             fine = days_late * 10
+#             ob.fine = fine
+#             ob.save()
+#     return redirect('onebook', {'result': obj})
+
+def issuebooklib(request,id):
+    book=Book.objects.all()
+    cat=Category_Book.filter(id=id)
+    user = request.user
+    today = date.today()
+    obj=tbl_BookIssue(user_id=user.id,book_id=book.id,cat=cat.id)
+    for ob in obj:
+        exp = ob.date_of_issue + timedelta(days=10)
+        ob.expiry_date = exp
+        ob.save()
+        if ob.expiry_date < today and not ob.issuedstatus:
+            days_late = (today - ob.expiry_date).days
+            fine = days_late * 10
+            ob.fine = fine
+            ob.save()
+    return redirect('onebook', {'result': obj})
+
+
+
+
+def student_issued_books(request):
+    return render(request,'student_issued_books.html')
+
+#############################################################################
 
 # def issuebook(request):
 #     ibook = Book.objects.all()
@@ -433,79 +478,6 @@ def searchbar(request):
 #     return render(request, "issue_book.html")
 
 #############################################
-
-
-def issuebook_view(request):
-    form=forms.IssuedBookForm()
-    if request.method=='POST':
-        #now this form have data from html
-        form=forms.IssuedBookForm(request.POST)
-        if form.is_valid():
-            obj=models.IssuedBook()
-            obj.enrollment=request.POST.get('enrollment2')
-            obj.isbn=request.POST.get('isbn2')
-            obj.save()
-            return render(request,'bookissued.html')
-    return render(request,'issuebook.html',{'form':form})
-
-
-
-@login_required(login_url='login')
-def viewissuedbook_view(request):
-    issuedbooks=models.IssuedBook.objects.all()
-    li=[]
-    for ib in issuedbooks:
-        issdate=str(ib.issuedate.day)+'-'+str(ib.issuedate.month)+'-'+str(ib.issuedate.year)
-        expdate=str(ib.expirydate.day)+'-'+str(ib.expirydate.month)+'-'+str(ib.expirydate.year)
-        #fine calculation
-        days=(date.today()-ib.issuedate)
-        print(date.today())
-        d=days.days
-        fine=0
-        if d>15:
-            day=d-15
-            fine=day*10
-
-
-        books=list(models.Book.objects.filter(isbn=ib.isbn))
-        students=list(models.StudentExtra.objects.filter(enrollment=ib.enrollment))
-        i=0
-        for l in books:
-            t=(students[i].get_name,students[i].enrollment,books[i].name,books[i].author,issdate,expdate,fine)
-            i=i+1
-            li.append(t)
-
-    return render(request,'view_issued_book.html',{'li':li})
-
-
-
-
-
-@login_required(login_url = 'login')
-def student_issued_books(request):
-    student = Account.objects.filter(request.user.id)
-    issuedBooks = issuedBooks.objects.filter(user=student[0].id)
-    li1 = []
-    li2 = []
-
-    for i in issuedBooks:
-        books = Book.objects.filter(bookname=i.bookname)
-        for book in books:
-            t=(request.user.id, request.user.first_name, book.book_name,book.book_author)
-            li1.append(t)
-
-        days=(date.today()-i.issued_date)
-        d=days.days
-        fine=0
-        if d>15:
-            day=d-14
-            fine=day*5
-        t=(issuedBooks[0].issued_date, issuedBooks[0].expiry_date, fine)
-        li2.append(t)
-
-    return render(request,'student_issued_books.html',{'li1':li1, 'li2':li2})
-
-
 
 
 
@@ -543,6 +515,14 @@ def uploadFile(request):
         a.save()
         messages.success(request, 'Files Submitted successfully!')
         return redirect('files')
+    
+
+def deletepdf(request,id):
+    item  = Files.objects.get(id=id)
+    item.delete()
+    return redirect('files') 
+
+
  
 ###############################################################################################
 @login_required(login_url='view_login')
@@ -564,23 +544,31 @@ def Outpass(request):
      o.save()
     return render(request,'Outpass.html')
 
+##############################################
+# TWILIO_ACCOUNT_SID = 'AC7e1b12f105b868c334e9923e237a3e2a'
+# TWILIO_AUTH_TOKEN = '080cc05e21e9313086823c94f15094a7'
+# TWILIO_PHONE_NUMBER = '13215946647'
 
-# from django.conf import settings
-# from twilio.rest import Client
-# from django.http import HttpResponse
+# def outpass_application(request):
+#     if request.method == 'POST':
+#         # Process form data and save the outpass application to database
+#         data = request.POST.copy()
+#         data['student'] = request.user.id
+#         application = Leave.objects.create(**data.dict())
 
-# def send_sms(request):
-#     account_sid = settings.TWILIO_ACCOUNT_SID
-#     auth_token = settings.TWILIO_AUTH_TOKEN
-#     client = Client(account_sid, auth_token)
-#     message = client.messages.create(
-#         to=request.POST.get('parents_contact'),
-#         from_=settings.TWILIO_FROM_NUMBER,
-#         body=request.POST.get('message')
-#     )
-#     return HttpResponse('SMS sent!')
+#         # Send SMS notification to the associated parent's phone number
+#         client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+#         parents_contact = application.parents_contact
+#         message_body = f"Your child, {application.user.first_name}, has submitted a new outpass application. Please review it on the school's website."
+#         message = client.messages.create(to=parents_contact,
+#                                          from_=TWILIO_PHONE_NUMBER,
+#                                          body=message_body)
 
-
+#         return HttpResponseRedirect(reverse('outpass_history'))
+#     else:
+#         # Show the outpass application form to the user
+#         return render(request, 'Outpass.html')
+#####################################################
 @login_required(login_url='view_login')
 def outpass_history(request):
     user = request.user
@@ -593,8 +581,11 @@ def deleteoutpass(request,id):
     item.delete()
     return redirect('outpass_history') 
 
-
 def outpassedit(request,id):
+    value = Leave.objects.filter(id=id) 
+    return render(request, "outpassedit.html",{'value':value}) 
+
+def outpassupdate(request,id):
     user = request.user
     if request.method=="POST":
         id = request.POST.get('id')
@@ -613,16 +604,17 @@ def outpassedit(request,id):
         value.parents_contact = parents_contact
         value.save()
         return redirect('outpass_history')
-    return render(request,'OutpassEdit.html')
+    return render(request,'outpassedit.html')
 
 def Wardenhome(request):
     user = Account.objects.filter(is_user=True).count
     order = Payment.objects.all().count()
     amount = Payment.objects.all()
+    complaint=ComplaintStudent.objects.all().count
     Revenue = 0
     for i in amount:
         Revenue += i.product.price
-    return render(request,'Wardenhome.html',{'user':user,'order':order,'amount':amount,'Revenue':Revenue})
+    return render(request,'Wardenhome.html',{'user':user,'order':order,'amount':amount,'Revenue':Revenue,'complaint':complaint})
 
 
 
@@ -878,6 +870,57 @@ def Room_view(request):
     return render(request, "Room_view.html",{'single_rooms':single_rooms, 'double_rooms':double_rooms, 'triple_rooms':triple_rooms, 'both_rooms':both_rooms})
 
 
+# def RoomDetails(request, id):
+#     room = Room.objects.filter(id=id).first()
+#     razor_amount = room.price * 100
+#     client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
+#     data = {
+#         "amount": razor_amount,
+#         "currency": "INR",
+#         "receipt": f"order_rcptid_{room.id}"
+#     }
+#     payment_response = client.order.create(data=data)
+#     order_id = payment_response['id']
+#     request.session['order_id'] = order_id
+#     order_status = payment_response['status']
+#     if order_status == 'created':
+#         payment = Payment(
+#             user=request.user,
+#             amount=room.price,
+#             razorpay_order_id=order_id,
+#             razorpay_payment_status=order_status,
+#             product=room
+#         )
+#         payment.save()
+#     return render(request, 'RoomDetails.html', {'room': room, 'razor_amount': razor_amount})
+
+
+
+# @login_required(login_url='login')
+# def payment_done(request):
+#     order_id = request.session['order_id']
+#     payment_id = request.GET.get('payment_id')
+#     print(payment_id)
+#     payment = Payment.objects.get(razorpay_order_id=order_id)
+    
+#     payment.paid = True
+#     payment.razorpay_payment_id = payment_id
+#     payment.razorpay_payment_status = 'paid'
+#     payment.save()
+#     rooms = Payment.objects.filter(user=request.user,razorpay_payment_status='paid')
+#     for room in rooms:
+#         # room.save()
+#         student = Account.objects.get(id=room.user.id)
+#         student.room_allotted = True
+#         # student.room = room
+#         # student.save()
+#         order=OrderPlaced(user=request.user, product=room.product, payment=payment, is_ordered=True)
+#         order.save()
+#         # room.available -= 1
+#         print(order)
+#     return redirect('showbill')
+
+
 def RoomDetails(request, id):
     room = Room.objects.filter(id=id).first()
     razor_amount = room.price * 100
@@ -927,7 +970,6 @@ def payment_done(request):
         # room.available -= 1
         print(order)
     return redirect('showbill')
-
 
 
 
@@ -1013,7 +1055,7 @@ def scan(request):
 
     profiles = Account.objects.all()
     for profile in profiles:
-        person = profile.image
+        person = Account.image
         image_of_person = face_recognition.load_image_file(f'images/pics/{person}')
         person_face_encoding = face_recognition.face_encodings(image_of_person)[0]
         known_face_encodings.append(person_face_encoding)
@@ -1125,6 +1167,10 @@ def reset(request):
     return redirect('Warden_AttendenceView')
 ################################Libraran####################
 
+def Librarianhome(request):
+    user = Account.objects.filter(is_user=True).count
+    complaint=ComplaintBookStudent.objects.all().count
+    return render(request,'Librarianhome.html',{'user':user,'complaint':complaint})
 
 def LibrarianAddBook(request):
     cat = Category_Book.objects.all()
@@ -1209,6 +1255,50 @@ def deletebook(request,id):
     item  = Book.objects.get(id=id)
     item.delete()
     return redirect('booktable') 
+
+
+
+
+def StudentBookScomplaint(request):
+    stu_id=Account.objects.get(id=request.user.id)
+    complaint_data=ComplaintBookStudent.objects.filter(user=stu_id)
+    return render(request,"StudentLib_complaint.html",{"complaint_data":complaint_data})
+
+def StudentBookScomplaint_save(request):
+    if request.method!="POST":
+        return redirect('StudentBookScomplaint')
+    else:
+        complaint_msg=request.POST.get("complaint_msg")
+
+        student_obj=Account.objects.get(id=request.user.id)
+        try:
+            complaint=ComplaintBookStudent(user=student_obj,complaint=complaint_msg,complaint_reply="")
+            complaint.save()
+            messages.success(request, "Successfully Sent Complaint")
+            return redirect('StudentBookScomplaint')
+        except:
+            messages.error(request, "Failed To Send Complaint")
+            return redirect('StudentBookScomplaint')
+
+
+def LibrarianComplaintView(request):
+    feedbacks=ComplaintBookStudent.objects.all()
+    return render(request,"LibrarianComplaintView.html",{"feedbacks":feedbacks})
+
+
+@csrf_exempt
+def student_bookcomplaint_message_replied(request):
+    feedback_id=request.POST.get("id")
+    feedback_message=request.POST.get("message")
+    try:
+        feedback=ComplaintBookStudent.objects.get(id=feedback_id)
+        feedback.complaint_reply=feedback_message
+        feedback.save()
+        return HttpResponse("True")
+    except:
+        return HttpResponse("False")
+    
+
   
 ##############################################################################################################################################################################
 

@@ -86,54 +86,51 @@
 
 
     <!-- ======= Services Section ======= -->
-    <section id="services" class="services">
+    <section id="featured-services" class="featured-services">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
           <h2>Services</h2>
           <h3>Check our <span>Services</span></h3>
-          <p>We assure that best Library service.</p>
+          <!-- <p>Ut possimus qui ut temporibus culpa velit eveniet modi omnis est adipisci expedita at voluptas atque vitae autem.</p> -->
         </div>
 
-        <div class="row">
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-book"></i></div>
-              <h4><a href="{% url 'Viewbookindex' %}">view Books</a></h4>
-              <p>To build up a library is to create a life. It’s never just a random collection of books. </p>
+          <div class="row">
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+              <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+                <div class="icon"><i class="bx bx-book"></i></div>
+                <h4 class="title"><a href="{% url 'Viewbookindex' %}">view Books</a></h4>
+                <p class="description">To build up a library is to create a life. It’s never just a random collection of books. </p>
+              </div>
+            </div>
+
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
+              <div class="icon"><i class="bi bi-book"></i></div>
+              <h4 class="title"><a href="{% url 'student_issued_books' %}">View Issued Book</a></h4>
+              <p class="description">When you absolutely positively have to know, ask a librarian. </p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
+              <div class="icon"><i class="bi bi-file-text"></i></div>
+              <h4 class="title"><a href="{% url 'StudentBookScomplaint_save' %}">Complaints</a></h4>
+              <p class="description">Register your Complaint</p>
             </div>
           </div>
 
-          <!-- <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-book-add"></i></div>
-              <h4><a href="{% url 'issuebook_view' %}">Request For Book</a></h4>
-              <p>When you absolutely positively have to know, ask a librarian.</p>
-            </div>
-          </div> -->
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-book-add"></i></div>
-              <h4><a href="{% url 'view_issued_book' %}">View Issued Book</a></h4>
-              <p>When you absolutely positively have to know, ask a librarian.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="200">
-            <div class="icon-box">
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="400">
               <div class="icon"><i class="bi bi-currency-rupee"></i></div>
-              <h4><a href="">Penalty</a></h4>
-              <p>When you absolutely positively have to know, ask a librarian.</p>
+              <h4 class="title"><a href="">Payment</a></h4>
+              <p class="description">Payment Details</p>
             </div>
           </div>
-
 
         </div>
 
       </div>
-    </section><!-- End Services Section -->
-
+    </section>
    
       
     <!-- ======= Contact Section ======= -->

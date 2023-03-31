@@ -96,9 +96,9 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end nav-link-menu">
                                     <ul class="nav-list">
-                                        <li><a href="" class="dropdown-item"><i class="fas fa-address-card"></i> Profile</a></li>
+                                        <!-- <li><a href="" class="dropdown-item"><i class="fas fa-address-card"></i> Profile</a></li>
                                         <li><a href="" class="dropdown-item"><i class="fas fa-envelope"></i> Messages</a></li>
-                                        <li><a href="" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a></li>
+                                        <li><a href="" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a></li> -->
                                         <div class="dropdown-divider"></div>
                                         <li><a href="{% url 'logout' %}" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                                         {% else %}
@@ -220,20 +220,20 @@
                         <a href="{% url 'clear_history' %}"><button type="button" class="btn btn-outline-secondary">Clear History</button></a>
                     </div>
                 </div>
-            
             </div>
-             <script>
-                $(".scan").click(function () {
-                    var postData = { csrfmiddlewaretoken: '{{ csrf_token }}' }
-                    $.ajax({
-                        url: "{% url 'scan' %}",
-                        data: {
-            
-                        },
-                    });
-                });
-            </script>
- <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
+            </div></div>
+<script>
+    $(".scan").click(function () {
+        var postData = { csrfmiddlewaretoken: '{{ csrf_token }}' }
+        $.ajax({
+            url: "{% url 'scan' %}",
+            data: {
+
+            },
+        });
+    });
+</script>
+<script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
     <script src="{% static 'vendor/chartsjs/Chart.min.js'%}"></script>
     <script src="{% static 'js/dashboard-charts.js'%}"></script>

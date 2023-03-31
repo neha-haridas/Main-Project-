@@ -12,16 +12,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>My Card-Library</title>
+    <title>My Card-Warden</title>
     <link href="{% static 'vendor/fontawesome/css/fontawesome.min.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/fontawesome/css/solid.min.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/fontawesome/css/brands.min.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
     <link href="{% static 'css/master.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/flagiconcss/css/flag-icon.min.css'%}" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    
-
+   
 </head>
         
 <body>
@@ -55,7 +53,7 @@
                     <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-money-bill"></i> Payment Details</a>
                     <ul class="collapse list-unstyled" id="pagesmenu">
                         <li>
-                            <a href="{% url 'WardenMess'%}"><i class="fas fa-rupee-sign"></i> Mess Fee</a>
+                            <a href="{% url 'WardenMess' %}"><i class="fas fa-rupee-sign"></i> Mess Fee</a>
                         </li>
                         <li>
                             <a href="{% url 'WardenViewPaymentDetails' %}"><i class="fas fa-rupee-sign"></i> Hostel Rent</a>
@@ -64,6 +62,9 @@
                             <a href="{% url 'WardenDue' %}"><i class="fas fa-info-circle"></i> Dues</a>
                         </li>
                     </ul>
+                </li>
+                <li>
+                    <a href="{% url 'Warden_AttendenceView' %}"><i class="fas fa-user-friends"></i>Face Detection</a>
                 </li>
             </ul>
         </nav>
@@ -101,9 +102,9 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end nav-link-menu">
                                     <ul class="nav-list">
-                                        <li><a href="" class="dropdown-item"><i class="fas fa-address-card"></i> Profile</a></li>
+                                        <!-- <li><a href="" class="dropdown-item"><i class="fas fa-address-card"></i> Profile</a></li>
                                         <li><a href="" class="dropdown-item"><i class="fas fa-envelope"></i> Messages</a></li>
-                                        <li><a href="" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a></li>
+                                        <li><a href="" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a></li> -->
                                         <div class="dropdown-divider"></div>
                                         <li><a href="{% url 'logout' %}" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                                         {% else %}
@@ -141,6 +142,8 @@
                           <tr>
                               <th>Student Reg No</th>
                               <th>Student Name</th>
+                              <th>Student Department</th>
+                              <th>Student Sem</th>
                               <th>Message</th>  
                               <th>Sended On</th>
                               <th>Reply</th>
@@ -149,6 +152,8 @@
                            <tr>
                               <td>{{ feedback.user.regno }} </td>
                               <td>{{ feedback.user.first_name }} {{ feedback.user.last_name }}</td>
+                              <td>{{ feedback.user.dpmnt }} </td>
+                              <td>{{ feedback.user.sem }} </td>
                               <td>{{ feedback.complaint }}</td>
                               <td>{{ feedback.created_at }}</td>
                               <td>
@@ -164,9 +169,6 @@
                   </div>
                 </div>
               <!-- /.card -->
-  
-  
-  
             </div>
             </div>
         </div>
@@ -176,10 +178,7 @@
       <div class="modal-dialog">
   
         <!-- Modal content-->
-        <section class="content">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 col-lg-12">
+       
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Reply</h4>
@@ -189,7 +188,6 @@
           <div class="modal-body">
             <p>Reply To : <span id="reply_name"></span></p>
               <input type="hidden" id="reply_id" name="reply_id">
-             
                 <textarea class="form-control" rows="5" id="reply_message"></textarea><br>
                 <button id="reply_btn" class="btn btn-info btn-block">Reply</button>
           </div>
@@ -220,7 +218,7 @@
                 var message=$("#reply_message").val()
 
                 $.ajax({
-                        url:"{% url 'student_complaint_message_replied' %}",
+                        url:'{% url 'student_complaint_message_replied' %}',
                         type:'POST',
                         data:{id:id,message:message},
                     })
@@ -237,18 +235,12 @@
                     .fail(function(){
                         alert("Error in Sending Reply")
                     })
-           });
+            });
 
     });
 </script>
-
-                       
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+   
+                    
     <script
         src="https://code.jquery.com/jquery-3.5.0.min.js"
         integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="

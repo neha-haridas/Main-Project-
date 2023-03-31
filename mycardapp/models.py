@@ -155,7 +155,13 @@ class Book(models.Model):
     img2 = models.ImageField(upload_to='pics', default=0)
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
 
-
+class ComplaintBookStudent(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    complaint = models.TextField(max_length=500)
+    complaint_reply = models.TextField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
 class Files(models.Model):
     filename = models.CharField(max_length=100)
@@ -176,17 +182,27 @@ class Files(models.Model):
 
 def get_expiry():
     return datetime.today() + timedelta(days=15)
-class IssuedBook(models.Model):
-    #moved this in forms.py
-    #enrollment=[(student.enrollment,str(student.get_name)+' ['+str(student.enrollment)+']') for student in StudentExtra.objects.all()]
-    enrollment=models.CharField(max_length=30)
-    #isbn=[(str(book.isbn),book.name+' ['+str(book.isbn)+']') for book in Book.objects.all()]
-    isbn=models.CharField(max_length=30)
-    issuedate=models.DateField(auto_now=True)
-    expirydate=models.DateField(default=get_expiry)
-    def __str__(self):
-        return self.enrollment
+class tbl_BookIssue(models.Model):
+    issue_id=models.AutoField(primary_key=True)
+    user=models.ForeignKey(Account,on_delete=models.CASCADE)
+    book=models.ForeignKey(Book,on_delete=models.CASCADE)
+    cat=models.ForeignKey(Category_Book,on_delete=models.CASCADE)
+    date_of_issue=models.DateField(auto_now_add=True)
+    expiry_date=models.DateField(default=get_expiry)
+    issuedstatus=models.BooleanField(default=False)
+    fine = models.BigIntegerField(null=True)
+    paymentchoices = (('Paid', 'Paid'), ('Unpaid', 'Unpaid'), ('None', 'None'))
+    payment=models.CharField(default='Unpaid',choices=paymentchoices,max_length=40)
 
+# class tbl_BookIssue(models.Model):
+#     issue_id=models.AutoField(primary_key=True)
+#     reqid=models.ForeignKey(BookRequest,on_delete=models.CASCADE)
+#     date_of_issue=models.DateField(auto_now_add=True)
+#     expiry_date=models.DateField(null=True)
+#     issuedstatus=models.BooleanField(default=False)
+#     fine = models.BigIntegerField(null=True)
+#     paymentchoices = (('Paid', 'Paid'), ('Unpaid', 'Unpaid'), ('None', 'None'))
+#     payment=models.CharField(default='Unpaid',choices=paymentchoices,max_length=40)
 
 ##############################Hostel####################################################
 

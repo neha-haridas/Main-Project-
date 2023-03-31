@@ -94,15 +94,15 @@
       </div>
      
       {% for i in datas %}
-      <div class="row" >
-        
+      <div class="row" >  
         <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
           <img src="{{i.img.url}}" class="img-fluid" alt="">
         </div>
         <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="100">
           <p class="fst-italic">
             {{i.book_desc}}
-          </p>  
+          </p>
+           <a href="{% url 'issuebooklib' i.issue_id %}"><button type="button" class="btn btn-outline-primary">Issue Now</button>
         </div>
         
 
@@ -110,7 +110,7 @@
       {% endfor %}
     </div>
   </section><!-- End About Section -->
-
+  
 
 
 

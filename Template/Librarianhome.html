@@ -30,10 +30,13 @@
             </div>
             <ul class="list-unstyled components text-secondary">
                 <li>
+                    <a href="{% 'Librarianhome' 5}"><i class="fas fa-home"></i>Dashboard</a>
+                </li>
+                <li>
                     <a href=""><i class="fas fa-book-reader"></i>Book issue Details</a>
                 </li>
                 <li>
-                    <a href=""><i class="fas fa-file-alt"></i> Complaints</a>
+                    <a href="{% url 'LibrarianComplaintView' %}"><i class="fas fa-file-alt"></i> Complaints</a>
                 </li>
                 <li>
                     <a href="#authmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-book"></i> Books</a>
@@ -111,7 +114,116 @@
                 </div>
             </nav>
             <!-- end of navbar navigation -->
-            
+            <div class="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 page-header">
+                            <div class="page-pretitle">My Card</div>
+                            <h2 class="page-title"> Librarian -Dashboard</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+                            <div class="card">
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="icon-big text-center">
+                                                <i class="teal fas fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="detail">
+                                                <p class="detail-subtitle">Users</p>
+                                                <span class="number">{{user}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer">
+                                        <hr />
+                                        <div class="stats">
+                                            <i class="fas fa-calendar"></i> For this Week
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+                            <div class="card">
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="icon-big text-center">
+                                                <i class="olive fas fa-money-bill-alt"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="detail">
+                                                <p class="detail-subtitle">Revenue</p>
+                                                <span class="number">{{Revenue}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer">
+                                        <hr />
+                                        <div class="stats">
+                                            <i class="fas fa-calendar"></i> For this Month
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+                            <div class="card">
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="icon-big text-center">
+                                                <i class="violet fas fa-eye"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="detail">
+                                                <p class="detail-subtitle">Page views</p>
+                                                <span class="number">28,210</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer">
+                                        <hr />
+                                        <div class="stats">
+                                            <i class="fas fa-stopwatch"></i> For this Month
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+                            <div class="card">
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="icon-big text-center">
+                                                <i class="orange fas fa-envelope"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="detail">
+                                                <p class="detail-subtitle">Complaints</p>
+                                                <span class="number">{{complaint}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer">
+                                        <hr />
+                                        <div class="stats">
+                                            <i class="fas fa-envelope-open-text"></i> For this week
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                     
                         

@@ -33,7 +33,7 @@
                     <a href=""><i class="fas fa-book-reader"></i>Book issue Details</a>
                 </li>
                 <li>
-                    <a href=""><i class="fas fa-file-alt"></i> Complaints</a>
+                    <a href="{% url 'LibrarianComplaintView' %}"><i class="fas fa-file-alt"></i> Complaints</a>
                 </li>
                 <li>
                     <a href="#authmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-book"></i> Books</a>
@@ -111,6 +111,7 @@
                 </div>
             </nav>
             <!-- end of navbar navigation -->
+            
             <div class="content">
                 <div class="container">
                     <div class="page-title">

@@ -126,7 +126,7 @@
     <br>
 <h1>Outpass Form</h1>
 {% for value in value %}
-<form class="cf" action="{% url 'Outpass' value.id %}" autocomplete="off" method="POST" enctype="multipart/form-data">
+<form class="cf" action="{% url 'outpassupdate' value.id %}" autocomplete="off" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="half left cf"> 
     <input type="text" id="name" name="name" value="{{request.user.first_name}} {{request.user.last_name}}" placeholder="Name" readonly>
