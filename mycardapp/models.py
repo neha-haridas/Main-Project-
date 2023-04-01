@@ -194,6 +194,13 @@ class tbl_BookIssue(models.Model):
     paymentchoices = (('Paid', 'Paid'), ('Unpaid', 'Unpaid'), ('None', 'None'))
     payment=models.CharField(default='Unpaid',choices=paymentchoices,max_length=40)
 
+
+    def save(self, *args, **kwargs):
+        book = self.book.book_quantity
+        book.book_quantity -= 1
+        book.save(update_fields=['book_quantity'])
+        super().save(*args, **kwargs)
+
 # class tbl_BookIssue(models.Model):
 #     issue_id=models.AutoField(primary_key=True)
 #     reqid=models.ForeignKey(BookRequest,on_delete=models.CASCADE)
@@ -240,9 +247,9 @@ class Leave(models.Model):
             client = Client(account_sid, auth_token)
 
             message = client.messages.create(
-                body=f"Dear Parent,{self.name}, applying Outpass for {self.purpose}",
+                body=f"{self.name}, applying Outpass for {self.purpose}",
                 from_='+13215946647',
-                to={self.parents_contact}
+                to='+917025920093'
             )
 
             print(message.sid)

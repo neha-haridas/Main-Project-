@@ -2,7 +2,7 @@ from audioop import reverse
 from contextvars import Token
 from importlib.metadata import files
 # from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from django.http import HttpResponse
@@ -47,6 +47,7 @@ from mycardapp.encryption_util import *
 from django.core.paginator import Paginator
 import razorpay 
 
+import datetime
 
 
 from django.shortcuts import render, HttpResponse, redirect
@@ -57,6 +58,8 @@ import winsound
 from django.db.models import Q
 from playsound import playsound
 import os
+from django.db import connection
+from datetime import date
 
 
 # Create your views here.
@@ -433,22 +436,42 @@ def searchbar(request):
 #             ob.save()
 #     return redirect('onebook', {'result': obj})
 
-def issuebooklib(request,id):
-    book=Book.objects.all()
-    cat=Category_Book.filter(id=id)
+# def issuebooklib(request,id):
+#     book=Book.objects.all()
+#     user = request.user
+#     today = date.today()
+#     obj=tbl_BookIssue(user_id=user.id,book_id=book.id,cat=book.book_category)
+#     for ob in obj:
+#         exp = ob.date_of_issue + timedelta(days=10)
+#         ob.expiry_date = exp
+#         ob.save()
+#         if ob.expiry_date < today and not ob.issuedstatus:
+#             days_late = (today - ob.expiry_date).days
+#             fine = days_late * 10
+#             ob.fine = fine
+#             ob.save()
+#     return redirect('onebook', {'result': obj})
+
+
+from datetime import date, timedelta
+from django.shortcuts import get_object_or_404, render
+
+def issuebooklib(request, id):
+    book = get_object_or_404(Book, id=id)
     user = request.user
     today = date.today()
-    obj=tbl_BookIssue(user_id=user.id,book_id=book.id,cat=cat.id)
-    for ob in obj:
-        exp = ob.date_of_issue + timedelta(days=10)
-        ob.expiry_date = exp
-        ob.save()
-        if ob.expiry_date < today and not ob.issuedstatus:
-            days_late = (today - ob.expiry_date).days
-            fine = days_late * 10
-            ob.fine = fine
-            ob.save()
-    return redirect('onebook', {'result': obj})
+    exp = today + timedelta(days=10)
+    obj = tbl_BookIssue.objects.create(
+        user_id=user.id,
+        book_id=book.id,
+        cat=book.book_category,
+        date_of_issue=today,
+        expiry_date=exp,
+        issuedstatus=True,
+    )
+    book.book_quantity -= 1
+    book.save()
+    return render(request, 'onebook.html', {'result': [obj]})
 
 
 
@@ -623,9 +646,29 @@ def WardenOutpassView(request):
     return render(request,'WardenOutpassView.html',{'outpas':outpas})
 
 
+# def outpassapproved(request,leave_id):
+#     appout=Leave.objects.get(id=leave_id)
+#     appout.status=1
+#     appout.save()
+#     return redirect('WardenOutpassView')
+    
+
+# def outpassdisapprove(request,leave_id):
+#     appout=Leave.objects.get(id=leave_id)
+#     appout.status=2
+#     appout.save()
+#     return redirect('WardenOutpassView')
+    
+
+
 def outpassapproved(request,leave_id):
     appout=Leave.objects.get(id=leave_id)
     appout.status=1
+    subject = "Your outpass request has been approved"
+    message = "Dear Parent,  applying Outpass for  from to  outpass request has been approved.Thank you."
+    from_email = "wardenmycard@gmail.com"  # change this to your email address
+    recipient_list = [appout.parents_email]  # send the email to the student's parent's email address
+    send_mail(subject, message, from_email, recipient_list)
     appout.save()
     return redirect('WardenOutpassView')
     
@@ -633,10 +676,17 @@ def outpassapproved(request,leave_id):
 def outpassdisapprove(request,leave_id):
     appout=Leave.objects.get(id=leave_id)
     appout.status=2
+    subject = "Your outpass request has been disapproved"
+    message = "Dear Parent,  applying Outpass for  from to  outpass request has been disapproved.Thank you."
+    from_email = "wardenmycard@gmail.com"  # change this to your email address
+    recipient_list = [appout.parents_email]  # send the email to the student's parent's email address
+    send_mail(subject, message, from_email, recipient_list)
     appout.save()
     return redirect('WardenOutpassView')
     
    
+
+
 
 def WardenDue(request):
     return render(request,'Warden_Due.html')
@@ -870,56 +920,11 @@ def Room_view(request):
     return render(request, "Room_view.html",{'single_rooms':single_rooms, 'double_rooms':double_rooms, 'triple_rooms':triple_rooms, 'both_rooms':both_rooms})
 
 
-# def RoomDetails(request, id):
-#     room = Room.objects.filter(id=id).first()
-#     razor_amount = room.price * 100
-#     client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
-#     data = {
-#         "amount": razor_amount,
-#         "currency": "INR",
-#         "receipt": f"order_rcptid_{room.id}"
-#     }
-#     payment_response = client.order.create(data=data)
-#     order_id = payment_response['id']
-#     request.session['order_id'] = order_id
-#     order_status = payment_response['status']
-#     if order_status == 'created':
-#         payment = Payment(
-#             user=request.user,
-#             amount=room.price,
-#             razorpay_order_id=order_id,
-#             razorpay_payment_status=order_status,
-#             product=room
-#         )
-#         payment.save()
-#     return render(request, 'RoomDetails.html', {'room': room, 'razor_amount': razor_amount})
+######################################Payment for rent and decrement with one year payment###########################################################
 
 
-
-# @login_required(login_url='login')
-# def payment_done(request):
-#     order_id = request.session['order_id']
-#     payment_id = request.GET.get('payment_id')
-#     print(payment_id)
-#     payment = Payment.objects.get(razorpay_order_id=order_id)
-    
-#     payment.paid = True
-#     payment.razorpay_payment_id = payment_id
-#     payment.razorpay_payment_status = 'paid'
-#     payment.save()
-#     rooms = Payment.objects.filter(user=request.user,razorpay_payment_status='paid')
-#     for room in rooms:
-#         # room.save()
-#         student = Account.objects.get(id=room.user.id)
-#         student.room_allotted = True
-#         # student.room = room
-#         # student.save()
-#         order=OrderPlaced(user=request.user, product=room.product, payment=payment, is_ordered=True)
-#         order.save()
-#         # room.available -= 1
-#         print(order)
-#     return redirect('showbill')
-
+import pytz
+from datetime import datetime, timedelta
 
 def RoomDetails(request, id):
     room = Room.objects.filter(id=id).first()
@@ -934,15 +939,26 @@ def RoomDetails(request, id):
     order_id = payment_response['id']
     request.session['order_id'] = order_id
     order_status = payment_response['status']
+    
     if order_status == 'created':
-        payment = Payment(
+        if not Payment.objects.filter(user=request.user, paid=True).exists():
+            payment = Payment(
             user=request.user,
             amount=room.price,
             razorpay_order_id=order_id,
             razorpay_payment_status=order_status,
             product=room
-        )
-        payment.save()
+             )
+            payment.save()
+  
+        else :
+            user = request.user
+            payment=Payment.objects.filter(user=user.id,paid=True)
+            last_ordered = Payment.objects.filter(user=user).latest('created_at').created_at
+            now = datetime.now(pytz.timezone('Asia/Kolkata'))
+            if last_ordered and now - last_ordered < timedelta(days=365):
+                # User has ordered within the past year, do not allow new order
+                return redirect('Room_view')
     return render(request, 'RoomDetails.html', {'room': room, 'razor_amount': razor_amount})
 
 
@@ -958,20 +974,26 @@ def payment_done(request):
     payment.razorpay_payment_id = payment_id
     payment.razorpay_payment_status = 'paid'
     payment.save()
+    if payment.paid == True:
+        id=payment.product.id
+        rom = Room.objects.filter(id=id) # get all available rooms
+        for room in rom:
+            room.available -= 1 # decrease the availability by 1
+            room.save()
     rooms = Payment.objects.filter(user=request.user,razorpay_payment_status='paid')
     for room in rooms:
-        # room.save()
+        room = payment.product
         student = Account.objects.get(id=room.user.id)
         student.room_allotted = True
-        # student.room = room
-        # student.save()
-        order=OrderPlaced(user=request.user, product=room.product, payment=payment, is_ordered=True)
+        student.room = room
+        student.save()
+        order=OrderPlaced(user=request.user, product=room, payment=payment, is_ordered=True)
+        
         order.save()
         # room.available -= 1
         print(order)
     return redirect('showbill')
-
-
+#################################################################################################
 
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
