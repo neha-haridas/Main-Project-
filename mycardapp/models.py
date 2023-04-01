@@ -196,9 +196,8 @@ class tbl_BookIssue(models.Model):
 
 
     def save(self, *args, **kwargs):
-        book = self.book.book_quantity
-        book.book_quantity -= 1
-        book.save(update_fields=['book_quantity'])
+        self.book.book_quantity -= 1
+        self.book.save(update_fields=['book_quantity'])
         super().save(*args, **kwargs)
 
 # class tbl_BookIssue(models.Model):

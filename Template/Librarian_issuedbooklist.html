@@ -21,7 +21,7 @@
     <link href="{% static 'vendor/flagiconcss/css/flag-icon.min.css'%}" rel="stylesheet">
    
 </head>
-         
+        
 <body>
     <div class="wrapper">
         <nav id="sidebar" class="active">
@@ -114,111 +114,75 @@
                 </div>
             </nav>
             <!-- end of navbar navigation -->
-            
+
             <div class="content">
                 <div class="container">
-                    {% include 'alert.html' %}
-								  <script>
-									  setTimeout(function(){
-										if ($('#msg').length > 0){
-										  $('#msg').remove();
-										  }
-										},2900)
-								  </script>
                     <div class="page-title">
-                        <h3>Add Books</h3>
+                        <h3>Books</h3>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12">
+                    <div class="row"> 
+                        <div class="col-md-12 col-lg-12">
                             <div class="card">
-                                <div class="card-header"></div>
+                                <div class="card-header">Books</div>
                                 <div class="card-body">
-                                    <!-- <h5 class="card-title">Lorem ipsum dolor sit amet consectetur.</h5> -->
-                                    <form accept-charset="utf-8" method="POST" action="" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        
-                                        <div class="row g-2">
-                                          <div class="mb-3 col-md-6">
-                                            <label for="password" class="form-label">Book Name</label>
-                                            <input type="text" class="form-control" name="book_name" placeholder="Book Name" onkeyup='pincodeValidation(this)' required>
-                                          </div>
-                                            <div class="mb-3 col-md-6">
-                                                <label for="email" class="form-label">Select Book Category </label>
-                                                <select class="form-select" name="category" placeholder="Book Category" required>
-                                                    {% for c in cat %}
-                                                    <option value="{{ c.category_id }}">{{c.category_name}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>    
-                                        </div>
-                                        <div class="row g-2">
-                                          <div class="mb-3 col-md-6">
-                                            <label for="password" class="form-label">Book Language</label>
-                                            <input type="text" class="form-control" name="book_language" placeholder="Book Language" onkeyup='pincodeValidation(this)' required>
-                                          </div>
-                                          <div class="mb-3 col-md-6">
-                                            <label for="password" class="form-label">Book Author</label>
-                                            <input type="text" class="form-control" name="book_author" placeholder="Book Author" onkeyup='pincodeValidation(this)' required>
-                                          </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="email" class="form-label">Add description about Book</label>
-                                            <textarea class="form-control" name="book_desc" rows="3" placeholder="Book description" onkeyup='addressValidation(this)' required></textarea>
-                                            <span id="addr" class="new" style="color: red;"></span>
-                                        </div>
-                                        <div class="row g-2">
-                                          <div class="mb-3 col-md-6">
-                                            <label for="password" class="form-label">Book Year</label>
-                                            <input type="text" class="form-control" name="book_year" placeholder="Book Year" onkeyup='pincodeValidation(this)' required>
-                                          </div>
-                                          <div class="mb-3 col-md-6">
-                                            <label for="password" class="form-label">Book Publisher</label>
-                                            <input type="text" class="form-control" name="book_publisher" placeholder="Book Publisher" onkeyup='pincodeValidation(this)' required>
-                                          </div>
-                                        </div>
-                                        <div class="row g-2">
-                                            <div class="mb-3 col-md-6">
-                                                <label for="email" class="form-label">Add Book image</label>
-                                                <input class="form-control" name="img" type="file" accept=".png, .jpeg, .jpg"  id="file" onkeyup="return fileValidation(this)" required>
-                                                <small class="text-muted">The image must have be in jpeg/png format</small>
-                                            </div>
-                                            <div class="mb-3 col-md-6">
-                                                <label for="password" class="form-label">Price</label>
-                                                <input type="number" class="form-control" name="book_price" placeholder="Price" onkeyup='pincodeValidation(this)' required>
-                                            </div>
-                                            <div class="row g-2">
-                                                <div class="mb-3 col-md-6">
-                                                  <label for="password" class="form-label">Book isbn</label>
-                                                  <input type="text" class="form-control" name="isbn" placeholder="Book Isbn" onkeyup='pincodeValidation(this)' required>
-                                                </div>
-                                                <div class="mb-3 col-md-6">
-                                                    <label for="state" class="form-label">Available</label>
-                                                    <input type="number" class="form-control" name="book_quantity" onkeyup='pinValidation(this)' placeholder="Available" required>
-                                                </div>
-                                               
-                                                
-                                            </div>
-                                        <div class="mb-3">
-                                            <button class="btn btn-success" type="submit"><i class="fas fa-check"></i> Save</button>
-                                        </div>
-                                    </form>
+                                    <p class="card-title"></p>
+                                    <form enctype="multipart/form-data">
+                                        <table class="table table-hover" id="dataTables-example" width="100%">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Book issued Student Name</th>
+                                                                                        <th>Student Department</th>
+                                                                                        <th>Student Sem</th>
+                                                                                        <th>Student Regno</th>
+                                                                                        <th>Student Conatact</th>
+                                                                                        <th>Book Name</th>
+                                                                                        <th>Category</th>
+                                                                                        <th>Author</th>
+                                                                                        <th>Language</th>
+                                                                                        <th>Price</th>
+                                                                                        <th>Issued Date</th>
+                                                                                        <th>Expiry Date</th>
+                                                                                        <th>Fine</th>
+                                                                                        <th>Available Books</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    {% for p in issuebk %}
+                                                                                    <tr>
+                                                                                        <td>{{p.user.first_name}} {{p.user.last_name}}</td>
+                                                                                        <td>{{p.user.dpmnt}}</td>
+                                                                                        <td>{{p.user.sem}}</td>
+                                                                                        <td>{{p.user.regno}}</td>
+                                                                                        <td>{{p.user.contact}}</td>
+                                                                                        <td>{{p.book.book_name}}</td>
+                                                                                        <td>{{p.book.book_category}}</td>
+                                                                                        <td>{{p.book.book_author}}</td>
+                                                                                        <td>{{p.book.book_language}}</td>
+                                                                                        <td>{{p.book.book_price}}</td> 
+                                                                                        <td>{{p.date_of_issue}}</td>
+                                                                                        <td>{{p.expiry_date}}</td>
+                                                                                        <td>{{p.fine}}</td>
+                                                                                        <td>{{p.book.book_quantity}}</td> 
+                                                                                        
+                                                                                    </tr>
+                                                                                    {% endfor %}
+                                                                                </tbody>
+                                                                            </table>
+                                                                            </form> 
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+
+    </div>
     <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
     <script src="{% static 'vendor/chartsjs/Chart.min.js'%}"></script>
     <script src="{% static 'js/dashboard-charts.js'%}"></script>
     <script src="{% static 'js/scripts.js'%}"></script>
-
-  
 </body>
-
-</html>

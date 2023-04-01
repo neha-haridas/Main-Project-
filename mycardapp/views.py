@@ -452,12 +452,18 @@ def searchbar(request):
 #             ob.save()
 #     return redirect('onebook', {'result': obj})
 
+##############################Book issue################################################
 
 from datetime import date, timedelta
 from django.shortcuts import get_object_or_404, render
+from django.http import Http404
 
 def issuebooklib(request, id):
-    book = get_object_or_404(Book, id=id)
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        raise Http404("Book does not exist")
+    
     user = request.user
     today = date.today()
     exp = today + timedelta(days=10)
@@ -475,9 +481,12 @@ def issuebooklib(request, id):
 
 
 
-
 def student_issued_books(request):
-    return render(request,'student_issued_books.html')
+    user = request.user
+    bk=tbl_BookIssue.objects.filter(user_id=user)
+    return render(request,'student_issued_books.html',{'bk':bk})
+
+
 
 #############################################################################
 
@@ -993,6 +1002,7 @@ def payment_done(request):
         # room.available -= 1
         print(order)
     return redirect('showbill')
+
 #################################################################################################
 
 def render_to_pdf(template_src, context_dict={}):
@@ -1192,7 +1202,8 @@ def reset(request):
 def Librarianhome(request):
     user = Account.objects.filter(is_user=True).count
     complaint=ComplaintBookStudent.objects.all().count
-    return render(request,'Librarianhome.html',{'user':user,'complaint':complaint})
+    issue=tbl_BookIssue.objects.all().count
+    return render(request,'Librarianhome.html',{'user':user,'complaint':complaint,'issue':issue})
 
 def LibrarianAddBook(request):
     cat = Category_Book.objects.all()
@@ -1321,6 +1332,22 @@ def student_bookcomplaint_message_replied(request):
         return HttpResponse("False")
     
 
-  
+def Librarian_issuedbooklist(request):
+    issuebk=tbl_BookIssue.objects.all()
+    return render(request,"Librarian_issuedbooklist.html",{"issuebk":issuebk})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##############################################################################################################################################################################
 

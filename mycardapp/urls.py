@@ -90,11 +90,12 @@ urlpatterns = [
     
 
 
-    # path('outpass-application/',views.outpass_application, name='outpass_application'),
+    ###########################################################################################################################
     path('StudentBookScomplaint/', views.StudentBookScomplaint, name='StudentBookScomplaint'),
     path('StudentBookScomplaint_save', views.StudentBookScomplaint_save, name="StudentBookScomplaint_save"),
     path('LibrarianComplaintView', views.LibrarianComplaintView, name="LibrarianComplaintView"),
     path('student_bookcomplaint_message_replied/', views.student_bookcomplaint_message_replied, name="student_bookcomplaint_message_replied"),
+     path('Librarian_issuedbooklist', views.Librarian_issuedbooklist, name="Librarian_issuedbooklist"),
     # path('return_book/<int:id>',views.return_issued_book,name="return_issued_book"),Studentbooklist  
     # # path('edit_issued/<int:id>',views.edit_issued,name="edit_issued"),
     # path('mainPage', views.mainPage, name="mainPage"),

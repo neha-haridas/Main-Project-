@@ -98,16 +98,15 @@
             </tr>
         </thead>
         <tbody>
-            {% for i in li1 %}
-            <tr class="text-center">
+            {% for i in bk %}
+            <tr>
                 <td>{{forloop.counter}}.</td>
-                <td>{{x.book_author}}</td>
-                <td>{{i.3}}</td>
-                {% endfor %}
-                {% for i in li2 %}
-                <td>{{i.0}}</td>
-                <td>{{i.1}}</td>
-                <td>₹ {{i.2}}</td>
+                <td>{{i.book.book_name}}</td>
+                <td>{{i.book.book_author}}</td>
+                <td>{{i.date_of_issue}}</td>
+                <td>{{i.expiry_date}}</td>
+                <td>{{i.fine}}</td>
+                
             </tr>
             {% endfor %}
         </tbody>
@@ -156,7 +155,7 @@
             </ul>
           </div>
 
-          <
+          
           <div class="col-lg-3 col-md-6 footer-links">
             <h4>Our Social Networks</h4>
             <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p>
