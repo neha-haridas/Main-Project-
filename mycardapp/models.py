@@ -10,6 +10,7 @@ import os
 from django.core.validators import MinLengthValidator
 import datetime
 from time import time
+from django.utils import timezone
 
 # Create your models here.
 class MyAccount(BaseUserManager):
@@ -200,15 +201,42 @@ class tbl_BookIssue(models.Model):
         self.book.save(update_fields=['book_quantity'])
         super().save(*args, **kwargs)
 
-# class tbl_BookIssue(models.Model):
-#     issue_id=models.AutoField(primary_key=True)
-#     reqid=models.ForeignKey(BookRequest,on_delete=models.CASCADE)
-#     date_of_issue=models.DateField(auto_now_add=True)
-#     expiry_date=models.DateField(null=True)
-#     issuedstatus=models.BooleanField(default=False)
-#     fine = models.BigIntegerField(null=True)
-#     paymentchoices = (('Paid', 'Paid'), ('Unpaid', 'Unpaid'), ('None', 'None'))
-#     payment=models.CharField(default='Unpaid',choices=paymentchoices,max_length=40)
+
+################################################################
+
+def get_expiry():
+    return datetime.today() + timedelta(days=15)
+class tbl_BookIssues(models.Model):
+    issue_id=models.AutoField(primary_key=True)
+    user=models.ForeignKey(Account,on_delete=models.CASCADE)
+    book=models.ForeignKey(Book,on_delete=models.CASCADE)
+    cat=models.ForeignKey(Category_Book,on_delete=models.CASCADE)
+    date_of_issue=models.DateField(auto_now_add=True)
+    expiry_date=models.DateField(default=get_expiry)
+    issuedstatus=models.BooleanField(default=False)
+    fine = models.BigIntegerField(null=True)
+    paymentchoices = (('Paid', 'Paid'), ('Unpaid', 'Unpaid'), ('None', 'None'))
+    payment=models.CharField(default='Unpaid',choices=paymentchoices,max_length=40)
+    return_date=models.DateField(null=True)
+
+    def save(self, *args, **kwargs):
+        # decrease book_quantity when issue is saved
+        self.book.book_quantity -= 1
+        self.book.save(update_fields=['book_quantity'])
+        super().save(*args, **kwargs)
+
+    def return_book(self):
+        self.issuedstatus = False
+        self.return_date = timezone.now().date()
+        if self.return_date > self.expiry_date:
+            days_late = (self.return_date - self.expiry_date).days
+            fine_per_day = 2  # Change this to whatever fine amount you want
+            fine_amount = days_late * fine_per_day
+            self.fine = fine_amount
+        self.book.book_quantity += 1
+        self.book.save()
+        self.save()
+
 
 ##############################Hostel####################################################
 
@@ -239,6 +267,12 @@ class Leave(models.Model):
     
     def __str__(self):
         return self.purpose
+    
+    def __str__(self):
+        return self.sem
+    
+    def __str__(self):
+        return self.dept
 
     def save(self, *args, **kwargs):
             account_sid = 'AC7e1b12f105b868c334e9923e237a3e2a'
@@ -246,7 +280,7 @@ class Leave(models.Model):
             client = Client(account_sid, auth_token)
 
             message = client.messages.create(
-                body=f"{self.name}, applying Outpass for {self.purpose}",
+                body=f"{self.name} {self.dept} {self.sem}, applying Outpass for {self.purpose}",
                 from_='+13215946647',
                 to='+917025920093'
             )

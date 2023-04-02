@@ -1,0 +1,9 @@
+<h1>My Books</h1>
+{% if issued_books %}
+<ul>
+{% for book in issued_books %}
+    <li>{{ book.book.book_name }} (issued on {{ book.date_of_issue }}, expires on {{ book.expiry_date }})</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>You currently have no books checked out.</p>

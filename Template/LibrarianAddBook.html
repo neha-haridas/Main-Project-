@@ -140,7 +140,7 @@
                                         <div class="row g-2">
                                           <div class="mb-3 col-md-6">
                                             <label for="password" class="form-label">Book Name</label>
-                                            <input type="text" class="form-control" name="book_name" placeholder="Book Name" onkeyup='pincodeValidation(this)' required>
+                                            <input type="text" class="form-control" name="book_name" placeholder="Book Name" pattern="^[A-Za_z][A-Za-z -]+$" title="The name should begin with capital letter Followed by uppercase or lowercase" size="30" required>
                                           </div>
                                             <div class="mb-3 col-md-6">
                                                 <label for="email" class="form-label">Select Book Category </label>

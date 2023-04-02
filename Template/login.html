@@ -32,6 +32,18 @@
 				</div>
 
 				<form class="login100-form validate-form" method="post" action="{% url 'login' %}">
+					<div style="width:90%;text-align: center;align: center;">
+						{% include 'alert.html' %}
+
+							 <script>
+								 setTimeout(function(){
+								   if ($('#msg').length > 0){
+									 $('#msg').remove();
+									 }
+								   },2900)
+
+							 </script>
+					 </div>
 					{% csrf_token %}
 					<span class="login100-form-title">
 						Member Login

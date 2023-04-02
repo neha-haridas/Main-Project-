@@ -137,7 +137,7 @@
                                 <th>File Name</th>
                                 <th>View</th>
                                 <th>Download</th>
-                                <th>Delete</th>
+                                <!-- <th>Delete</th> -->
                             </tr>
                             </thead>
                             <tbody>
@@ -164,13 +164,13 @@
                                     <span class="text-muted">No PDF</span>
                                    {% endif %}
                                   </td> 
-                                  <td>
+                                  <!-- <td>
                                     {% if file.pdf %}
                                       <a href="{% url 'deletepdf' file.id %}" download class="btn btn-outline-danger">
                                         Delete PDF</a>
 
                                    {% endif %}
-                                  </td> 
+                                  </td>  -->
                                 </tr>
                             {% endfor %}
                         {% endif %}

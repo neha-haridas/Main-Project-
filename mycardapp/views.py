@@ -454,37 +454,37 @@ def searchbar(request):
 
 ##############################Book issue################################################
 
-from datetime import date, timedelta
-from django.shortcuts import get_object_or_404, render
-from django.http import Http404
+# from datetime import date, timedelta
+# from django.shortcuts import get_object_or_404, render
+# from django.http import Http404
 
-def issuebooklib(request, id):
-    try:
-        book = Book.objects.get(id=id)
-    except Book.DoesNotExist:
-        raise Http404("Book does not exist")
+# def issuebooklib(request, id):
+#     try:
+#         book = Book.objects.get(id=id)
+#     except Book.DoesNotExist:
+#         raise Http404("Book does not exist")
     
-    user = request.user
-    today = date.today()
-    exp = today + timedelta(days=10)
-    obj = tbl_BookIssue.objects.create(
-        user_id=user.id,
-        book_id=book.id,
-        cat=book.book_category,
-        date_of_issue=today,
-        expiry_date=exp,
-        issuedstatus=True,
-    )
-    book.book_quantity -= 1
-    book.save()
-    return render(request, 'onebook.html', {'result': [obj]})
+#     user = request.user
+#     today = date.today()
+#     exp = today + timedelta(days=10)
+#     obj = tbl_BookIssue.objects.create(
+#         user_id=user.id,
+#         book_id=book.id,
+#         cat=book.book_category,
+#         date_of_issue=today,
+#         expiry_date=exp,
+#         issuedstatus=True,
+#     )
+#     book.book_quantity -= 1
+#     book.save()
+#     return render(request, 'onebook.html', {'result': [obj]})
 
 
 
-def student_issued_books(request):
-    user = request.user
-    bk=tbl_BookIssue.objects.filter(user_id=user)
-    return render(request,'student_issued_books.html',{'bk':bk})
+# def student_issued_books(request):
+#     user = request.user
+#     bk=tbl_BookIssue.objects.filter(user_id=user)
+#     return render(request,'student_issued_books.html',{'bk':bk})
 
 
 
@@ -510,8 +510,65 @@ def student_issued_books(request):
 #     return render(request, "issue_book.html")
 
 #############################################
+from datetime import date, timedelta
+from django.shortcuts import get_object_or_404, render
+from django.http import Http404
 
+def issuebooklib(request, id):
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        raise Http404("Book does not exist")
+    
+    user = request.user
+    today = datetime.today()
+    exp = today + timedelta(days=10)
+    obj = tbl_BookIssues.objects.create(
+        user_id=user.id,
+        book_id=book.id,
+        cat=book.book_category,
+        date_of_issue=today,
+        expiry_date=exp,
+        issuedstatus=True,
+    )
+    return render(request, 'onebook.html', {'result': [obj]})
 
+def return_book_lib(request, issue_id):
+    bookissue = tbl_BookIssues.objects.get(issue_id=issue_id, issuedstatus=True)
+    if request.method == 'POST':
+        # Update the book issue object and the corresponding book object
+        bookissue.issuedstatus = False
+        bookissue.return_date = date.today()
+
+        # Calculate fine if book is returned late
+        if bookissue.return_date > bookissue.expiry_date:
+            days_late = (bookissue.return_date - bookissue.expiry_date).days
+            fine_per_day = 2  # Change this to whatever fine amount you want
+            fine_amount = days_late * fine_per_day
+            bookissue.fine = fine_amount
+
+        book = get_object_or_404(Book, id=bookissue.book.id)
+        book.book_quantity += 1
+        book.save()
+
+        bookissue.save()
+
+        return redirect('mybooks')
+    
+    return render(request, 'student_issued_books.html', {'bookissue': bookissue})
+
+def mybooks(request):
+    user = request.user
+    issued_books = tbl_BookIssues.objects.filter(user=user, issuedstatus=True)
+    return render(request, 'mybook.html', {'issued_books': issued_books})
+
+########################################
+def student_issued_books(request):
+    user = request.user
+    bk=tbl_BookIssues.objects.filter(user_id=user)
+    return render(request,'student_issued_books.html',{'bk':bk})
+
+#########################################################
 
 # class FileView(generic.ListView):
 #     # user = request.user
@@ -872,7 +929,7 @@ def Addroom(request):
 
 def table(request):
     products = Room.objects.all()
-    return render(request, "tables.html",{'products':products})
+    return render(request, "Warden_Room_tables.html",{'products':products})
 
 def addroomtable(request,id):
     return redirect('table')
@@ -914,6 +971,18 @@ def productupdate(request):
 def WardenViewPaymentDetails(request):
     orders = Payment.objects.all()
     return render(request,'WardenViewPaymentDetails.html', {'orders': orders})
+
+
+import csv
+def order_detailslog(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="order_details.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['user', 'ordered_date','product'])
+    order_details = OrderPlaced.objects.all().values_list('user', 'ordered_date','product')
+    for i in order_details:
+        writer.writerow(i)
+    return response
 
 
 def deleteproduct(request,id):
@@ -1003,7 +1072,6 @@ def payment_done(request):
         print(order)
     return redirect('showbill')
 
-#################################################################################################
 
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
@@ -1202,7 +1270,7 @@ def reset(request):
 def Librarianhome(request):
     user = Account.objects.filter(is_user=True).count
     complaint=ComplaintBookStudent.objects.all().count
-    issue=tbl_BookIssue.objects.all().count
+    issue=tbl_BookIssues.objects.all().count
     return render(request,'Librarianhome.html',{'user':user,'complaint':complaint,'issue':issue})
 
 def LibrarianAddBook(request):
@@ -1333,7 +1401,7 @@ def student_bookcomplaint_message_replied(request):
     
 
 def Librarian_issuedbooklist(request):
-    issuebk=tbl_BookIssue.objects.all()
+    issuebk=tbl_BookIssues.objects.all()
     return render(request,"Librarian_issuedbooklist.html",{"issuebk":issuebk})
 
 
