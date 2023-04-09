@@ -1,0 +1,18 @@
+
+<h2>Return Book</h2>
+<hr>
+{% if bookissue %}
+  <p><strong>Author:</strong> {{ bookissue.book.author }}</p>
+  <p><strong>Category:</strong> {{ bookissue.book.book_category }}</p>
+  <p><strong>Date of Issue:</strong> {{ bookissue.date_of_issue }}</p>
+  <p><strong>Expiry Date:</strong> {{ bookissue.expiry_date }}</p>
+  {% if bookissue.fine %}
+    <p><strong>Fine:</strong> {{ bookissue.fine }}</p>
+  {% endif %}
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Return Book</button>
+  </form>
+{% else %}
+  <p>No book to return.</p>
+{% endif %}

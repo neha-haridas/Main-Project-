@@ -107,10 +107,16 @@
                 <td>{{i.date_of_issue}}</td>
                 <td>{{i.expiry_date}}</td>
                 <td>{{i.fine}}</td>
-                <td><a href="{% url 'return_book_lib' i.book.id %}"  button type="button" class="btn btn-outline-primary">Return</a></td>
-                
-            </tr>
-            {% endfor %}
+                <td>
+                  {% if i.issuedstatus %}
+                  <form action="{% url 'return_book_lib' i.id %}" method="POST">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-outline-primary">Return</button>
+                  </form>
+                  {% endif %}
+              </td>
+          </tr>
+          {% endfor %}
         </tbody>
     </table>
     </div>

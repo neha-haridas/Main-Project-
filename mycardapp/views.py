@@ -5,11 +5,11 @@ from importlib.metadata import files
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.http import HttpResponseRedirect, JsonResponse
 
 from mycardapp.utils import send_twilio_message
-from .models import Account, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files,Room,Payment,OrderPlaced,ComplaintStudent,LastFace,tbl_BookIssue
+from .models import Account, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files,Room,Payment,OrderPlaced,ComplaintStudent,LastFace,tbl_BookIssues
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -36,7 +36,6 @@ from twilio.rest import Client
 
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from twilio.rest import Client
 
 import datetime,calendar
 from .forms import *
@@ -59,7 +58,6 @@ from django.db.models import Q
 from playsound import playsound
 import os
 from django.db import connection
-from datetime import date
 
 
 # Create your views here.
@@ -349,6 +347,7 @@ def profile_update(request):
         dpmnt = request.POST.get('dpmnt')
         sem = request.POST.get('sem')
         img= request.FILES.get('img', '')
+        choice=request.POST.get('choice')
         user_id = request.user.id
 
         user = Account.objects.get(id=user_id)
@@ -362,9 +361,13 @@ def profile_update(request):
         user.dpmnt = dpmnt 
         user.sem = sem  
         user.img = img
+        user.choice = choice
         user.save()
         messages.success(request,'Profile Are Successfully Updated. ')
-        return redirect('profile')
+        context = {
+        'choices': Account.choices,
+    }
+        return redirect('profile',context)
 
 
 
@@ -418,40 +421,6 @@ def searchbar(request):
             print("No information to show")
     return render(request, 'searchbar.html', {}) 
 
-############################################################################
-
-# def issuebooklib(request):
-#     obj = tbl_BookIssue.objects.all()
-#     today = date.today()
-#     for ob in obj:
-#         exp = ob.date_of_issue + timedelta(days=10)
-
-#         print(ob)
-#         ob.expiry_date = exp
-#         ob.save()
-#         if ob.expiry_date < today and not ob.issuedstatus:
-#             days_late = (today - ob.expiry_date).days
-#             fine = days_late * 10
-#             ob.fine = fine
-#             ob.save()
-#     return redirect('onebook', {'result': obj})
-
-# def issuebooklib(request,id):
-#     book=Book.objects.all()
-#     user = request.user
-#     today = date.today()
-#     obj=tbl_BookIssue(user_id=user.id,book_id=book.id,cat=book.book_category)
-#     for ob in obj:
-#         exp = ob.date_of_issue + timedelta(days=10)
-#         ob.expiry_date = exp
-#         ob.save()
-#         if ob.expiry_date < today and not ob.issuedstatus:
-#             days_late = (today - ob.expiry_date).days
-#             fine = days_late * 10
-#             ob.fine = fine
-#             ob.save()
-#     return redirect('onebook', {'result': obj})
-
 ##############################Book issue################################################
 
 # from datetime import date, timedelta
@@ -487,54 +456,39 @@ def searchbar(request):
 #     return render(request,'student_issued_books.html',{'bk':bk})
 
 
-
-#############################################################################
-
-# def issuebook(request):
-#     ibook = Book.objects.all()
-#     category = Category_Book.objects.all()
-#     return render(request,'issuebook.html',{'products':ibook,'category':category})
-
-
-# @login_required(login_url='login')
-# def issue_book(request):
-#     user = request.user
-#     if request.method == "POST":
-#             obj = models.issuedBooks()
-#             obj.bookname = request.POST['bookname']
-#             obj.issued_date = request.POST['issuedate']
-#             obj.expiry_date=request.POST['expridate']
-#             obj.save()
-#             alert = True
-#             return render(request, "issue_book.html", {'obj':obj, 'alert':alert})
-#     return render(request, "issue_book.html")
-
-#############################################
+#############################################issue book working properly###################3
 from datetime import date, timedelta
-from django.shortcuts import get_object_or_404, render
-from django.http import Http404
+from django.shortcuts import get_object_or_404, render, redirect
+from .models import Book,tbl_BookIssues
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def issuebooklib(request, id):
-    try:
-        book = Book.objects.get(id=id)
-    except Book.DoesNotExist:
-        raise Http404("Book does not exist")
-    
-    user = request.user
-    today = datetime.today()
+    book = get_object_or_404(Book, id=id)
+    today = date.today()
     exp = today + timedelta(days=10)
-    obj = tbl_BookIssues.objects.create(
-        user_id=user.id,
-        book_id=book.id,
-        cat=book.book_category,
-        date_of_issue=today,
-        expiry_date=exp,
-        issuedstatus=True,
-    )
-    return render(request, 'onebook.html', {'result': [obj]})
+    if book.book_quantity>0:
+        obj = tbl_BookIssues.objects.create(
+            user=request.user,
+            book=book,
+            cat=book.book_category,
+            date_of_issue=today,
+            expiry_date=exp,
+            issuedstatus=True,
+        )
+        messages.success(request, f"You have successfully issued '{book.book_name}'")
+    else:
+        messages.error(request, 'The book is out of stock!')
 
-def return_book_lib(request, issue_id):
-    bookissue = tbl_BookIssues.objects.get(issue_id=issue_id, issuedstatus=True)
+    return redirect('student_issued_books')
+
+@login_required
+def return_book_lib(request, id):
+    try:
+        bookissue = tbl_BookIssues.objects.get(id=id, issuedstatus=True)
+    except tbl_BookIssues.DoesNotExist:
+        raise Http404("Book issue does not exist or has already been returned")
+    
     if request.method == 'POST':
         # Update the book issue object and the corresponding book object
         bookissue.issuedstatus = False
@@ -555,8 +509,9 @@ def return_book_lib(request, issue_id):
 
         return redirect('mybooks')
     
-    return render(request, 'student_issued_books.html', {'bookissue': bookissue})
+    return render(request, 'mybooks.html', {'bookissue': bookissue})
 
+@login_required
 def mybooks(request):
     user = request.user
     issued_books = tbl_BookIssues.objects.filter(user=user, issuedstatus=True)
@@ -731,7 +686,7 @@ def outpassapproved(request,leave_id):
     appout=Leave.objects.get(id=leave_id)
     appout.status=1
     subject = "Your outpass request has been approved"
-    message = "Dear Parent,  applying Outpass for  from to  outpass request has been approved.Thank you."
+    message = "Dear Parent, applying Outpass request has been approved.Thank you."
     from_email = "wardenmycard@gmail.com"  # change this to your email address
     recipient_list = [appout.parents_email]  # send the email to the student's parent's email address
     send_mail(subject, message, from_email, recipient_list)
@@ -743,7 +698,7 @@ def outpassdisapprove(request,leave_id):
     appout=Leave.objects.get(id=leave_id)
     appout.status=2
     subject = "Your outpass request has been disapproved"
-    message = "Dear Parent,  applying Outpass for  from to  outpass request has been disapproved.Thank you."
+    message = "Dear Parent, applying Outpass request has been disapproved.Thank you."
     from_email = "wardenmycard@gmail.com"  # change this to your email address
     recipient_list = [appout.parents_email]  # send the email to the student's parent's email address
     send_mail(subject, message, from_email, recipient_list)
@@ -969,7 +924,7 @@ def productupdate(request):
 
 
 def WardenViewPaymentDetails(request):
-    orders = Payment.objects.all()
+    orders = OrderPlaced.objects.all()
     return render(request,'WardenViewPaymentDetails.html', {'orders': orders})
 
 
@@ -1084,10 +1039,10 @@ def render_to_pdf(template_src, context_dict={}):
 
 def get(request,id,*args, **kwargs,):
         
-        place = Payment.objects.get(id=id)
-        date=place.created_at
+        place = OrderPlaced.objects.get(id=id)
+        date=place.payment.created_at
 
-        orders=Payment.objects.filter(user_id=request.user.id,created_at=date)
+        orders= OrderPlaced.objects.filter(user_id=request.user.id,created_at=date)
         for o in orders:
             total=o.product.price
         addrs=Account.objects.get(id=request.user.id)
@@ -1097,8 +1052,6 @@ def get(request,id,*args, **kwargs,):
             "total":total,
             "orders":orders,
             "shipping":addrs,
-    
- 
         }
         pdf = render_to_pdf('report.html',data)
         if pdf:
@@ -1113,7 +1066,7 @@ def get(request,id,*args, **kwargs,):
 
 @login_required(login_url='login')
 def showbill(request):
-    orders = Payment.objects.filter(user=request.user, paid=True).order_by('created_at')
+    orders = OrderPlaced.objects.filter(user=request.user, is_ordered=True).order_by('ordered_date')
     return render(request, "PaymentdetailsStudent.html", {'orders': orders})
     
 #########################Attendence######################################

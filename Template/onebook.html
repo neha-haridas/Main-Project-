@@ -87,6 +87,15 @@
   <section id="about" class="about section-bg">
     <div class="container" data-aos="fade-up" >
 
+      {% include 'alert.html' %}
+
+							 <script>
+								 setTimeout(function(){
+								   if ($('#msg').length > 0){
+									 $('#msg').remove();
+									 }
+								   },2900)
+                </script>
       <div class="section-title" >
         <h2>About the Book</h2>
 

@@ -112,7 +112,7 @@
               
               <img class="card-img-top" src="{{i.img.url}}" style="height: 400px; width: 400px; padding-left: 10ch;" alt="Card image cap"  >
               <div class="card-body">
-                <h5 class="card-title"><a href="{% url 'onebook' i.encrypt_key %}">{{i.book_name}}</a></h5>
+                <h5 class="card-title"><a href="{% url 'onebook' i.id %}">{{i.book_name}}</a></h5>
                 <p class="card-text">{{i.book_author}} &nbsp;|&nbsp; {{i.book_language}}</p>
               </div>
               <!-- <div class="card-footer">

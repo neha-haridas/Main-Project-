@@ -141,6 +141,12 @@
                     <br>
                     <br>
 
+        <div class="content">
+          <div class="container">
+              <div class="page-title">
+                <div class="row"> 
+                  <div class="col-md-12 col-lg-12">
+
                     <div class="inner">
                       <!-- About Us -->
                       <header id="inner">
@@ -153,30 +159,42 @@
 
                       <h2 class="h2">Latest Book</h2>
                       <br>
-                      <div class="row" data-aos="zoom-in" data-aos-delay="100"></div>
-                      <div class="col-md-12 col-md-pull-5">
-                        {% for i in datas %}
-                          <div class="row">
-                            <div class="col-md-3 ">
-                              <div class="card float-right">
-                                <img class="card-img-top" src="{{i.img.url}}" style="height:20; width:20;" alt="Card image cap">
-                                <div class="card-body">
-                                  <h5 class="card-title"><a href="{% url 'onebook' i.encrypt_key %}">{{i.book_name}}</a></h5>
-                                  <p class="card-text">{{i.book_author}} &nbsp;|&nbsp; {{i.book_language}}</p>
-                                </div>
-                                <!-- <div class="card-footer">
-                                  <small class="text-muted">Last updated 3 mins ago</small>
-                                </div> -->
-                              </div>
-                            </div>
-                          </div>
-                        {% endfor %}
-                    </div>
-                  </div><br>
+                      
                 </div>
       </div>    
                     
-      </div>    
+      </div>  
+
+            <div class="card">
+                <div class="card-header">Books</div>
+                <div class="card-body">
+                    <p class="card-title"></p>
+                    <form enctype="multipart/form-data">
+                        <table class="table table-hover" id="dataTables-example" width="100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th> Book Name</th>
+                                                                        <th>Author</th>
+                                                                        <th>Language</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {% for i in datas %}
+                                                                    <tr>
+                                                                        <td><a href="{% url 'onebook' i.encrypt_key %}">{{i.book_name}}</a></td>
+                                                                        <td>{{i.book_author}}</td>
+                                                                        <td>{{i.book_language}}</td>
+                                                                    </tr>
+                                                                    {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                            </form> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 
 <!-- ======= Footer ======= -->
 <footer id="footer">

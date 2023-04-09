@@ -64,7 +64,13 @@ class Account(AbstractBaseUser,PermissionsMixin):
     regno           = models.BigIntegerField(default=0 , unique=True)
     dpmnt           = models.CharField(max_length=50, default='')
     sem             = models.CharField(max_length=50, default='')
-    image             = models.ImageField(upload_to='pics', default=0)
+    img            = models.ImageField(upload_to='pics', default=0)
+    choices = [('N','None'),('D', 'Day scholar'), ('H', 'Hosteler')]
+    choice = models.CharField(
+        choices=choices,
+        max_length=1,
+        default='N',null=True)
+
     gender_choices = [('N','None'),('M', 'Male'), ('F', 'Female')]
     gender = models.CharField(
         choices=gender_choices,
@@ -207,7 +213,7 @@ class tbl_BookIssue(models.Model):
 def get_expiry():
     return datetime.today() + timedelta(days=15)
 class tbl_BookIssues(models.Model):
-    issue_id=models.AutoField(primary_key=True)
+    id=models.AutoField(primary_key=True)
     user=models.ForeignKey(Account,on_delete=models.CASCADE)
     book=models.ForeignKey(Book,on_delete=models.CASCADE)
     cat=models.ForeignKey(Category_Book,on_delete=models.CASCADE)

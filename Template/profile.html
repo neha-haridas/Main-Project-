@@ -373,7 +373,7 @@
             <div class="module-inner">
                 <div class="side-bar">
                     <div class="user-info">
-                        <img class="img-profile img-circle img-responsive center-block" src="{{user.image.url}}"alt="">
+                        <img class="img-profile img-circle img-responsive center-block" src="{{user.img.url}}"alt="">
                         <ul class="meta list list-unstyled">
                                 <!-- <label class="label label-info">UX Designer</label> -->
                             </li>
@@ -487,7 +487,16 @@
                             </div>
 
                             
-
+                            <div class="form-group">
+                                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Choice</label>
+                                <div class="col-md-10 col-sm-9 col-xs-12">
+                                    <select class="form-select" name="choice" id="choice" placeholder="Choice" required>
+                                        {% for choice in choices %}
+                                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
 
                         </fieldset>
 <!-- 

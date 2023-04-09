@@ -120,11 +120,19 @@
             </nav>
             <!-- end of navbar navigation -->
             <div class="content">
-            <div class="container">
-            <div class="col-md-12 col-lg-12">
-                <div class="card">
-                    <div class="card-header"> Room Rent Payment Details<a href="/order_detailslog"> <button class="btn btn-sm btn-primary" > Download Details <i class="ti-download pdd-right-5"></i> </button></a></div>
-                    <div class="card-body">
+                <div class="container">
+                  <div class="col-md-12 col-lg-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <h5 class="mb-0">Room Rent Payment Details</h5>
+                          <a href="/order_detailslog" class="btn btn-outline-primary">
+                            <i class="fa fa-file-excel"></i>
+                            Download Details
+                          </a>
+                        </div>
+                      </div>
+                      <div class="card-body">
                         <p class="card-title"></p>
                         <table class="table table-hover" id="dataTables-example" width="100%">
                             <thead>
@@ -142,9 +150,9 @@
                                     <tr> 
                                         <td>{{orders.user.regno}}</td>
                                         <td>{{orders.user.first_name}} {{orders.user.last_name}}</td>
-                                        <td>{{orders.amount}}</td>
+                                        <td>{{orders.payment.amount}}</td>
                                         <td>{{orders.product.room_type}}</td>
-                                        <td>{{orders.created_at}}</td>
+                                        <td>{{orders.ordered_date}}</td>
                                     </tr>
                                     {% endfor %}
                             </tbody>

@@ -103,9 +103,9 @@
     {% for orders in orders %}
     <tr> 
           <td>{{orders.product.room_type}}</td>
-          <td>{{orders.amount}}</td>
-          <td>{{orders.created_at}}</td>
-          <td>{{orders.razorpay_payment_status}}</td>
+          <td>{{orders.payment.amount}}</td>
+          <td>{{orders.payment.created_at}}</td>
+          <td>{{orders.payment.razorpay_payment_status}}</td>
         {% if orders %}
         <td><a href="{% url 'pdf' orders.id %}" class="btn btn-success">View bill</a></td> 
         <td><a href="{% url 'pdf' orders.id %}" class="btn btn-success"  download class="btn btn-outline-success">Download Bill</a></td> 
