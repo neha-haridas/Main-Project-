@@ -187,25 +187,6 @@ class Files(models.Model):
         
 
 
-def get_expiry():
-    return datetime.today() + timedelta(days=15)
-class tbl_BookIssue(models.Model):
-    issue_id=models.AutoField(primary_key=True)
-    user=models.ForeignKey(Account,on_delete=models.CASCADE)
-    book=models.ForeignKey(Book,on_delete=models.CASCADE)
-    cat=models.ForeignKey(Category_Book,on_delete=models.CASCADE)
-    date_of_issue=models.DateField(auto_now_add=True)
-    expiry_date=models.DateField(default=get_expiry)
-    issuedstatus=models.BooleanField(default=False)
-    fine = models.BigIntegerField(null=True)
-    paymentchoices = (('Paid', 'Paid'), ('Unpaid', 'Unpaid'), ('None', 'None'))
-    payment=models.CharField(default='Unpaid',choices=paymentchoices,max_length=40)
-
-
-    def save(self, *args, **kwargs):
-        self.book.book_quantity -= 1
-        self.book.save(update_fields=['book_quantity'])
-        super().save(*args, **kwargs)
 
 
 ################################################################
@@ -224,6 +205,8 @@ class tbl_BookIssues(models.Model):
     paymentchoices = (('Paid', 'Paid'), ('Unpaid', 'Unpaid'), ('None', 'None'))
     payment=models.CharField(default='Unpaid',choices=paymentchoices,max_length=40)
     return_date=models.DateField(null=True)
+    payment_id = models.CharField(max_length=100, blank=True, null=True)
+
 
     def save(self, *args, **kwargs):
         # decrease book_quantity when issue is saved

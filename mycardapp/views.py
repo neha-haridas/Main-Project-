@@ -5,7 +5,7 @@ from importlib.metadata import files
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
 from django.http import HttpResponseRedirect, JsonResponse
 
 from mycardapp.utils import send_twilio_message
@@ -464,10 +464,14 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def issuebooklib(request, id):
-    book = get_object_or_404(Book, id=id)
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        raise Http404("Book does not exist")
+
     today = date.today()
     exp = today + timedelta(days=10)
-    if book.book_quantity>0:
+    if book.book_quantity > 0:
         obj = tbl_BookIssues.objects.create(
             user=request.user,
             book=book,
@@ -481,6 +485,37 @@ def issuebooklib(request, id):
         messages.error(request, 'The book is out of stock!')
 
     return redirect('student_issued_books')
+
+# @login_required
+# def return_book_lib(request, id):
+#     try:
+#         bookissue = tbl_BookIssues.objects.get(id=id, issuedstatus=True)
+#     except tbl_BookIssues.DoesNotExist:
+#         raise Http404("Book issue does not exist or has already been returned")
+    
+#     if request.method == 'POST':
+#         # Update the book issue object and the corresponding book object
+#         bookissue.issuedstatus = False
+#         bookissue.return_date = date.today()
+
+#         # Calculate fine if book is returned late
+#         if bookissue.return_date > bookissue.expiry_date:
+#             days_late = (bookissue.return_date - bookissue.expiry_date).days
+#             fine_per_day = 2  # Change this to whatever fine amount you want
+#             fine_amount = days_late * fine_per_day
+#             bookissue.fine = fine_amount
+
+#         book = get_object_or_404(Book, id=bookissue.book.id)
+#         book.book_quantity += 1
+#         book.save()
+
+#         bookissue.save()
+
+#         return redirect('mybooks')
+    
+#     return render(request, 'mybooks.html', {'bookissue': bookissue})
+
+
 
 @login_required
 def return_book_lib(request, id):
@@ -505,11 +540,44 @@ def return_book_lib(request, id):
         book.book_quantity += 1
         book.save()
 
-        bookissue.save()
+        if bookissue.fine is None or bookissue.fine <= 0:
+            return HttpResponseBadRequest("Fine not found or invalid for this book issue.")
+        
+        amount = int(bookissue.fine * 100)  # Converting to smallest currency unit
+        if amount > 0:
+            client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
+            payment = client.order.create({'amount': amount, 'currency': 'INR'})
 
-        return redirect('mybooks')
+            bookissue.payment_id = payment['id']
+            bookissue.save()
+            return render(request, 'payment_success.html', {'payment': payment})
+        else:
+            return HttpResponseBadRequest("Fine amount is invalid.")
     
     return render(request, 'mybooks.html', {'bookissue': bookissue})
+ 
+@login_required
+def payment_success(request, id):
+    bookissue = get_object_or_404(tbl_BookIssues, id=id, issuedstatus=False, payment_id=request.GET.get('payment_id'))
+    if request.method == 'POST':
+        client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
+        try:
+            status = client.payment.fetch(bookissue.payment_id)['status']
+            if status == 'captured':
+                messages.success(request, f"Your payment of Rs. {bookissue.fine} has been successfully received.")
+                bookissue.payment_status = True
+                bookissue.save()
+            else:
+                messages.error(request, "Payment was unsuccessful. Please try again or contact support.")
+        except Exception as e:
+            messages.error(request, "An error occurred while processing the payment. Please try again or contact support.")
+            print(str(e))
+        return redirect('mybooks')
+    return render(request, 'payment_success.html', {'bookissue': bookissue})
+
+
+
+
 
 @login_required
 def mybooks(request):
@@ -517,7 +585,7 @@ def mybooks(request):
     issued_books = tbl_BookIssues.objects.filter(user=user, issuedstatus=True)
     return render(request, 'mybook.html', {'issued_books': issued_books})
 
-########################################
+
 def student_issued_books(request):
     user = request.user
     bk=tbl_BookIssues.objects.filter(user_id=user)

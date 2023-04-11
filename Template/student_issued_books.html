@@ -27,6 +27,8 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'css/style.css'%}" rel="stylesheet">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
 </head>
 
@@ -106,7 +108,7 @@
                 <td>{{i.book.book_author}}</td>
                 <td>{{i.date_of_issue}}</td>
                 <td>{{i.expiry_date}}</td>
-                <td>{{i.fine}}</td>
+                <td id="fine-amount" data-amount="{{ i.fine }}">{{ i.fine }}</td>
                 <td>
                   {% if i.issuedstatus %}
                   <form action="{% url 'return_book_lib' i.id %}" method="POST">
@@ -120,6 +122,42 @@
         </tbody>
     </table>
     </div>
+
+
+    <script>
+      // Step 3: Attach click event listener to the fine amount element
+      document.getElementById('fine-amount').addEventListener('click', function() {
+        var amount = this.getAttribute('data-amount');
+    
+        var options = {
+          "key": "rzp_test_atlnSmR0BK0uGq",
+          "amount": amount * 100, // Amount in paise
+          "currency": "INR",
+          "name": "My Card",
+          "description": "Fine Amount ",
+          "handler": function (response) {
+            // Step 4: Handle the payment response
+            alert('Payment successful!');
+            console.log(response);
+          },
+          "prefill": {
+            "name": "John Doe",
+            "email": "john@example.com",
+            "contact": "9999999999"
+          },
+          "notes": {
+            "order_id": "123456789"
+          },
+          "theme": {
+            "color": "#F37254"
+          }
+        };
+    
+        // Call the Razorpay checkout function
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+      });
+    </script>
 
   <!-- ======= Footer ======= -->
   <footer id="footer">

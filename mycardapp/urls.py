@@ -99,6 +99,7 @@ urlpatterns = [
     path('student_bookcomplaint_message_replied/', views.student_bookcomplaint_message_replied, name="student_bookcomplaint_message_replied"),
     path('Librarian_issuedbooklist', views.Librarian_issuedbooklist, name="Librarian_issuedbooklist"),
     path('order_detailslog/',views.order_detailslog,name='order_detailslog'),
+    path('payment_success/<int:id>/', views.payment_success, name='payment_success'),
     # # path('edit_issued/<int:id>',views.edit_issued,name="edit_issued"),
     # path('mainPage', views.mainPage, name="mainPage"),
     # path("acceptedOutpassNotifications", views.acceptedOutpassNotifications, name="acceptedOutpassNotifications"),
