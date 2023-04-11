@@ -52,7 +52,7 @@
                     <a href="#pagesmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle no-caret-down"><i class="fas fa-money-bill"></i> Payment Details</a>
                     <ul class="collapse list-unstyled" id="pagesmenu">
                         <li>
-                            <a href="{% url 'WardenMess'%}"><i class="fas fa-rupee-sign"></i> Mess Fee</a>
+                            <a href=""><i class="fas fa-rupee-sign"></i> Mess Fee</a>
                         </li>
                         <li>
                             <a href="{% url 'WardenViewPaymentDetails' %}"><i class="fas fa-rupee-sign"></i> Hostel Rent</a>
@@ -154,7 +154,7 @@
                                     {% for appout in outpas %}
                                     <tr>
                                         <td>{{appout.name}}</td>
-                                        <td><img src="{{appout.user.image.url }}" height="40" width="40"></td>
+                                        <td><img src="{{appout.user.img.url }}" height="40" width="40"></td>
                                         <td>{{appout.user.regno}}</td>
                                         <td>{{appout.dept}} {{appout.sem}}</td>     
                                         <td>{{appout.dest}}</td>

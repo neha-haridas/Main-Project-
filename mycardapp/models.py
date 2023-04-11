@@ -278,15 +278,11 @@ class Leave(models.Model):
             return super().save(*args, **kwargs)
 
 
-
-class addmessfee(models.Model):
-    id  =  models.AutoField(primary_key=True)
-    user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
-    feestatus=models.BooleanField(default=False)
-    amount = models.FloatField(blank=True,null=True)
-    date_paid = models.DateField(auto_now=True)
-
-
+class MessFee(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    fee = models.DecimalField(max_digits=10, decimal_places=2)
   
 
 class ComplaintStudent(models.Model):

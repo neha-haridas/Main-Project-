@@ -9,7 +9,7 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpRespo
 from django.http import HttpResponseRedirect, JsonResponse
 
 from mycardapp.utils import send_twilio_message
-from .models import Account, ComplaintStudent,Leave,addmessfee,Book,Category_Book,Files,Room,Payment,OrderPlaced,ComplaintStudent,LastFace,tbl_BookIssues
+from .models import Account, ComplaintStudent,Leave,Book,Category_Book,Files,Room,Payment,OrderPlaced,ComplaintStudent,LastFace,tbl_BookIssues
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -36,7 +36,6 @@ from twilio.rest import Client
 
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-
 import datetime,calendar
 from .forms import *
 from datetime import date
@@ -45,10 +44,7 @@ from mycardapp.encryption_util import *
 # from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 import razorpay 
-
 import datetime
-
-
 from django.shortcuts import render, HttpResponse, redirect
 import face_recognition
 import cv2
@@ -58,6 +54,7 @@ from django.db.models import Q
 from playsound import playsound
 import os
 from django.db import connection
+from decimal import Decimal
 
 
 # Create your views here.
@@ -773,22 +770,58 @@ def outpassdisapprove(request,leave_id):
     appout.save()
     return redirect('WardenOutpassView')
     
-   
-
-
+ 
 
 def WardenDue(request):
     return render(request,'Warden_Due.html')
 
 
-def WardenMess(request):
-    messfee=Account.objects.filter(is_user = True)
-    if request.method == 'POST':
-        amount = request.POST.get("amount")
-        user = Account.objects.get(id=request.user.id)
-        pay = addmessfee(user=user,amount=amount)
-        pay.save()    
-    return render(request,'WardenMess.html',{'messfee':messfee})
+
+
+@login_required
+def calculate_mess_fee(request):
+    # Get the current user's leave history
+    user_leaves = Leave.objects.filter(user=request.user)
+    
+    # Calculate the total number of days the student stayed in the hostel
+    total_days = 0
+    for leave in user_leaves:
+        if leave.status == 1: # leave was approved
+            days = (leave.idate - leave.ldate).days + 1
+            total_days += days
+    
+    # Calculate the mess fee based on the total number of days
+    mess_fee = Decimal(total_days) * Decimal('10.00')
+    
+    # Store the mess fee in the database for the current month
+    today = datetime.now().date()
+    first_day_of_month = today.replace(day=1)
+    last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+    mess_fee_obj, created = MessFee.objects.get_or_create(
+        user=request.user,
+        start_date=first_day_of_month,
+        end_date=last_day_of_month,
+        defaults={'fee': mess_fee}
+    )
+    if not created:
+        mess_fee_obj.fee = mess_fee
+        mess_fee_obj.save()
+    
+    # Return the mess fee calculation to the template
+    context = {
+        'mess_fee': mess_fee
+    }
+    return render(request, 'mess_fee.html', context)
+
+
+# def WardenMess(request):
+#     messfee=Account.objects.filter(is_user = True)
+#     if request.method == 'POST':
+#         amount = request.POST.get("amount")
+#         user = Account.objects.get(id=request.user.id)
+#         pay = addmessfee(user=user,amount=amount)
+#         pay.save()    
+#     return render(request,'WardenMess.html',{'messfee':messfee})
 
 
 
