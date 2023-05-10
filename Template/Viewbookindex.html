@@ -171,31 +171,53 @@
                     <p class="card-title"></p>
                     <form enctype="multipart/form-data">
                         <table class="table table-hover" id="dataTables-example" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th> Book Name</th>
-                                                                        <th>Author</th>
-                                                                        <th>Language</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {% for i in datas %}
-                                                                    <tr>
-                                                                        <td><a href="{% url 'onebook' i.encrypt_key %}">{{i.book_name}}</a></td>
-                                                                        <td>{{i.book_author}}</td>
-                                                                        <td>{{i.book_language}}</td>
-                                                                    </tr>
-                                                                    {% endfor %}
-                                                                </tbody>
-                                                            </table>
-                                                            </form> 
+                        <thead>
+                            <tr>
+                                <th> Book Name</th>
+                                <th>Author</th>
+                                <th>Language</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in datas %}
+                            <tr>
+                                <td><a href="{% url 'onebook' i.encrypt_key %}">{{i.book_name}}</a></td>
+                                <td>{{i.book_author}}</td>
+                                <td>{{i.book_language}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </form>
+                      {% if recommended_books %}
+                        <div class="container mt-5">
+                          <h2>Recent Books</h2>
+                          <div class="row">
+                            {% for book in recommended_books %}
+                            <div class="col-md-4">
+                              <div class="card mb-4">
+                                <img class="card-img-top" src="{{ book.img.url }}" alt="{{ book.book_name }}">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ book.book_name }}</h5>
+                                  <p class="card-text">{{ book.author }}</p>
+                                  <p class="card-text">{{ book.language }}</p>
+                                </div>
+                              </div>
+                            </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endif %}                                               
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-</div>
-
+  
+<br>
+<br>
 <!-- ======= Footer ======= -->
 <footer id="footer">
     <div class="footer-newsletter">
@@ -251,7 +273,6 @@
 
           <div class="col-lg-3 col-md-6 footer-links">
             <h4>Our Social Networks</h4>
-            <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p>
             <div class="social-links mt-3">
               <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
               <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>

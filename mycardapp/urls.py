@@ -16,9 +16,6 @@ urlpatterns = [
     path('forgotPassword/', views.forgotPassword, name='forgotPassword'),
     path('resetPassword/', views.resetPassword, name='resetPassword'),
     path('Service/', views.Service, name='Service'),
-    
-    # path('Doc/', views.Doc, name='Doc'),
-    # path('photo/<str:pk>/', views.viewPhoto, name='photo'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('Hostel_home/', views.Hostel_home, name='Hostel_home'),
     path('Outpass/', views.Outpass, name='Outpass'),
@@ -53,12 +50,10 @@ urlpatterns = [
     path('WardenComplaintView', views.WardenComplaintView, name="WardenComplaintView"),
     path('student_complaint_message_replied/', views.student_complaint_message_replied, name="student_complaint_message_replied"),
     
-    # path('warden_dues/', views.warden_dues, name='warden_dues'),
+    path('WardenMess/', views.WardenMess, name='WardenMess'),
     # path('warden_add_due/', views.warden_add_due, name='warden_add_due'),
     # path('warden_remove_due/', views.warden_remove_due, name='warden_remove_due'),
     # path('send-sms/', views.send_sms, name='send_sms'),
-    path('present_leaves/', views.present_leaves, name='present_leaves'),
-    path('mess_rebate/', views.mess_rebate, name='mess_rebate'),
     path('Addroom', views.Addroom, name='Addroom'),
     path('table/',views.table,name='table'),
     path('addroomtable/<int:id>/',views.addroomtable,name='addroomtable'),
@@ -100,14 +95,13 @@ urlpatterns = [
     path('Librarian_issuedbooklist', views.Librarian_issuedbooklist, name="Librarian_issuedbooklist"),
     path('order_detailslog/',views.order_detailslog,name='order_detailslog'),
     path('payment_success/<int:id>/', views.payment_success, name='payment_success'),
-    path('messfee_studentview/', views.messfee_studentview, name='messfee_studentview'),
+    # path('messfee_studentview/', views.messfee_studentview, name='messfee_studentview'),
 
     #########################################################################
-    path('generate-mess-fee/', views.generate_mess_fee, name='generate_mess_fee'),
-
-    # # path('edit_issued/<int:id>',views.edit_issued,name="edit_issued"),
-    # path('mainPage', views.mainPage, name="mainPage"),
-    # path("acceptedOutpassNotifications", views.acceptedOutpassNotifications, name="acceptedOutpassNotifications"),
-    # path("acceptedOutpassNotifications1", views.acceptedOutpassNotifications1, name="acceptedOutpassNotifications1"),
-
+    path('generate_mess_fee/', views.generate_mess_fee, name='generate_mess_fee'),
+    path('paymentdone/', views.paymentdone, name='paymentdone'),
+    path('messfee_studentview/', views.messfee_studentview, name='messfee_studentview'),
+    # path('messfee_studentview/', messfee_studentview, name='messfee_studentview'),
+    # path('mess_fee_details/', views.mess_fee_details, name='mess_fee_details'),
+    # path('recommendations/', views.book_recommendations, name='recommendations'),
 ]

@@ -3,7 +3,7 @@ from pyexpat import model
 from django.contrib import admin
 
 # Register your models here.
-from .models import Account, Book, Category_Book,librarian
+from .models import Account, Book, Category_Book
 from django.contrib.auth.admin import UserAdmin
 
 from mycardapp import models
@@ -15,9 +15,6 @@ class AccountAdmin(admin.ModelAdmin):
     list_display=['first_name','email','contact','regno','dpmnt']
 admin.site.register(Account,AccountAdmin)
 
-class librarianAdmin(admin.ModelAdmin):
-    list_display=['First_name','Last_name','email','Phone_number','is_libr','is_active']
-admin.site.register(librarian,librarianAdmin)
 
 
 # warden_site.register(Account)

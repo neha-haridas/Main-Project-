@@ -9,7 +9,7 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpRespo
 from django.http import HttpResponseRedirect, JsonResponse
 
 from mycardapp.utils import send_twilio_message
-from .models import Account, ComplaintStudent,Leave,Book,Category_Book,Files,Room,Payment,OrderPlaced,ComplaintStudent,LastFace,tbl_BookIssues
+from .models import Account, ComplaintStudent,Leave,Book,Category_Book,Files,Room,Payment,OrderPlaced,ComplaintStudent,LastFace,tbl_BookIssues,SearchHistory
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -273,62 +273,6 @@ def activate(request, uidb64, token):
 
 
 
-
-# @login_required(login_url='login')
-# def add(request):
-#     user = request.user
-
-#     categories = user.category_set.all()
-
-#     if request.method == 'POST':
-#         data = request.POST
-#         images = request.FILES.getlist('images')
-#         upload = request.FILES.getlist('upload')
-
-#         if data['category'] != 'none':
-#             category = Category.objects.get(id=data['category'])
-#         elif data['category_new'] != '':
-#             category, created = Category.objects.get_or_create(
-#                 user=user,
-#                 name=data['category_new'])
-#         else:
-#             category = None
-
-#         for image in images:
-#             photo = Document.objects.create(
-#                 category=category,
-#                 description=data['description'],
-#                 image=image,
-#                 upload=upload,
-                
-#             )
-
-#         return redirect('Doc')
-#     return render(request,'add.html',{'categories': categories})
-
-
-# @login_required(login_url='login')
-# def Doc(request):
-#     user = request.user
-#     category = request.GET.get('category')
-#     if category == None:
-#         photos = Document.objects.filter(category__user=user)
-#     else:
-#         photos = Document.objects.filter(
-#             category__name=category, category__user=user)
-
-#     categories = Category.objects.filter(user=user)
-#     context = {'categories': categories, 'photos': photos}
- 
-#     return render(request,'Doc.html',context)
-
-
-# @login_required(login_url='login')
-# def viewPhoto(request, pk):
-#     photo = Document.objects.get(id=pk)
-#     return render(request, 'photo.html', {'photo': photo})
-
-
 def profile(request):
     return render(request,'profile.html')
 
@@ -406,17 +350,60 @@ def Catagory_Books(request,id):
         tblBook = Book.objects.filter(book_category_id=id)
     return render(request,'Catagory_Book.html',{'datas':tblBook})
 
+from django.db.models import Count, Q
+from .models import SearchHistory
+
 def searchbar(request):
     if request.method == 'GET':
         query = request.GET.get('query')
         if query:
+            # Search for books that match the query
             multiple_q = Q(Q(book_name__icontains=query) | Q(book_author__icontains=query) | Q(book_language__icontains=query))
-            products = Book.objects.filter(multiple_q) 
-            return render(request, 'searchbar.html', {'datas':products})
+            products = Book.objects.filter(multiple_q)
+
+            # Get the user's search history and save the new search
+            user = request.user
+            search = SearchHistory(user=user, query=query)
+            search.save()
+            history = SearchHistory.objects.filter(user=user).values('query').annotate(count=Count('query')).order_by('-count')[:3]
+
+            # Exclude books that match the top two queries from the search history
+            recommended_books = []
+            if len(history) >= 1:
+                recommended_books = Book.objects.filter(book_name__icontains=history[0]['query'])
+            if len(history) >= 2:
+                recommended_books = recommended_books.exclude(id__in=Book.objects.filter(book_name__icontains=history[1]['query']).values_list('id', flat=True))
+            if len(history) >= 3:
+                recommended_books = recommended_books.exclude(id__in=Book.objects.filter(book_name__icontains=history[2]['query']).values_list('id', flat=True))[:10]
+
+            return render(request, 'searchbar.html', {'datas':products,'recommended_books': recommended_books})
         else:
             messages.info(request, 'No search result!!!')
             print("No information to show")
-    return render(request, 'searchbar.html', {}) 
+    return render(request, 'searchbar.html', {})
+
+
+# from django.db.models import Count, Q
+# from .models import SearchHistory
+
+# def searchbar(request):
+#     if request.method == 'GET':
+#         query = request.GET.get('query')
+#         if query:
+#             # Search for books that match the query
+#             multiple_q = Q(Q(book_name__icontains=query) | Q(book_author__icontains=query) | Q(book_language__icontains=query))
+#             products = Book.objects.filter(multiple_q)
+
+#             # Get the user's search history and save the new search
+#             user = request.user
+#             search = SearchHistory(user=user, query=query)
+#             search.save()
+#             history = SearchHistory.objects.filter(user=user).values('query').annotate(count=Count('query')).order_by('-count')[:3]
+#             return render(request, 'searchbar.html', {'datas':products})
+#         else:
+#             messages.info(request, 'No search result!!!')
+#             print("No information to show")
+#     return render(request, 'searchbar.html', {})
 
 ##############################Book issue################################################
 
@@ -589,19 +576,6 @@ def student_issued_books(request):
     bk=tbl_BookIssues.objects.filter(user_id=user)
     return render(request,'student_issued_books.html',{'bk':bk})
 
-#########################################################
-
-# class FileView(generic.ListView):
-#     # user = request.user
-#     model = Files
-#     template_name = 'file.html'
-#     context_object_name = 'files'
-#     paginate_by = 6
-
-#     def get_queryset(self):
-#     	return Files.objects.order_by('user_id')
-
-###############################################################
 
 def files(request):
     user = request.user
@@ -776,107 +750,241 @@ def outpassdisapprove(request,leave_id):
 def WardenDue(request):
     return render(request,'Warden_Due.html')
 
+############################################################################working properly################################################################
+# def calculate_mess_fee(month, year):
+#     # Get all the leaves for the given month and year
+#     leaves = Leave.objects.filter(ldate__month=month, ldate__year=year)
+    
+#     # Calculate the total number of days the students have taken leave
+#     total_leaves = 0
+#     for leave in leaves:
+#         total_leaves += (leave.idate - leave.ldate).days + 1
+    
+#     # Calculate the mess fee amount for the given month and year
+#     mess_fee_amount = Decimal(1500) - (Decimal(10) * Decimal(total_leaves))
+    
+#     # Create a MessFee instance for the given month and year
+#     mess_fee = MessFees.objects.create(month=month, year=year, amount=mess_fee_amount)
+    
+#     # Associate all the leaves with the MessFee instance
+#     mess_fee.leaves.set(leaves)
+    
+#     return mess_fee
+
+# def generate_mess_fee(request):
+#     # Get the current month and year
+#     current_month = datetime.now().month
+#     current_year = datetime.now().year
+    
+#     # Calculate the mess fee for the current month and year
+#     mess_fee = calculate_mess_fee(current_month, current_year)
+    
+#     # Return a response with the mess fee details
+#     return HttpResponse(f"Mess fee for {mess_fee.month} {mess_fee.year}: {mess_fee.amount}")
+
+# def mess_fee_details(request):
+#     # Get all the mess fee instances
+#     mess_fees = MessFees.objects.all()
+    
+#     # Render the mess fee details in an HTML template
+#     return render(request, 'mess_fee_details.html', {'mess_fees': mess_fees})
+    
 
 
+# def messfee_studentview(request):
+#     messfee=MessFees.objects.all()
+#     return render(request,'messfee_studentview.html',{'messfee':messfee})
+#################################################################################***#######################################################################
+
+############################################################making paymnet ###################################################################
+# def calculate_mess_fee(month, year):
+#     # Get all the leaves for the given month and year
+#     leaves = Leave.objects.filter(ldate__month=month, ldate__year=year)
+    
+#     # Calculate the total number of days the students have taken leave
+#     total_leaves = 0
+#     for leave in leaves:
+#         total_leaves += (leave.idate - leave.ldate).days + 1
+    
+#     # Calculate the mess fee amount for the given month and year
+#     mess_fee_amount = Decimal(1500) - (Decimal(10) * Decimal(total_leaves))
+#     mess_fee_amount_float = float(mess_fee_amount)  # Convert Decimal to float
+    
+#     # Create a MessFee instance for the given month and year
+#     mess_fee = MessFees.objects.create(month=month, year=year, amount=mess_fee_amount_float)
+    
+#     # Associate all the leaves with the MessFee instance
+#     mess_fee.leaves.set(leaves)
+    
+#     return mess_fee
 
 
-# @login_required
-# def calculate_mess_fee(request):
-#     # Get the current user's leave history
-#     user_leaves = Leave.objects.filter(user=request.user)
+# razorpay_client = razorpay.Client(auth=("rzp_test_atlnSmR0BK0uGq", "IqCklsj8xA9HxtlN2FziELL1"))
+# from django.http import HttpResponseBadRequest
+
+# def generate_mess_fee(request):
+#     messfee=MessFees.objects.all()
+#     # Get the current month and year
+#     current_month = datetime.now().month
+#     current_year = datetime.now().year
     
-#     # Calculate the total number of days the student stayed in the hostel
-#     total_days = 0
-#     for leave in user_leaves:
-#         if leave.status == 1: # leave was approved
-#             days = (leave.idate - leave.ldate).days + 1
-#             total_days += days
+#     # Calculate the mess fee for the current month and year
+#     mess_fee = calculate_mess_fee(current_month, current_year)
     
-#     # Calculate the mess fee based on the total number of days
-#     mess_fee = Decimal(total_days) * Decimal('100.00')
+#     # Get the amount from the POST data, or use the mess fee amount as a fallback
+#     amount = request.POST.get('amount')
+#     if amount is None:
+#         amount = mess_fee.amount
+#     else:
+#         amount = int(amount) * 100  # Convert amount to paise
     
-#     # Store the mess fee in the database for the current month
-#     today = datetime.now().date()
-#     first_day_of_month = today.replace(day=1)
-#     last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
-#     mess_fee_obj, created = MessFee.objects.get_or_create(
-#         user=request.user,
-#         start_date=first_day_of_month,
-#         end_date=last_day_of_month,
-#         defaults={'fee': mess_fee}
-#     )
-#     if not created:
-#         mess_fee_obj.fee = mess_fee
-#         mess_fee_obj.save()
-    
-#     # Return the mess fee calculation to the template
-#     context = {
-#         'mess_fee': mess_fee
+#     # Generate Razorpay order
+#     order_data = {
+#         "amount": amount,
+#         "currency": "INR",
+#         "notes": {
+#             "order_type": "Mess Fee",
+#             "user_id": request.user.id  # Replace with the user ID of the currently logged-in user
+#         }
 #     }
-#     return render(request, 'mess_fee.html', context)
-
-
-############################################################################
-def calculate_mess_fee(month, year):
-    # Get all the leaves for the given month and year
-    leaves = Leave.objects.filter(ldate__month=month, ldate__year=year)
+#     order = razorpay_client.order.create(data=order_data)
     
-    # Calculate the total number of days the students have taken leave
-    total_leaves = 0
+#     # Store the order ID in the MessFees model
+#     mess_fee.payment_id = order["id"]
+#     mess_fee.save()
+    
+#     # Render the payment form with Razorpay parameters
+#     razor_amount = amount
+#     order_id = order["id"]
+#     return render(request, 'messfee_studentview.html', {'razor_amount': razor_amount, 'order_id': order_id,'messfee':messfee})
+
+
+
+# def paymentdone(request):
+#     payment_id = request.GET.get('payment_id')
+    
+#     try:
+#         # Get the MessFee instance based on the payment ID
+#         mess_fee = MessFees.objects.get(payment_id=payment_id)
+#     except MessFees.DoesNotExist:
+#         # Return an error response if no MessFees object is found for the payment ID
+#         return HttpResponseBadRequest("Invalid payment ID")
+    
+#     # Update the payment status and payment date
+#     mess_fee.user=request.user
+#     mess_fee.payment = "Paid"
+#     mess_fee.payment_date = datetime.now()
+#     mess_fee.save()
+    
+#     # Render a response with the payment details
+#     return render(request, 'payment_done.html', {'mess_fee': mess_fee})
+
+def WardenMess(request):
+    msfe=MessFees.objects.all()
+    return render(request,'WardenMess.html',{'msfe':msfe})
+
+
+#####################################################****************#######################################################
+def messfee_studentview(request):
+    mess_fees = MessFees.objects.filter(user=request.user)
+    return render(request, 'messfee_studentview.html', {'mess_fees': mess_fees})
+
+
+import pytz
+import razorpay
+from datetime import datetime, timedelta
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.urls import reverse
+from .models import MessFees, Leave
+
+razorpay_client = razorpay.Client(auth=("rzp_test_atlnSmR0BK0uGq", "IqCklsj8xA9HxtlN2FziELL1"))
+
+def calculate_mess_fee(mess_fee_instance):
+    # get the start and end date of the month for which the mess fees is being calculated
+    start_date = datetime(year=mess_fee_instance.year, month=int(mess_fee_instance.month), day=1).date()
+    end_date = (start_date + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+
+    # get all the approved leaves within the month
+    leaves = Leave.objects.filter(status=1, idate__range=(start_date, end_date))
+
+    # calculate the total number of days for which the student was absent in the month
+    total_days_absent = 0
     for leave in leaves:
-        total_leaves += (leave.idate - leave.ldate).days + 1
-    
-    # Calculate the mess fee amount for the given month and year
-    mess_fee_amount = Decimal(1500) - (Decimal(10) * Decimal(total_leaves))
-    
-    # Create a MessFee instance for the given month and year
-    mess_fee = MessFees.objects.create(month=month, year=year, amount=mess_fee_amount)
-    
-    # Associate all the leaves with the MessFee instance
-    mess_fee.leaves.set(leaves)
-    
-    return mess_fee
+        total_days_absent += (leave.idate - leave.ldate).days
+
+    # calculate the mess fee
+    mess_fee_rate = mess_fee_instance.user.mess_fee_rate
+    total_days_present = (end_date - start_date).days + 1 - total_days_absent
+    mess_fee = round(total_days_present * mess_fee_rate, 2)
+
+    # update the mess fee for the instance
+    mess_fee_instance.amount = mess_fee
+    mess_fee_instance.save()
 
 def generate_mess_fee(request):
+    mess_fees = MessFees.objects.filter(user=request.user)
     # Get the current month and year
-    current_month = datetime.now().month
-    current_year = datetime.now().year
+    current_month = datetime.now(pytz.timezone('Asia/Kolkata')).month
+    current_year = datetime.now(pytz.timezone('Asia/Kolkata')).year
+
+    # Check if the current user has already paid for the current month's mess fee
+    if mess_fees.filter(month=current_month, year=current_year, payment="Paid").exists():
+        messages.error(request, "You have already paid for this month's mess fee.")
+        return redirect(reverse('messfee_studentview'))
+
+    # Get or create the mess fee instance for the current month and year
+    mess_fee_instance, created = MessFees.objects.get_or_create(month=current_month, year=current_year, user=request.user)
+
+    # Calculate the mess fee for the current month and year if the instance is newly created
+    if created:
+        calculate_mess_fee(mess_fee_instance)
+
+    # Get the amount
+    amount = int(mess_fee_instance.amount * 100)
+
+    # Create the Razorpay order
+    order = razorpay_client.order.create({'amount':amount, 'currency':'INR'})
+
+    # Save the order_id to the mess fee instance
+    mess_fee_instance.payment_id = order['id']
+    mess_fee_instance.save()
+
+    # Render the payment page with the order details
+    return render(request, 'payment.html', {'order': order})
+
+def paymentdone(request):
+    payment_id = request.GET.get('payment_id')
     
-    # Calculate the mess fee for the current month and year
-    mess_fee = calculate_mess_fee(current_month, current_year)
+    try:
+        # Get the MessFee instance based on the payment ID
+        mess_fee = MessFees.objects.get(payment_id=payment_id)
+    except MessFees.DoesNotExist:
+        # Return an error response if no MessFees object is found for the payment ID
+        return HttpResponseBadRequest("Invalid payment ID")
     
-    # Return a response with the mess fee details
-    return HttpResponse(f"Mess fee for {mess_fee.month} {mess_fee.year}: {mess_fee.amount}")
-
-def mess_fee_details(request):
-    # Get all the mess fee instances
-    mess_fees = MessFees.objects.all()
+    # Update the payment status and payment date
+    mess_fee.user = request.user
+    mess_fee.payment = "Paid"
+    mess_fee.payment_date = datetime.now()
+    mess_fee.save()
     
-    # Render the mess fee details in an HTML template
-    return render(request, 'mess_fee_details.html', {'mess_fees': mess_fees})
+    # Insert a new instance of MessFeePayment
+    MessFees.objects.create(user=request.user, amount=mess_fee.amount)
     
-
-
-def messfee_studentview(request):
-    messfee=MessFees.objects.all()
-    return render(request,'messfee_studentview.html',{'messfee':messfee})
-#################################################################################
-# def WardenMess(request):
-#     # messfee=Account.objects.filter(is_user = True)
-#     user = request.user
-#     if user is not None:
-#         if not user.is_warden:
-#             return HttpResponse('Invalid Login')
-#         else:
-#             if request.method == 'POST':
-#                 amount = request.POST.get("amount")
-#                 user = Account.objects.get(id=request.user.id)
-#                 pay = addmessfee(user=user,amount=amount)
-#                 pay.save()    
-#     return render(request,'WardenMess.html')
-
-
-#####################################################
+    # Update the leave status for the associated leaves
+    start_date = datetime(year=mess_fee.year, month=mess_fee.month, day=1).date()
+    end_date = (start_date + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+    leaves = Leave.objects.filter(status=1, idate__range=(start_date, end_date))
+    
+    for leave in leaves:
+        if leave.user == request.user:
+            # Update the leave status for the current user
+            leave.status = 'Paid'
+            leave.save()
+    
+    return redirect(reverse('messfee_studentview'))
+##################################################################################################################################
 
 def Student_complaint(request):
     stu_id=Account.objects.get(id=request.user.id)
@@ -917,75 +1025,6 @@ def student_complaint_message_replied(request):
     except:
         return HttpResponse("False")
     
-
-
-
-
-###############################################################################################
-
-def present_leaves(request):
-    user = request.user
-    if user is not None:
-        if not user.is_staff:
-            return HttpResponse('Invalid Login')
-        elif user.is_active:
-            warden_hostel = user.is_warden
-            stud = Account.objects.filter(room__hostel=warden_hostel)
-            leaves = Leave.objects.filter(user__in=stud,status='1',ldate__lte=datetime.date.today(), idate__gte=datetime.date.today()).values_list('user', flat=True).distinct()
-            stud = Account.objects.filter(id__in= leaves)
-            # print(leaves.query)
-            print(stud.query)
-            # print(stud)
-            return render(request, 'present_leaves.html', {'student': stud})
-        else:
-            return HttpResponse('Disabled account')
-    else:
-        return HttpResponse('Invalid Login')
-
-
-def mess_rebate(request):
-    if request.method == 'POST':
-        user = request.user
-        form = RebateForm(request.POST)
-        if user is not None:
-            if not user.is_staff:
-                return HttpResponse('Invalid Login')
-            elif user.is_active and form.is_valid():
-                reb = form.cleaned_data['rebate']
-                print(reb)
-                warden_hostel = user.is_user
-                stud = Account.objects.filter(room__hostel=warden_hostel)
-                leaves = Leave.objects.filter(user__in=stud, status="1")
-                stud_rebate_list = {}
-                this_month = reb.month
-                first_day = datetime.date(reb.year, this_month, 1)
-
-                for stud_id in stud:
-                    cnt = 0
-                    for leave in leaves:
-                        if leave.user.id == stud_id.id and (leave.ldate.month == this_month or leave.idate.month == this_month)  :
-                            if (reb-leave.idate).days > 0:
-
-                                dayz = abs(leave.idate-first_day).days - abs(leave.ldate-first_day).days + 1
-                            else:
-                                dayz = abs(reb - first_day).days - abs(leave.ldate - first_day).days
-                            print(leave.idate,first_day,stud_id.first_name,dayz)
-                            cnt = cnt+dayz
-                    stud_rebate_list[stud_id.regno] = cnt
-                print(stud_rebate_list)
-                month_name = calendar.month_name[this_month]
-                return render(request, 'mess_rebate.html',{'form': form, 'count_rebate': stud_rebate_list, 'student': stud})
-            else:
-                return HttpResponse('Disabled account')
-        else:
-            return HttpResponse('Invalid Login')
-    else:
-        form = RebateForm()
-        stud_rebate_list={}
-        stud=Account.objects.none()
-
-        return render(request, 'mess_rebate.html', {'form': form,'count_rebate': stud_rebate_list,'student': stud})
-
 
 #######################Add Rooms########################################
 
@@ -1206,7 +1245,7 @@ def showbill(request):
     return render(request, "PaymentdetailsStudent.html", {'orders': orders})
     
 
-
+    
 #########################Attendence######################################
 
 
@@ -1246,7 +1285,7 @@ def scan(request):
 
     profiles = Account.objects.all()
     for profile in profiles:
-        person = Account.image
+        person = profile.image
         image_of_person = face_recognition.load_image_file(f'images/pics/{person}')
         person_face_encoding = face_recognition.face_encodings(image_of_person)[0]
         known_face_encodings.append(person_face_encoding)
@@ -1323,7 +1362,7 @@ def scan(request):
 
     video_capture.release()
     cv2.destroyAllWindows()
-    return HttpResponse('scaner closed')
+    return HttpResponse('scaner closed', last_face)
 
 
 def details(request):
@@ -1497,16 +1536,21 @@ def Librarian_issuedbooklist(request):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 ##############################################################################################################################################################################
+from django.db.models import Count
 
+# def book_recommendations(request):
+#     # Get the user's search history and save the new search
+#     user = request.user
+#     history = SearchHistory.objects.filter(user=user).values('query').annotate(count=Count('query')).order_by('-count')[:3]
+
+#     # Exclude books that match the top two queries from the search history
+#     recommended_books = []
+#     if len(history) >= 1:
+#         recommended_books = Book.objects.filter(book_name__icontains=history[0]['query'])
+#     if len(history) >= 2:
+#         recommended_books = recommended_books.exclude(id__in=Book.objects.filter(book_name__icontains=history[1]['query']).values_list('id', flat=True))
+#     if len(history) >= 3:
+#         recommended_books = recommended_books.exclude(id__in=Book.objects.filter(book_name__icontains=history[2]['query']).values_list('id', flat=True))[:10]
+
+#     return render(request, 'Viewbookindex.html', {'recommended_books': recommended_books})

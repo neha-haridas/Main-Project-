@@ -79,6 +79,7 @@ class Account(AbstractBaseUser,PermissionsMixin):
     present = models.BooleanField(default=False)
     room_allotted = models.BooleanField(default=False)
     no_dues = models.BooleanField(default=True)
+    mess_fee_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
 
     # required
     date_joined     = models.DateTimeField(auto_now_add=True)
@@ -124,16 +125,6 @@ class LastFace(models.Model):
 
 
 ######################################Library########################################
-
-class librarian(models.Model):
-    libid           = models.AutoField(primary_key=True)
-    First_name      = models.CharField(max_length=50, default='')
-    Last_name       = models.CharField(max_length=50, default='')
-    email           = models.EmailField(max_length=100, unique=True)
-    Phone_number    = models.BigIntegerField(default=0)
-    is_libr         = models.BooleanField(default=True)
-    is_active       = models.BooleanField(default=True)
-    is_admin        = models.BooleanField(default=False)
 
 
 
@@ -247,7 +238,7 @@ class Leave(models.Model):
     parents_email  = models.EmailField(max_length=100, default=0)
     parents_contact  = models.BigIntegerField(default=0)
 
-
+    
 
 
     def __str__(self):
@@ -279,27 +270,24 @@ class Leave(models.Model):
             print(message.sid)
             return super().save(*args, **kwargs)
 
-
-class MessFee(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    fee = models.DecimalField(max_digits=10, decimal_places=2)
-
-
 class MessFees(models.Model):
     id = models.AutoField(primary_key=True)
     month = models.CharField(max_length=100)
     year = models.IntegerField()
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     leaves = models.ManyToManyField(Leave)
     paymentchoices = (('Paid', 'Paid'), ('Unpaid', 'Unpaid'), ('None', 'None'))
-    payment=models.CharField(default='Unpaid',choices=paymentchoices,max_length=40)
+    payment = models.CharField(choices=paymentchoices, max_length=6, default='Unpaid')
     payment_date=models.DateField(null=True)
-    payment_id = models.CharField(max_length=100, blank=True, null=True)
+    payment_id = models.CharField(max_length=100, blank=True, null=True, default="")
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
 
+   
+    def __str__(self):
+        return f"{self.user.first_name} - {self.month}/{self.year}"
 
-  
+    class Meta:
+        unique_together = ('user', 'month', 'year')
 
 class ComplaintStudent(models.Model):
     id = models.AutoField(primary_key=True)
@@ -402,3 +390,7 @@ class OrderPlaced(models.Model):
 
 
 
+class SearchHistory(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    query = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)

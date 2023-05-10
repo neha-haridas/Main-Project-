@@ -1,0 +1,35 @@
+
+
+  <h1>Mess Fee Details</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Month</th>
+        <th>Year</th>
+        <th>Amount</th>
+        <th>Leaves</th>
+        <th>Payment Status</th>
+        <th>Payment Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for mess_fee in mess_fees %}
+        <tr>
+          <td>{{ mess_fee.id }}</td>
+          <td>{{ mess_fee.month }}</td>
+          <td>{{ mess_fee.year }}</td>
+          <td>{{ mess_fee.amount }}</td>
+          <td>
+            <ul>
+              {% for leave in mess_fee.leaves.all %}
+                <li>{{ leave }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>{{ mess_fee.payment }}</td>
+          <td>{{ mess_fee.payment_date }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>

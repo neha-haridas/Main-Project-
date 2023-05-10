@@ -106,21 +106,40 @@
           </header><!-- End Header -->
       <div class="inner"></div>
         <div id="main">
-          <div class="card-deck">
+          <div class="container mt-5">
+          <div class="row">
             {% for i in datas %}
-            <div class="card">
-              
+            <div class="col-md-4">
+              <div class="card mb-4">
               <img class="card-img-top" src="{{i.img.url}}" style="height: 400px; width: 400px; padding-left: 10ch;" alt="Card image cap"  >
               <div class="card-body">
                 <h5 class="card-title"><a href="{% url 'onebook' i.id %}">{{i.book_name}}</a></h5>
                 <p class="card-text">{{i.book_author}} &nbsp;|&nbsp; {{i.book_language}}</p>
               </div>
-              <!-- <div class="card-footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-              </div> -->
             </div>
+          </div>
             {% endfor %}
         </div>
+      </div>
+        {% if recommended_books %}
+          <div class="container mt-5">
+            <h2>Recent Search Books</h2>
+            <div class="row">
+              {% for book in recommended_books %}
+              <div class="col-md-4">
+                <div class="card mb-4">
+                  <img class="card-img-top" src="{{book.img.url}}" style="height: 400px; width: 400px; padding-left: 10ch;" alt="{{ book.book_name }}">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'onebook' book.id %}">{{ book.book_name }}</a></h5>
+                    <p class="card-text">{{ book.book_author }}</p>
+                    <p class="card-text">{{ book.book_language }}</p>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
       </div>
       </div>
 
