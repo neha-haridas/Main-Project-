@@ -50,8 +50,6 @@ STRIPE_SECRET_KEY='sk_test_51MyBFLSJ944GJfKdn8weSqHK6mVnvABSMBy6K5ZEYu5rlgYI9M3y
 
 
 INSTALLED_APPS = [
-    'twilio',
-    'jazzmin',
     'mycardapp',
     'django.contrib.admin',
     'django.contrib.auth',
