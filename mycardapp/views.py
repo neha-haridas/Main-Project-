@@ -42,16 +42,14 @@ from datetime import date
 from mycardapp.encryption_util import *
 # from .utils import render_to_pdf
 # from django.core.exceptions import ObjectDoesNotExist
-from django.core.paginator import Paginator
+from django.core.paginator import 
 import razorpay 
 import datetime
 from django.shortcuts import render, HttpResponse, redirect
 
-import cv2
+
 import numpy as np
-import winsound
 from django.db.models import Q
-from playsound import playsound
 import os
 from django.db import connection
 from decimal import Decimal
