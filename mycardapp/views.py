@@ -42,7 +42,7 @@ from datetime import date
 from mycardapp.encryption_util import *
 # from .utils import render_to_pdf
 # from django.core.exceptions import ObjectDoesNotExist
-from django.core.paginator import 
+from django.core.paginator import Paginator
 import razorpay 
 import datetime
 from django.shortcuts import render, HttpResponse, redirect
