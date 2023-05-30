@@ -48,7 +48,6 @@ urlpatterns = [
     path('outpassdisapprove/<str:leave_id>', views.outpassdisapprove,name="outpassdisapprove"),
     path('WardenDue/', views.WardenDue, name='WardenDue'),
     path('calculate-mess-fee/',views.calculate_mess_fee, name='calculate_mess_fee'),
-    # path('WardenMess/', views.WardenMess, name='WardenMess'),
     path('Student_complaint/', views.Student_complaint, name='Student_complaint'),
     path('Student_complaint_save', views.Student_complaint_save, name="Student_complaint_save"),
     path('WardenComplaintView', views.WardenComplaintView, name="WardenComplaintView"),
@@ -101,6 +100,11 @@ urlpatterns = [
     path('Librarian_issuedbooklist', views.Librarian_issuedbooklist, name="Librarian_issuedbooklist"),
     path('order_detailslog/',views.order_detailslog,name='order_detailslog'),
     path('payment_success/<int:id>/', views.payment_success, name='payment_success'),
+    path('messfee_studentview/', views.messfee_studentview, name='messfee_studentview'),
+
+    #########################################################################
+    path('generate-mess-fee/', views.generate_mess_fee, name='generate_mess_fee'),
+
     # # path('edit_issued/<int:id>',views.edit_issued,name="edit_issued"),
     # path('mainPage', views.mainPage, name="mainPage"),
     # path("acceptedOutpassNotifications", views.acceptedOutpassNotifications, name="acceptedOutpassNotifications"),

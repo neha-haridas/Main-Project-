@@ -453,7 +453,8 @@ def searchbar(request):
 #     return render(request,'student_issued_books.html',{'bk':bk})
 
 
-#############################################issue book working properly###################3
+#############################################issue book working properly###################
+
 from datetime import date, timedelta
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Book,tbl_BookIssues
@@ -778,54 +779,88 @@ def WardenDue(request):
 
 
 
-@login_required
-def calculate_mess_fee(request):
-    # Get the current user's leave history
-    user_leaves = Leave.objects.filter(user=request.user)
+
+# @login_required
+# def calculate_mess_fee(request):
+#     # Get the current user's leave history
+#     user_leaves = Leave.objects.filter(user=request.user)
     
-    # Calculate the total number of days the student stayed in the hostel
-    total_days = 0
-    for leave in user_leaves:
-        if leave.status == 1: # leave was approved
-            days = (leave.idate - leave.ldate).days + 1
-            total_days += days
+#     # Calculate the total number of days the student stayed in the hostel
+#     total_days = 0
+#     for leave in user_leaves:
+#         if leave.status == 1: # leave was approved
+#             days = (leave.idate - leave.ldate).days + 1
+#             total_days += days
     
-    # Calculate the mess fee based on the total number of days
-    mess_fee = Decimal(total_days) * Decimal('10.00')
+#     # Calculate the mess fee based on the total number of days
+#     mess_fee = Decimal(total_days) * Decimal('100.00')
     
-    # Store the mess fee in the database for the current month
-    today = datetime.now().date()
-    first_day_of_month = today.replace(day=1)
-    last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
-    mess_fee_obj, created = MessFee.objects.get_or_create(
-        user=request.user,
-        start_date=first_day_of_month,
-        end_date=last_day_of_month,
-        defaults={'fee': mess_fee}
-    )
-    if not created:
-        mess_fee_obj.fee = mess_fee
-        mess_fee_obj.save()
+#     # Store the mess fee in the database for the current month
+#     today = datetime.now().date()
+#     first_day_of_month = today.replace(day=1)
+#     last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+#     mess_fee_obj, created = MessFee.objects.get_or_create(
+#         user=request.user,
+#         start_date=first_day_of_month,
+#         end_date=last_day_of_month,
+#         defaults={'fee': mess_fee}
+#     )
+#     if not created:
+#         mess_fee_obj.fee = mess_fee
+#         mess_fee_obj.save()
     
-    # Return the mess fee calculation to the template
-    context = {
-        'mess_fee': mess_fee
-    }
-    return render(request, 'mess_fee.html', context)
+#     # Return the mess fee calculation to the template
+#     context = {
+#         'mess_fee': mess_fee
+#     }
+#     return render(request, 'mess_fee.html', context)
 
 
-# def WardenMess(request):
-#     messfee=Account.objects.filter(is_user = True)
-#     if request.method == 'POST':
-#         amount = request.POST.get("amount")
-#         user = Account.objects.get(id=request.user.id)
-#         pay = addmessfee(user=user,amount=amount)
-#         pay.save()    
-#     return render(request,'WardenMess.html',{'messfee':messfee})
+############################################################################
+def calculate_mess_fee(month, year):
+    # Get all the leaves for the given month and year
+    leaves = Leave.objects.filter(ldate__month=month, ldate__year=year)
+    
+    # Calculate the total number of days the students have taken leave
+    total_leaves = 0
+    for leave in leaves:
+        total_leaves += (leave.idate - leave.ldate).days + 1
+    
+    # Calculate the mess fee amount for the given month and year
+    mess_fee_amount = Decimal(1500) - (Decimal(10) * Decimal(total_leaves))
+    
+    # Create a MessFee instance for the given month and year
+    mess_fee = MessFees.objects.create(month=month, year=year, amount=mess_fee_amount)
+    
+    # Associate all the leaves with the MessFee instance
+    mess_fee.leaves.set(leaves)
+    
+    return mess_fee
+
+def generate_mess_fee(request):
+    # Get the current month and year
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    
+    # Calculate the mess fee for the current month and year
+    mess_fee = calculate_mess_fee(current_month, current_year)
+    
+    # Return a response with the mess fee details
+    return HttpResponse(f"Mess fee for {mess_fee.month} {mess_fee.year}: {mess_fee.amount}")
+
+def mess_fee_details(request):
+    # Get all the mess fee instances
+    mess_fees = MessFees.objects.all()
+    
+    # Render the mess fee details in an HTML template
+    return render(request, 'mess_fee_details.html', {'mess_fees': mess_fees})
+    
 
 
-
-
+def messfee_studentview(request):
+    messfee=MessFees.objects.all()
+    return render(request,'messfee_studentview.html',{'messfee':messfee})
+#################################################################################
 # def WardenMess(request):
 #     # messfee=Account.objects.filter(is_user = True)
 #     user = request.user
@@ -1170,6 +1205,8 @@ def showbill(request):
     orders = OrderPlaced.objects.filter(user=request.user, is_ordered=True).order_by('ordered_date')
     return render(request, "PaymentdetailsStudent.html", {'orders': orders})
     
+
+
 #########################Attendence######################################
 
 

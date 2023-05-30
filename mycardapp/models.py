@@ -248,6 +248,8 @@ class Leave(models.Model):
     parents_contact  = models.BigIntegerField(default=0)
 
 
+
+
     def __str__(self):
         return self.name
     
@@ -283,6 +285,20 @@ class MessFee(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     fee = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+class MessFees(models.Model):
+    id = models.AutoField(primary_key=True)
+    month = models.CharField(max_length=100)
+    year = models.IntegerField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    leaves = models.ManyToManyField(Leave)
+    paymentchoices = (('Paid', 'Paid'), ('Unpaid', 'Unpaid'), ('None', 'None'))
+    payment=models.CharField(default='Unpaid',choices=paymentchoices,max_length=40)
+    payment_date=models.DateField(null=True)
+    payment_id = models.CharField(max_length=100, blank=True, null=True)
+
+
   
 
 class ComplaintStudent(models.Model):

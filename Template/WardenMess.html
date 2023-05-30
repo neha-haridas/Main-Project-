@@ -121,7 +121,7 @@
                       
                 </div>
             </nav>
-            <!-- end of navbar navigation -->
+            
             <div class="content">
             <div class="container">
             <div class="col-md-12 col-lg-12">
@@ -143,24 +143,12 @@
                             <tbody>
                                 {% for messfee in messfee %}
                                 <tr>
-                                    <td>{{messfee.first_name}}</td>
+                                    <td>{{messfee.first_name}} {{messfee.last_name}}</td>
                                     <td>{{messfee.regno}}</td>
                                     <td>{{messfee.dpmnt}} {{messfee.sem}}</td>
                                     <td>{{messfee.contact}}</td>
-                                    <td>
-                                        <form method="POST" action="{% url 'WardenMess' %}">
-                                            {% csrf_token %}
-                                        <div class="mb-3 col-md-6">
-                                            <input type="text" class="form-control" id="amount"  name="amount"  placeholder="Amount" required>
-                                        </div>
-                                        
-                                    </td>
-                                    <td>
-                                        <td>
-                                            <button type="submit" name="submit" class="btn btn-success" >Submit</button>
-                                        </td>            
-                                    </form>                                
-                                    </td>
+                                    <td>{{messfees.fee}}</td>
+                                    
                                     <!-- <td>{{amount.amount}}</td> -->
                                 </tr>
                                 {% endfor %}
