@@ -96,6 +96,7 @@
         </div>
 
           <div class="row">
+            {% if can_access_outpass %}
             <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
               <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
                 <div class="icon"><i class="bi bi-layout-text-sidebar-reverse"></i></div>
@@ -103,6 +104,8 @@
                 <p class="description">Getting Outpass</p>
               </div>
             </div>
+            {% endif %}
+
 
           <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
             <div class="icon-box" data-aos="fade-up" data-aos-delay="200">

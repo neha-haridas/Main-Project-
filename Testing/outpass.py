@@ -19,7 +19,7 @@ username_field = driver.find_element(By.NAME, "email")
 username_field.send_keys("neham2023b@mca.ajce.in")
 
 password_field = driver.find_element(By.NAME, "pass")
-password_field.send_keys("Varsha@123")
+password_field.send_keys("Varsha@1234")
 
 # Submit the login form
 password_field.send_keys(Keys.RETURN)
@@ -69,6 +69,7 @@ confirmation_message = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.XPATH, "//h3[text()='Outpass History']"))
 )
 
-
+print("applying outpass Successfull")
 # Close the webdriver
 driver.quit()
+

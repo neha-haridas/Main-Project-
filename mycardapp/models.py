@@ -65,9 +65,9 @@ class Account(AbstractBaseUser,PermissionsMixin):
     dpmnt           = models.CharField(max_length=50, default='')
     sem             = models.CharField(max_length=50, default='')
     img            = models.ImageField(upload_to='pics', default=0)
-    choices = [('N','None'),('D', 'Day scholar'), ('H', 'Hosteler')]
+    hdchoices = [('N','None'),('D', 'Day scholar'), ('H', 'Hosteler')]
     choice = models.CharField(
-        choices=choices,
+        choices=hdchoices,
         max_length=1,
         default='N',null=True)
 
@@ -80,7 +80,8 @@ class Account(AbstractBaseUser,PermissionsMixin):
     room_allotted = models.BooleanField(default=False)
     no_dues = models.BooleanField(default=True)
     mess_fee_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-
+    profile_updated = models.BooleanField(default=False)
+    
     # required
     date_joined     = models.DateTimeField(auto_now_add=True)
     last_login      = models.DateTimeField(auto_now_add=True)

@@ -368,6 +368,18 @@
 <body>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container">
+    {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-info alert-dismissible" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     <div class="view-account">
         <section class="module">
             <div class="module-inner">
@@ -488,11 +500,11 @@
 
                             
                             <div class="form-group">
-                                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Choice</label>
+                                <label class="col-md-2 col-sm-3 col-xs-12 control-label">Choice</label>
                                 <div class="col-md-10 col-sm-9 col-xs-12">
                                     <select class="form-select" name="choice" id="choice" placeholder="Choice" required>
                                         {% for choice in choices %}
-                                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                        <option value="{{ choice.0 }}" {% if choice.0 == user.choice %} selected {% endif %}>{{ choice.1 }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

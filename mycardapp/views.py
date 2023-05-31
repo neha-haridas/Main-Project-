@@ -63,7 +63,15 @@ def about(request):
     return render(request,'about.html')
 
 def Student_Home(request):
-    return render(request,'Student_Home.html')
+    is_hosteler = False
+    if request.user.is_authenticated and request.user.choice == 'H':
+        is_hosteler = True
+
+    context = {
+        'is_hosteler': is_hosteler,
+    }
+
+    return render(request, 'Student_Home.html', context)
 
 def Lib_Home(request):
     return render(request,'Lib_Home.html')
@@ -73,7 +81,13 @@ def Service(request):
     return render(request,'Service.html')
 
 def Hostel_home(request):
-    return render(request,'Hostel_home.html')
+    payment = Payment.objects.filter(user=request.user, paid=True).first()
+    can_access_outpass = payment is not None
+    
+    context = {
+        'can_access_outpass': can_access_outpass
+    }
+    return render(request, 'Hostel_home.html', context)
 
 def Library_home(request):
     return render(request,'Library_home.html')
@@ -272,7 +286,15 @@ def activate(request, uidb64, token):
 
 
 def profile(request):
-    return render(request,'profile.html')
+    choices = Account.hdchoices
+    if not request.user.is_staff and not request.user.profile_updated:
+        messages.info(request, 'Please update your profile.')
+        request.user.profile_updated = True
+        request.user.save()
+    context = {
+        'choices': choices,
+    }
+    return render(request,'profile.html',context)
 
 def profile_update(request):
     if request.method == "POST":
@@ -301,12 +323,10 @@ def profile_update(request):
         user.sem = sem  
         user.img = img
         user.choice = choice
+        user.profile_updated = True
         user.save()
         messages.success(request,'Profile Are Successfully Updated. ')
-        context = {
-        'choices': Account.choices,
-    }
-        return redirect('profile',context)
+        return redirect('profile')
 
 
 
@@ -1215,7 +1235,7 @@ def get(request,id,*args, **kwargs,):
         place = OrderPlaced.objects.get(id=id)
         date=place.payment.created_at
 
-        orders= OrderPlaced.objects.filter(user_id=request.user.id,created_at=date)
+        orders= OrderPlaced.objects.filter(user_id=request.user.id,ordered_date=place.ordered_date)
         for o in orders:
             total=o.product.price
         addrs=Account.objects.get(id=request.user.id)

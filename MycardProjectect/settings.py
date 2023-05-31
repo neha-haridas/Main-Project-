@@ -28,7 +28,7 @@ ENCRYPT_KEY = b'OHqp0gjmc3naLEKEttiWTfLwSv3ZNPy2RMEii6NhXe8='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 TWILIO_ACCOUNT_SID = 'AC7e1b12f105b868c334e9923e237a3e2a'

@@ -63,9 +63,7 @@
                         </li>
                     </ul>
                 </li>
-                <li>
-                    <a href="{% url 'Warden_AttendenceView' %}"><i class="fas fa-user-friends"></i>Face Detection</a>
-                </li>
+                
             </ul>
         </nav>
         <div id="body" class="active">
@@ -135,19 +133,23 @@
                                     <th>Name</th>
                                     <th>Admission Number</th>
                                     <th>Branch & Semester</th>
+                                    <th>Month</th>
                                     <th>Phone Number</th>
                                     <th>Amount</th>
+                                    <th> Payment Date</th>
+                                    
 
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for messfee in messfee %}
+                                {% for msfe in msfe %}
                                 <tr>
-                                    <td>{{messfee.first_name}} {{messfee.last_name}}</td>
-                                    <td>{{messfee.regno}}</td>
-                                    <td>{{messfee.dpmnt}} {{messfee.sem}}</td>
-                                    <td>{{messfee.contact}}</td>
-                                    <td>{{messfees.fee}}</td>
+                                    <td>{{msfe.user.first_name}} {{msfe.user.last_name}}</td>
+                                    <td>{{msfe.user.regno}}</td>
+                                    <td>{{msfe.user.dpmnt}} {{msfe.user.sem}}</td>
+                                    <td>{{msfe.month}}/{{msfe.year}}</td>
+                                    <td>{{msfe.user.contact}}</td>
+                                    <td>{{msfe.amount}}</td>
                                     
                                     <!-- <td>{{amount.amount}}</td> -->
                                 </tr>

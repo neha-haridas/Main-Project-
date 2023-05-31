@@ -616,7 +616,7 @@ table {
 #hero {
   width: 100%;
   height: 75vh;
-  background: url("MycardProjectect\static\img\hero-bg.jpg") top left;
+  background: url("/static/img/bookimg.jpg") top left;
   background-size: cover;
   position: relative;
 }
